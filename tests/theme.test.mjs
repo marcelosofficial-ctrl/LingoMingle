@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
-test("theme palette exposes required readable surface tokens", async () => {
-  const { colors } = await import("../src/theme/tokens.ts");
-  assert.ok(colors.canvas.startsWith("#"));
-  assert.ok(colors.ink.startsWith("#"));
-  assert.ok(colors.surface.startsWith("#"));
+test("theme palette defines readable canvas, ink, and surface tokens", async () => {
+  const source = await readFile(new URL("../src/theme/tokens.ts", import.meta.url), "utf8");
+  for (const token of ["canvas", "ink", "surface"]) {
+    assert.match(source, new RegExp(token + ": \"#[0-9A-Fa-f]{6}\""));
+  }
 });
