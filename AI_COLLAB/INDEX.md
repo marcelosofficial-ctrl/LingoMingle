@@ -10,7 +10,8 @@
 | AI_COLLAB/DEPENDENCIES.md | Adopted code/data and licences |
 | AI_COLLAB/RISKS.md | Risk register |
 | AI_COLLAB/VERIFY_BACKLOG.md | Unverified claims |
-| AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, dependency compatibility, SRS and reuse review |
+| AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, package compatibility, SRS and reuse review |
+| AI_COLLAB/COMPETITOR_AND_LEARNING_REVIEW_20261111.md | Kana apps, licensing, Hangul letter origins, mnemonic and retrieval evidence |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
