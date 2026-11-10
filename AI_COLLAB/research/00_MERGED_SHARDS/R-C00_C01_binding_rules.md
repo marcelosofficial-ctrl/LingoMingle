@@ -1,5 +1,6 @@
-# Claude C00 + C01 binding rules
-Audience: future executive AI chat. Confidence tags [V] verified, [I] inferred, [U] unknown. Preserve this shard at the top of future merged research.
+# Claude C00 + C01 binding rules (condensed working copy)
+**Source integrity notice:** This file is a distilled working summary, not a verbatim extract. Claude's original source attachment remains authoritative. The original C00 and C01 must be split into separate verbatim shards before any conflict resolution relies on their exact wording.
+Audience: future executive AI chat. Confidence tags [V] verified, [I] inferred, [U] unknown.
 <<<SHARD C00 | MERGE PROTOCOL + BINDING OPERATING RULES>>>
 ## C00.1 Merge protocol
 1. Keep C00 and C01 verbatim at the top under BINDING OPERATING RULES (authored by Claude). Do not paraphrase.
@@ -16,7 +17,7 @@ R2 On "continue working on LingoMingle": read ONLY BOOT.md, then STATE.md, NEXT_
 R3 Never open files >1,500 words whole. Find via INDEX.md. Do not create/read CHAT_START_HERE, HOT_RESUME, STATE_LEDGER.
 R4 Normal mode unless NEXT_TASK says otherwise. Commit before summary. About 350 lines per turn. Overwrite CHECKPOINT.md after each unit.
 R5 Final <=15 lines: done(paths, commit), latest CI, next, user actions <=3. Tag VERIFIED/INFERRED/UNKNOWN. Never claim tests passed without output. If GitHub cannot be read/written, stop.
-R6 Phone-first: each user action doable on iPhone in under 3 minutes, no terminal, no secrets in chat.
+R6 Phone-first: user actions doable on iPhone in under 3 minutes, no terminal, no secrets in chat.
 R7 Adopt, don't write. Check licences first; prefer permissive. Never copy GPL/AGPL code. Log adoptions in DEPENDENCIES.md.
 R8 No scraping; never commit copyrighted lyrics/subtitles; fixtures only PD/CC/original/synthetic. Do not implement gated lyric source before G1 approval.
 R9 Any paid account/subscription/recurring cost requires explicit approval.
@@ -28,11 +29,11 @@ R14 If [I]/[U] blocks task, create verification task rather than assume.
 R15 Linux CI: typecheck + lint + unit tests; report latest commit CI every final reply.
 <<<SHARD C01 | BOOTSTRAP TEMPLATES, SETTINGS CHANGES, CONCURRENCY>>>
 ## C01.1 Repo
-Separate repo is best for phone workflow, GitHub integration, CI and Expo project root. Do not place LingoMingle inside either other repo. Private recommended.
+Separate private repo is best for phone workflow, GitHub integration, CI and Expo project root. Do not place LingoMingle inside either other repo.
 ## C01.2 First commit tree
-AI_COLLAB/BOOT.md, STATE.md, NEXT_TASK.md, INBOX_chatgpt.md, CHECKPOINT.md, INDEX.md, DECISIONS.md, DEPENDENCIES.md, RISKS.md, VERIFY_BACKLOG.md, research shards, .github/workflows/ci.yml, README.md, LICENSE (defer; proprietary default), PRIVACY.md (later), app/src/assets/data/scripts created with Expo app.
+BOOT, STATE, NEXT_TASK, INBOX, CHECKPOINT, INDEX, DECISIONS, DEPENDENCIES, RISKS, VERIFY_BACKLOG, research shards, Linux CI, README, later proprietary LICENSE and PRIVACY, Expo app folders.
 ## C01.3 ChatGPT instructions
-Prefer a dedicated ChatGPT Project named LingoMingle for project-specific instructions; leave global RevDev/PocketCode instructions unchanged.
+Recommend a dedicated ChatGPT Project named LingoMingle; leave global RevDev/PocketCode instructions unchanged.
 ## C01.4 Cross-project work
 No cross-project repository operations here. User routes coordination requests.
 ## C01.5 Three AI chats
