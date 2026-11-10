@@ -10,7 +10,8 @@
 | AI_COLLAB/DEPENDENCIES.md | Adopted code/data and licences |
 | AI_COLLAB/RISKS.md | Risk register |
 | AI_COLLAB/VERIFY_BACKLOG.md | Unverified claims |
-| AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Claude binding workflow; use exact source attachment for any missing verbatim text |
+| AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, dependency compatibility, SRS and reuse review |
+| AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C04_media_rights.md | Lyrics/video/audio legal boundaries |
@@ -39,4 +40,4 @@
 Claude digest: 10,380 words, 69,414 bytes; SHA-256 5a6e297392fea6de49ba00e03b8d6b150cbfb28ff82fe21209bf6481f7487b53. Primary workflow/technical plan.
 Gemini Language.pdf: 637,913 bytes; SHA-256 c9bb7a2cd1cee16c9fedfe7c9bdfaef23787e392439f309e842890b9d891da74. API/media sync research.
 ChatGPT digest: 63,563 bytes; SHA-256 357801718d53a606e704483f3685b002b64353c651610b9ab57a50257fd7596d. Learning science, architecture, costs.
-Original sources remain in conversation attachments. This repo stores distilled synthesis. Import additional source sections as <=1,300-word shards when needed.
+Original sources remain in conversation attachments. This repo stores distilled synthesis. C00 and C01 verbatim extracts still need to be added as separate files; until then the original Claude attachment is authoritative.
