@@ -1,0 +1,5 @@
+# R-C05 Japanese and Korean pipeline
+Japanese candidate: normalize -> tokenize with Kuromoji-compatible tokenizer -> surface/base form, reading, POS -> kana/romaji -> dictionary lookup -> gloss/grammar. Kuromoji asset size, Hermes compatibility and memory UNKNOWN until spike. JMdict subset and KANJIDIC2/JmdictFurigana candidates require licence/attribution review. Romaji is an aid, not replacement for native script. Toggles independent: original, reading/furigana, romaji, translation.
+Korean starts with Hangul recognition and syllable-block assembly. Teach consonant/vowel combinations and batchim. Full Korean NLP later; tokenizer/dictionary licences and mobile feasibility unverified.
+Translation: distinguish line-level translation from token gloss; machine translation is fallible for idioms/poetry. Mark AI explanations. Prefer user translation/system language packs before paid provider.
+Speech: native OS TTS for words/phrases where available; voice quality/offline availability varies. Do not bundle generated audio without redistribution rights.
