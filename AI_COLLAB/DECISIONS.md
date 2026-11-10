@@ -1,7 +1,7 @@
 # DECISIONS
 ## Accepted
 D001 Separate private repo per project.
-D002 Expo + React Native + TypeScript candidate; exact SDK must be verified/pinned.
+D002 Expo SDK 58 + React Native + TypeScript pinned in package.json.
 D003 SQLite local-first; no mandatory account/server.
 D004 Hiragana MVP, then katakana/Hangul, then Song Study.
 D005 Freemium is future candidate, not first-slice scope.
@@ -9,8 +9,9 @@ D006 Reuse compatible permissively licensed packages/data; exclude GPL/AGPL/SSPL
 D007 v1 media uses user-imported, original, public-domain or properly licensed text. No scraping.
 D008 All spending blocked until explicit user approval.
 D009 PWA and Android APK are no-store-fee paths, not equivalents to official stores.
+D010 Canonical repository is marcelosofficial-ctrl/LingoMingle, selected explicitly by user on 2026-11-11. All new work belongs here.
 ## CONFLICTS
-Repo slug: Claude proposed LingoMingle. User later said LingoMingle! GitHub search returned both LingoMingle and LingoMingle-. Foundation is on LingoMingle-, chosen as punctuation-attempt candidate. Both private and accessible. Confirm before deleting/renaming.
+Repo slug: RESOLVED. A second private repository, LingoMingle-, also exists. It is not canonical. Foundation files were migrated to LingoMingle. The duplicate has not been deleted or archived because no destructive/archive GitHub action is available in this session; avoid further work there.
 Lyrics: Gemini's LRCLIB/Lyricsfile approach is technically useful for metadata and synced lines, but API access/format does not establish copyright display rights. G1 blocks integration.
 Apple: educational purpose alone does not waive Apple's fee for an individual. Waiver is limited to eligible nonprofits, accredited institutions and government entities. EU alternative distribution has eligibility/notarisation requirements and is not a simple free workaround.
 ## Gates
