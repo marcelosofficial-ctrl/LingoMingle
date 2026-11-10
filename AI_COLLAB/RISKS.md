@@ -9,5 +9,6 @@ K7 Mnemonic art: original vector/glyph-morph artwork; do not copy existing comme
 K8 Cloud costs: local-first and export; no cloud backend in MVP.
 K9 Scope creep: cut MVP at alphabet trainer + local review.
 K10 Licence contamination: dependency ledger and licence audit.
-K11 Duplicate repo slugs: do not delete/rename until user confirms.
+K11 Duplicate repository LingoMingle- exists; canonical is LingoMingle. Archive/delete duplicate manually after checking the migrated branch; no automated archive/delete action is available here.
 K12 Store fees: PWA/APK first; G2 blocks paid enrollment.
+K13 Package lock absent; direct package versions pinned but transitive dependency tree not reproducible until package-lock.json is committed.
