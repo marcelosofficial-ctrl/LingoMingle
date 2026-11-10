@@ -1,0 +1,6 @@
+# R-C08 Data, business, design and reuse
+SQLite local stores preferences, language, song/import metadata, saved glosses, cards, FSRS state, review logs, streak calendar, reminders and quiz history. Add migrations and versioned JSON export/import. User content stays local by default. Cloud sync only phase 2+ after identity, privacy, conflict and cost analysis.
+Freemium candidate: free core alphabet trainer and limited Song Study; premium may add advanced lessons, packs, analytics and review tools. Validate willingness to pay before paywall. RevenueCat optional, not MVP requirement. Store billing rules/commissions need current verification.
+Design: restraint, precision, hierarchy, typography, purposeful motion, haptics, tactile cards, consistent spacing, accessibility. Glass only selectively.
+Open source candidates: KanaDojo AGPL-3.0, UX study only, do not copy code into proprietary app. Kanji Dojo and Tsurukame licence needs verification. Kanjium and jmdict-simplified CC BY-SA require attribution/share-alike care. JmdictFurigana MIT candidate. ts-fsrs MIT candidate. Kuromoji fork licence/mobile compatibility unverified. LRCLIB server licence unverified.
+Allow candidates after review: MIT, BSD, Apache-2.0, ISC, Zlib, CC0, CC BY, OFL. CC BY-SA requires attribution/share-alike for adapted data. Exclude GPL/AGPL/SSPL, NC, ND and unlicensed assets.
