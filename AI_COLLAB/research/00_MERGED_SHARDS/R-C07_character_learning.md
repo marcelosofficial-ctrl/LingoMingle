@@ -1,0 +1,5 @@
+# R-C07 Character learning and quizzes
+Hiragana first, then dakuten/handakuten, yoon, small っ, long vowels, katakana and extended forms. Mnemonic seed list in Claude source is draft and should be curated with beginners. Preserve user hooks: や = yak -> ya; ㄴ = nose -> n. Do not copy commercial mnemonic art/text.
+Confusables: ぬ/め, わ/れ/ね, は/ほ, る/ろ, さ/き, い/り, こ/に, あ/お, す/む, ち/さ. Katakana confusables include シ/ツ and ソ/ン.
+Hangul articulator mnemonics: ㄱ tongue root, ㄴ tongue tip/nose cue, ㅁ mouth, ㅅ teeth, ㅇ throat. Extra strokes relate to aspiration; doubled consonants to tense consonants. Core consonants ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ; vowels ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ. Explain sound context and batchim carefully.
+Quiz modes: glyph->sound, sound->glyph, audio->glyph, romaji->glyph, typing, matching, speed round, odd-one-out/confusables, tracing, Hangul syllable builder. Seeded generator for tests; due FSRS cards + error weighting; distractors from confusables/same row and random pool; avoid rapid repeats.
