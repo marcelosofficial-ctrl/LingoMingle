@@ -17,13 +17,13 @@ Initial pins committed in package.json:
 - expo-router 58.0.30; expo-sqlite 58.0.15; expo-glass-effect 58.0.5; expo-status-bar 58.0.4
 - expo-constants 58.0.15; expo-linking 58.0.16
 - react-native-reanimated 4.7.1; react-native-worklets 0.13.0; react-native-gesture-handler 3.3.0; react-native-screens 4.30.1; react-native-safe-area-context 5.11.1
-- typescript 6.0.3; eslint 9.39.5; eslint-config-expo 58.0.4; @types/react 19.3.0
+- typescript 6.0.3; eslint 10.14.0; eslint-config-expo 58.0.4; @types/react 19.3.0
 
 **VERIFIED:** first dependency installation failed because expo-router@58.0.30 requires expo-constants ^58.0.15 while project initially pinned 58.0.13. Corrected to 58.0.15. No --force or --legacy-peer-deps workaround is permitted. A subsequent CI run must prove the full tree resolves.
 
-**VERIFIED:** npm install and typecheck completed successfully on commit cc81c37df4cee1101ba6737adb83f82bf270e90f. Lint then failed because Node ESM resolution requires the explicit eslint-config-expo/flat.js path; that import and package ESM mode have been corrected. ESLint was updated to 9.39.5, the latest 9.x patch. Expo's ESLint config currently relies on a React plugin not compatible with ESLint 10, while ESLint 9 is EOL; this is a temporary, documented tooling tradeoff.
+**VERIFIED:** npm install and typecheck completed on commit 053ab85a8cb6df30d27b9261ee470b6d81db6042. Lint failed with `TypeError: Unexpected array` because eslint-config-expo/flat.js itself exports an array; the correct composition is to spread that array into the exported flat config. This is fixed in eslint.config.js. The prior pin ESLint 9.39.5 was already EOL as of 2026-08-06. Expo's eslint-config-expo 58.0.4 declares peer dependency `eslint >=8.10` and its upstream README demonstrates flat-config composition; ESLint was moved to maintained 10.14.0 rather than retaining an EOL line. Latest CI must confirm real peer compatibility.
 
-**UNKNOWN:** final lint/test status on the corrected commit and lockfile reproducibility remain unverified. No package-lock is committed yet. Exact direct pins reduce drift but do not lock transitive dependencies.
+**UNKNOWN:** final lint/test status with ESLint 10.14.0 and lockfile reproducibility remain unverified. No package-lock is committed yet. Exact direct pins reduce drift but do not lock transitive dependencies.
 
 ## 3. Open-source reuse candidates
 
