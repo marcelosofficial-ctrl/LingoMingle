@@ -16,8 +16,8 @@
 Every future adoption records exact version, SPDX licence, purpose, upstream URL, attribution, modifications and review date before import.
 ## SDK 58 patch alignment (2026-11-12)
 - Updated `expo-router` to 58.0.31 and `expo-sqlite` to 58.0.16 after checking the SDK 58 versioned Expo docs. These are exact package pins, not ranges. The docs now recommend `~58.0.31` and `~58.0.16` respectively; the chosen exact pins resolve to those recommended patch releases.
-- CI must verify the updated dependency pair before T002 can close.
+- Run #36 verified the updated Router/SQLite/Constants/Linking/Expo patch set; see the checkpoint for exact quality-step evidence.
 
-- Router 58.0.31 requires `expo-constants ^58.0.16`; updated the exact pin to 58.0.16 after Run #34 exposed an npm peer conflict against 58.0.15. Expo 58.0.23 accepts the newer 58.0.16 within its `~58.0.15` range. Run #35 must verify the resolved tree.
+- Router 58.0.31 requires `expo-constants ^58.0.16`; updated the exact pin to 58.0.16 after Run #34 exposed an npm peer conflict against 58.0.15. Expo 58.0.24 accepts the 58.0.16 within its `~58.0.15` range. Run #35 must verify the resolved tree.
 
 - Router 58.0.31 also requires `expo-linking ^58.0.17`; aligned Expo, Linking and Status Bar to 58.0.24, 58.0.17 and 58.0.5 respectively, matching the SDK 58 template dependency set. Run #36 verifies the complete set.
