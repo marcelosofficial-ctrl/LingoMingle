@@ -1,6 +1,6 @@
 # DEPENDENCIES
 ## Present in app package.json
-- Expo SDK 58: expo 58.0.23, expo-router 58.0.30, expo-sqlite 58.0.15, expo-glass-effect 58.0.5, expo-status-bar 58.0.4, expo-constants 58.0.15, expo-linking 58.0.16.
+- Expo SDK 58: expo 58.0.23, expo-router 58.0.31, expo-sqlite 58.0.16, expo-glass-effect 58.0.5, expo-status-bar 58.0.4, expo-constants 58.0.15, expo-linking 58.0.16.
 - React Native 0.88.1 / React 19.3.0.
 - Reanimated 4.7.1 + Worklets 0.13.0; Gesture Handler 3.3.0; Screens 4.30.1; Safe Area Context 5.11.1.
 - TypeScript 6.0.3, ESLint 10.14.0, eslint-config-expo 58.0.4, eslint-import-resolver-typescript 4.4.5 (direct pin and npm override), @types/react 19.3.0.
@@ -14,3 +14,6 @@
 - Tatoeba licences vary per record; never assume one licence for all.
 - KanaDojo AGPL-3.0, Kanji Dojo GPL-3.0-or-later, Nihonoari GPL-3.0 and KanaSRS source-available: reference only; no code/assets adopted.
 Every future adoption records exact version, SPDX licence, purpose, upstream URL, attribution, modifications and review date before import.
+## SDK 58 patch alignment (2026-11-12)
+- Updated `expo-router` to 58.0.31 and `expo-sqlite` to 58.0.16 after checking the SDK 58 versioned Expo docs. These are exact package pins, not ranges. The docs now recommend `~58.0.31` and `~58.0.16` respectively; the chosen exact pins resolve to those recommended patch releases.
+- CI must verify the updated dependency pair before T002 can close.
