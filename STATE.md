@@ -1,12 +1,8 @@
 # STATE
 Updated: 2026-11-12
-Repo: marcelosofficial-ctrl/LingoMingle; branch: lingomingle-foundation-2026-11-10; default main; private.
-Canonical repo selected by user: exact name LingoMingle. Duplicate LingoMingle- exists; it is not canonical and must not receive further work.
-Research: nine source shards plus TECH_RESEARCH_20261111.md and COMPETITOR_AND_LEARNING_REVIEW_20261111.md. Original source attachments remain authoritative for exact C00/C01 wording.
-Stack pinned: Expo SDK 58; Expo 58.0.23, Router 58.0.30, SQLite 58.0.15, GlassEffect 58.0.5, constants 58.0.15, linking 58.0.16; React 19.3.0, React Native 0.88.1; Reanimated 4.7.1. Exact pins in package.json. TypeScript 6.0.3; ESLint 10.14.0 with eslint-config-expo 58.0.4.
-App shell: strict TypeScript, Expo Router stable NativeTabs (Songs, Alphabets, Review, You), light/dark system-aware theme tokens, optional GlassEffect runtime guard.
-Product: Japanese hiragana MVP, katakana extension, Hangul starter, Song Study later.
-Data: SQLite local-first; no mandatory account/server; export/restore before cloud sync.
-Legal: G1 blocks online copyrighted lyric lookup. Use BYO/original/PD/cleared content.
-Cost: no spending approved. PWA/APK are no-store-fee paths; official store distribution has fees.
-CI: Run 31 (5e194d7) passed npm install/typecheck, failed lint due eslint-plugin-react 7.37.x calling removed context.getFilename(); tests skipped. Added explicit React version setting in eslint.config.js; Run 32 on 5036e0f is pending. Run 26 install/typecheck passed but lint failed on earlier config shape and was fixed. No package-lock committed; reproducible npm ci remains an open gap.
+Repo: marcelosofficial-ctrl/LingoMingle; branch: lingomingle-foundation-2026-11-10; default main; private. Duplicate LingoMingle- is not canonical.
+Research: nine shards plus technical and competitor/learning reviews. Exact C00/C01 original wording remains source-attachment-only.
+Stack: Expo SDK 58 (Expo 58.0.23, Router 58.0.30, SQLite 58.0.15, GlassEffect 58.0.5), React 19.3.0, RN 0.88.1, Reanimated 4.7.1, TS 6.0.3, ESLint 10.14.0, eslint-config-expo 58.0.4, eslint-import-resolver-typescript 4.4.5 override.
+App: strict TS, stable NativeTabs (Songs, Alphabets, Review, You), system theme tokens, optional GlassEffect capability guard.
+Product: Japanese hiragana MVP, katakana extension, Hangul starter, Song Study later. SQLite local-first; G1 blocks online copyrighted lyric lookup. No paid services/store fees approved.
+CI: Run 31 passed install/typecheck, failed lint on React plugin API. Run 32 after explicit React version passed install/typecheck, failed lint on TypeScript import resolver interface and expo-router/native-tabs resolution; tests skipped. Resolver 4.4.5 direct pin + npm override committed; new CI must verify. No package-lock; npm ci reproducibility open.
