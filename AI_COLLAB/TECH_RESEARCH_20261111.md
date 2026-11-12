@@ -4,7 +4,7 @@
 
 **VERIFIED:** Expo SDK 58 was released 2026-10-15 and targets React Native 0.88 / React 19.3. Expo's SDK 58 docs specify Node 22.13.x or later supported lines (24.3+ or 26+), iOS 16.4+ and Android 7+ baseline, and Xcode 26.4. SDK 58 makes Expo Router native tabs stable. Source: https://expo.dev/changelog/sdk-58 and https://docs.expo.dev/versions/v58.0.0/
 
-**VERIFIED:** Expo Router SDK 58 docs recommend ~58.0.30. Expo SQLite docs recommend ~58.0.15 and SQLite persists data across app restarts. Reanimated docs recommend 4.7.1; Reanimated 4 requires the React Native New Architecture and matching react-native-worklets. Expo Router native tabs are stable from SDK 58 and use platform-native tab bars; Expo's guide documents system Liquid Glass behavior on iOS and native material tabs on Android. The app now uses `expo-router/native-tabs` with four explicitly declared destinations. Sources: https://docs.expo.dev/versions/v58.0.0/sdk/router/ ; https://docs.expo.dev/versions/v58.0.0/sdk/sqlite/ ; https://docs.expo.dev/versions/latest/sdk/reanimated/ ; https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility/ ; https://docs.expo.dev/router/advanced/native-tabs/
+**VERIFIED:** Expo Router SDK 58 docs currently recommend ~58.0.31. Expo SQLite docs recommend ~58.0.16 and SQLite persists data across app restarts. Reanimated docs recommend 4.7.1; Reanimated 4 requires the React Native New Architecture and matching react-native-worklets. Expo Router native tabs are stable from SDK 58 and use platform-native tab bars; Expo's guide documents system Liquid Glass behavior on iOS and native material tabs on Android. The app now uses `expo-router/native-tabs` with four explicitly declared destinations. Sources: https://docs.expo.dev/versions/v58.0.0/sdk/router/ ; https://docs.expo.dev/versions/v58.0.0/sdk/sqlite/ ; https://docs.expo.dev/versions/latest/sdk/reanimated/ ; https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility/ ; https://docs.expo.dev/router/advanced/native-tabs/
 
 **VERIFIED:** Expo GlassEffect uses the native iOS visual effect API, is available only on iOS 26+, and falls back to a regular View on unsupported platforms. The app must check both app/system availability and runtime API availability before rendering glass. Do not make glass the only contrast or navigation affordance. Source: https://docs.expo.dev/versions/latest/sdk/glass-effect/
 
@@ -14,7 +14,7 @@
 
 Initial pins committed in package.json:
 - expo 58.0.23; react 19.3.0; react-native 0.88.1
-- expo-router 58.0.30; expo-sqlite 58.0.15; expo-glass-effect 58.0.5; expo-status-bar 58.0.4
+- expo-router 58.0.31; expo-sqlite 58.0.16; expo-glass-effect 58.0.5; expo-status-bar 58.0.4
 - expo-constants 58.0.15; expo-linking 58.0.16
 - react-native-reanimated 4.7.1; react-native-worklets 0.13.0; react-native-gesture-handler 3.3.0; react-native-screens 4.30.1; react-native-safe-area-context 5.11.1
 - typescript 6.0.3; eslint 10.14.0; eslint-config-expo 58.0.4; @types/react 19.3.0
@@ -23,7 +23,7 @@ Initial pins committed in package.json:
 
 **VERIFIED:** npm install and typecheck completed on commit 053ab85a8cb6df30d27b9261ee470b6d81db6042. Lint failed with `TypeError: Unexpected array` because eslint-config-expo/flat.js itself exports an array; the correct composition is to spread that array into the exported flat config. This is fixed in eslint.config.js. ESLint 9.39.5 was EOL as of 2026-08-06, so the project moved to maintained ESLint 10.14.0. Expo's eslint-config-expo 58.0.4 declares peer dependency `eslint >=8.10` and its upstream README demonstrates flat-config composition. Run 30/31 must confirm peer compatibility and the corrected flat config.
 
-**UNKNOWN:** final lint/test status with ESLint 10.14.0 and lockfile reproducibility remain unverified. No package-lock is committed yet. Exact direct pins reduce drift but do not lock transitive dependencies.
+**VERIFIED (2026-11-12):** CI run #33 on code commit 7cc68679 passed install, typecheck, lint and all 3 unit tests. A follow-up patch alignment updated Router to 58.0.31 and SQLite to 58.0.16 to match current SDK 58 documentation recommendations; that update awaits its own CI run. **UNKNOWN:** lockfile reproducibility remains unverified. No package-lock is committed yet. Exact direct pins reduce drift but do not lock transitive dependencies.
 
 ## 3. Open-source reuse candidates
 
@@ -51,3 +51,9 @@ Initial pins committed in package.json:
 4. Benchmark WanaKana and candidate tokenizer in Hermes before adoption.
 5. Prototype FSRS v5/v6 behind an interface and test Hermes compatibility, persistence schema and migration of review history before choosing.
 6. Extract C00 and C01 verbatim into separate <=1,300-word source shards. The existing combined rules file is a condensed working copy, not an exact source reproduction.
+
+## 6. Current SDK 58 patch verification (2026-11-12)
+- **VERIFIED:** versioned SDK 58 Router docs recommend `~58.0.31`; native tabs are stable from SDK 58 and use platform-native bars. The SDK 58 SQLite docs recommend `~58.0.16` and describe persistence across app restarts.
+- **VERIFIED:** SDK 58 reference pairs React Native 0.88 with React 19.3 and requires Node 22.13.x minimum. SDK 58 changelog confirms native tabs stable.
+- **VERIFIED:** Expo Reanimated docs recommend 4.7.1. Expo GlassEffect docs recommend ~58.0.5, state GlassView is iOS 26+ and falls back to View elsewhere, and expose runtime capability checks.
+- Sources: https://docs.expo.dev/versions/v58.0.0/sdk/router/native-tabs/ ; https://docs.expo.dev/versions/v58.0.0/sdk/sqlite/ ; https://docs.expo.dev/versions/v58.0.0/ ; https://expo.dev/changelog/sdk-58 ; https://docs.expo.dev/versions/latest/sdk/reanimated/ ; https://docs.expo.dev/versions/latest/sdk/glass-effect/ .
