@@ -21,7 +21,7 @@ const japaneseEntries = [
     surfaceForms: ["熱い"],
     lemma: "熱い",
     reading: "あつい",
-    partOfSpeech: "adjective",
+    partOfSpeech: { scheme: "synthetic-pos-v1", tag: "adjective" },
     senses: [{ id: "s1", englishGloss: "hot to the touch" }],
     priority: 2,
   },
@@ -122,7 +122,7 @@ test("Korean analyzer cannot attach an unrelated lemma to another input", () => 
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "마셔요",
-    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "verb" } },
   });
 
   assert.deepEqual(results, []);
