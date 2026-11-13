@@ -1,11 +1,11 @@
 # CHECKPOINT
-Unit: T006 completed; T007 Kiwi feasibility spike queued.
-Status: T006 COMPLETE and VERIFIED. T007 is the next task.
+Unit: T007 Kiwi v0.24.1 integration and deployment feasibility.
+Status: COMPLETE as source-level research; no product dependency/model adopted.
 Canonical repo: marcelosofficial-ctrl/LingoMingle.
 Branch: lingomingle-foundation-2026-11-10.
-Latest code SHA: f6d38e573cf5ecccd297a91aa0af727b35b472bb. CI Run #46 (43400997300) completed SUCCESS: npm install, typecheck, lint and npm test; TAP 15/15 passed, 0 failed, 0 skipped. Later commits are documentation-only.
-Code files: src/features/glossary/types.ts, matching.mjs, matching.d.mts, index.ts, tests/glossary.test.mjs.
-Contract: GlossSource records version/licence/attribution/provenance. GlossEntry carries language, surface forms, lemma, reading, POS namespace, senses and optional learner metadata. Japanese/Korean analyzer outputs must identify the exact queried token; Japanese lookup uses reading/lemma, Korean uses lemma + POS. POS compares explicit {scheme, tag}; raw Kiwi/NIKL tags must be mapped to one versioned LingoMingle scheme. Korean morphology rejects internal whitespace; edge whitespace is trimmed. Exact surface matching can work without morphology. Unknown words return no invented gloss.
-Research corrections: NIKL official full-dictionary panel offers Excel/XML/JSON updated 2026-10; login condition UNKNOWN. Kiwi v0.24.1 Apache-2.0 has Android AAR 13.86 MB, iOS XCFramework 46.44 MB, and separate 87.97 MB base model; proof candidate only. Sudachi file-level notices and V1 format change documented. KANJIDIC2 SKIP is not NC-SA; owner says CC BY-SA 4.0, but EDRDG page still says prior permission for commercial apps; omit pending written clarification.
-Commits: code POS fixture correction f6d38e5; research/licence corrections 584426c, 69d70f0, 4555756, 94ceb5f, cd94abcd; T006 close af7e292; T007 queue 6d71492; state fa9eff9.
-Next: T007 Kiwi v0.24.1 Android/iOS/WASM integration and model feasibility. No user action.
+T006: COMPLETE/VERIFIED. CI #46 on code SHA f6d38e573cf5ecccd297a91aa0af727b35b472bb passed install/typecheck/lint and 15/15 tests (0 fail/skipped).
+T007 research: AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md. Kiwi v0.24.1 tag 724d00718f527bac3f8aef2f6ae3b6523b2aae74; latest main commit observed 6f7e5b80161b593dceb197e01f582ead82a736d9. Apache-2.0 from v0.24.0, NOTICE covers model files; third-party notices audited. Upstream release workflow #71 and Swift workflow #46 succeeded; latest main Ubuntu/Windows/macOS/WASM runs succeeded.
+Assets: Android AAR 13,858,682 bytes (arm64-v8a + x86_64, minSdk21); iOS/macOS XCFramework zip 46,441,378 bytes; separate model archive 87,967,233 bytes. Model uncompressed size/RSS UNKNOWN. Android can use StreamProvider. iOS Swift package manifest is nested under bindings/swift, not repo root; upstream Swift CI built/tested package and XCFramework. WASM requires Emscripten, loads model files separately, and builder.build() is synchronous; Expo native Worker API is unavailable by default. Use native AAR/Swift integration for native app/IME; WASM is web candidate only.
+No LingoMingle native build/integration performed. Keyboard extension process memory, model duplication and startup/latency remain UNKNOWN. Keep Kiwi as proof candidate, not adopted.
+Commits: T007 research 978246f; index f3dceaf; dependency audit 8ec878f; decision 837c4f4; state ed292d9; T008 queue 7169546.
+Next: T008 deterministic Kiwi↔NIKL POS crosswalk, preserve raw tags and ambiguous categories. No user action.
