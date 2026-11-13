@@ -12,6 +12,7 @@ D009 PWA and Android APK are no-store-fee paths, not equivalents to official sto
 D010 Canonical repository is marcelosofficial-ctrl/LingoMingle, selected explicitly by user on 2026-11-11. All new work belongs here.
 D011 Glossing is a separate offline lexical layer, never conflated with transliteration, IME conversion or sentence translation. Japanese and Korean morphology adapters return exact token surface + lemma/reading/POS as appropriate. Lookup rejects stale/mismatched analyzer surfaces and Korean morphology tokens containing internal whitespace.
 D012 POS comparisons require an explicit versioned tag namespace (scheme + tag). Never compare Kiwi Sejong-derived tags directly to NIKL dictionary POS labels. Exact surface matches may bypass morphology.
+D013 Kiwi v0.24.1 is the preferred Korean morphology proof candidate, not an adopted dependency. Use native AAR/Swift bindings for native app and keyboard targets; reserve WASM for web unless a tested native worker bridge exists. Do not bundle the 87.97 MB model until extension RAM/size and offline loading pass.
 ## CONFLICTS
 Repo slug: RESOLVED. A second private repository, LingoMingle-, also exists. It is not canonical. Foundation files were migrated to LingoMingle. The duplicate has not been deleted or archived because no destructive/archive GitHub action is available in this session; avoid further work there.
 Lyrics: Gemini's LRCLIB/Lyricsfile approach is technically useful for metadata and synced lines, but API access/format does not establish copyright display rights. G1 blocks integration.
