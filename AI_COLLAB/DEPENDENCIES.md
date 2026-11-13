@@ -9,7 +9,6 @@
 - WanaKana 5.3.1: MIT verified. Candidate for kana/romaji conversion only. Do not treat as tokenizer/dictionary or pronunciation evaluator.
 - ts-fsrs 6.0.0: MIT; FSRS-7 default; requires Node >=24 and has breaking API changes. Not adopted. Evaluate Hermes compatibility and current v5.4.2 compatibility before selection.
 - Kuromoji.js/fork: licence, Hermes compatibility, memory and dictionary size unknown.
-- hangul-js: maintenance/licence unknown.
 - JMdict/KANJIDIC2/KanjiVG: CC BY-SA-family candidates; attribution/share-alike obligations need review.
 - Tatoeba licences vary per record; never assume one licence for all.
 - KanaDojo AGPL-3.0, Kanji Dojo GPL-3.0-or-later, Nihonoari GPL-3.0 and KanaSRS source-available: reference only; no code/assets adopted.
@@ -23,9 +22,10 @@ Every future adoption records exact version, SPDX licence, purpose, upstream URL
 - Router 58.0.31 also requires `expo-linking ^58.0.17`; aligned Expo, Linking and Status Bar to 58.0.24, 58.0.17 and 58.0.5 respectively, matching the SDK 58 template dependency set. Run #36 verifies the complete set.
 
 ## Keyboard engine candidates (evaluated, not adopted; 2026-11-13)
-- Mozc: BSD-3-Clause for Mozc-authored code. Candidate Japanese IME engine. Third-party code and dictionary_oss have mixed/separate terms; audit each shipped component and dictionary before adoption. https://github.com/google/mozc
-- libhangul: LGPL-2.1. Candidate Korean Hangul composition engine; review dynamic/static linking and redistribution obligations. It does not supply the proposed English romanization front-end. https://github.com/libhangul/libhangul
-- librime: BSD-3-Clause core; runtime dependencies require separate SPDX review. Considered broad/heavy for first MVP. https://github.com/rime/librime
-- Fcitx5 Android: LGPL-2.1 framework reference; bundled plugins/engines have separate licences. Study integration, do not import wholesale. https://github.com/fcitx/fcitx5-android
-- FusionIME: GPL-3.0. UX/integration reference only; do not copy/link into proprietary app. https://github.com/Lee0701/FusionIME
-No keyboard engine, dictionary or dataset has been adopted or bundled. See AI_COLLAB/research/KEYBOARD_TRANSLITERATION_FEASIBILITY_20261113.md for platform constraints and open gates.
+- Mozc: BSD-3-Clause applies to Mozc-authored code, not automatically to dictionaries or third-party dependencies. The OSS dictionary README identifies IPAdic/ICOT notices and Okinawa Dictionary public-domain terms. Its generated dataset also includes the external Japanese Usage Dictionary and manual domain vocabulary; not every asset has been cleared. No engine/data adopted. Android has a JNI shared-library target for four ABIs; iOS engine source exists but upstream explicitly says iOS builds are not officially supported. See AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md.
+- Mozc build dependencies: Bazel/Bazelisk, Android NDK r29, Abseil, protobuf and target-specific modules. The current `src` tree does not contain the referenced `src/third_party` directory; external Bazel modules and their resolved licences require target-level SPDX audit.
+- libhangul: LGPL-2.1-or-later. Exposes preedit/commit/backspace composition and a built-in Romaja keyboard mode (`ro`). Static distribution requires application object/relink materials; dynamic distribution still requires library source/notices and a compliant replaceability mechanism. iOS signing/App Store implications need qualified review. No library adopted.
+- librime: BSD-3-Clause core; runtime dependencies require separate SPDX review. Considered broad/heavy for first MVP.
+- Fcitx5 Android: LGPL-2.1 framework reference; bundled plugins/engines have separate licences. Study integration, do not import wholesale.
+- FusionIME: GPL-3.0. UX/integration reference only; do not copy/link into proprietary app.
+No keyboard engine, dictionary or dataset has been adopted or bundled. Native builds/device tests are NOT RUN; see T004 source/build spike for exact evidence and remaining gates.
