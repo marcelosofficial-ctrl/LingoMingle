@@ -1,12 +1,12 @@
 # NEXT_TASK
-ID: T003
-Goal: Evaluate a system-wide LingoMingle multilingual transliteration keyboard for Japanese and Korean. Produce a sourced technical/competitor/licensing feasibility review and staged implementation recommendation before any keyboard code is adopted or written.
+ID: T004
+Goal: Run a bounded source-and-build feasibility spike for the proposed Japanese/Korean keyboard engines before any engine is adopted.
 Acceptance:
-- Compare iOS custom keyboard and Android IME constraints, including privacy, text-context access, extension lifecycle, app compatibility and network/full-access limitations.
-- Compare Japanese romaji→kana→kanji conversion and Korean Latin→Hangul strategies; explicitly distinguish transliteration, IME conversion, machine translation and word glossing.
-- Study relevant competitors and open-source implementations; record exact licenses, component boundaries, dictionary/data risks and adoption decisions.
-- Specify a practical MVP, UX for sentence context and English glosses, privacy defaults, architecture boundaries and measurable acceptance tests.
-- Update INDEX, STATE and CHECKPOINT. Research files <=1,300 words; total changed lines <=350.
-Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/STATE.md only if state is stored there (otherwise STATE.md), AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**.
-Out of scope: implementation, native extensions, dependency adoption, network service, accounts, paid APIs, dictionary bundling, online lyric lookup.
-Verification: cite primary platform docs and upstream project/licence sources; mark unverified build/Hermes/platform claims UNKNOWN.
+- Inspect Mozc build targets and source layout relevant to Android and iOS extension embedding; identify native toolchain, binary/runtime dependencies and practical integration boundary.
+- Inspect libhangul APIs for Hangul composition and determine exactly what it does not provide for Latin romanization; define the separate romanization adapter contract.
+- Audit Mozc dictionary_oss and third-party directory licence notices at file/component level; distinguish code licence from dictionary/content terms.
+- Audit libhangul LGPL-2.1 obligations for static vs dynamic linking and app distribution; do not assume compliance.
+- Produce a no-network prototype/spike plan, build matrix and go/no-go criteria. If the current environment cannot compile native targets, mark build verification UNKNOWN rather than claiming it.
+Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**, STATE.md.
+Out of scope: shipping keyboard code, adding native targets/dependencies, bundling dictionaries, network services, paid APIs, accounts, lyric lookup.
+Line budget <=350 changed lines. Verification: upstream source/licence evidence; build output only if a real build is executed.
