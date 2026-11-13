@@ -2,6 +2,10 @@ function normalize(value) {
   return value.normalize("NFKC").trim().toLowerCase();
 }
 
+function samePos(left, right) {
+  return Boolean(left && right && left.scheme === right.scheme && left.tag === right.tag);
+}
+
 /**
  * Deterministic dictionary lookup only. Language-specific morphology,
  * transliteration, tokenization and context ranking belong to adapters.
@@ -28,6 +32,8 @@ export function lookupGlosses(entries, key) {
         continue;
       }
       if (analysis.lemma && normalize(entry.lemma) !== normalize(analysis.lemma)) continue;
+      if (analysis.partOfSpeech && entry.partOfSpeech &&
+          !samePos(entry.partOfSpeech, analysis.partOfSpeech)) continue;
       matches.push({
         entry,
         matchedBy: analysis.lemma ? "lemma-reading" : "reading",
@@ -38,7 +44,7 @@ export function lookupGlosses(entries, key) {
 
     if (/\s/u.test(analysis.surfaceForm.trim())) continue;
     if (normalize(entry.lemma) !== normalize(analysis.lemma)) continue;
-    if (entry.partOfSpeech !== analysis.partOfSpeech) continue;
+    if (!samePos(entry.partOfSpeech, analysis.partOfSpeech)) continue;
     matches.push({ entry, matchedBy: "lemma-pos", matchedForm: entry.lemma });
   }
 

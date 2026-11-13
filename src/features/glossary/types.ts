@@ -19,6 +19,12 @@ export interface GlossSense {
   labels?: readonly string[];
 }
 
+export interface GlossPartOfSpeech {
+  /** Stable namespace for the tag set or an explicit crosswalk, not a display label. */
+  scheme: string;
+  tag: string;
+}
+
 export interface GlossEntry {
   id: string;
   sourceId: string;
@@ -26,7 +32,7 @@ export interface GlossEntry {
   surfaceForms: readonly string[];
   lemma: string;
   reading?: string;
-  partOfSpeech?: string;
+  partOfSpeech?: GlossPartOfSpeech;
   senses: readonly GlossSense[];
   learnerLevel?: string;
   frequencyRank?: number;
@@ -41,7 +47,7 @@ export interface JapaneseTokenAnalysis {
   /** Kana reading supplied by a Japanese morphology/transliteration adapter. */
   reading: string;
   lemma?: string;
-  partOfSpeech?: string;
+  partOfSpeech?: GlossPartOfSpeech;
 }
 
 export interface KoreanTokenAnalysis {
@@ -49,8 +55,8 @@ export interface KoreanTokenAnalysis {
   surfaceForm: string;
   /** Dictionary form supplied by a Korean morphology adapter. */
   lemma: string;
-  /** Analyzer's POS tag, preserved without lossy cross-analyzer remapping. */
-  partOfSpeech: string;
+  /** POS must be mapped into the same explicit scheme as the glossary entry. */
+  partOfSpeech: GlossPartOfSpeech;
 }
 
 export interface JapaneseMorphologyAdapter {

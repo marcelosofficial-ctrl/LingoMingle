@@ -10,7 +10,7 @@ const japaneseEntries = [
     surfaceForms: ["暑い"],
     lemma: "暑い",
     reading: "あつい",
-    partOfSpeech: "adjective",
+    partOfSpeech: { scheme: "synthetic-pos-v1", tag: "adjective" },
     senses: [{ id: "s1", englishGloss: "hot weather" }],
     priority: 1,
   },
@@ -45,7 +45,7 @@ const koreanEntries = [
     language: "ko",
     surfaceForms: ["먹다"],
     lemma: "먹다",
-    partOfSpeech: "verb",
+    partOfSpeech: { scheme: "synthetic-pos-v1", tag: "verb" },
     senses: [{ id: "s1", englishGloss: "to eat" }],
     learnerLevel: "beginner",
     frequencyRank: 120,
@@ -78,7 +78,7 @@ test("Japanese inflected surface resolves only with matching lemma and reading",
   const results = lookupGlosses(japaneseEntries, {
     language: "ja",
     surfaceForm: "暑かった",
-    analysis: { surfaceForm: "暑かった", lemma: "暑い", reading: "あつい" },
+    analysis: { surfaceForm: "暑かった", lemma: "暑い", reading: "あつい", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "adjective" } },
   });
 
   assert.equal(results.length, 1);
@@ -110,7 +110,7 @@ test("Korean inflected form resolves through analyzer lemma and part of speech",
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹어요",
-    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "verb" } },
   });
 
   assert.equal(results.length, 1);
@@ -132,7 +132,7 @@ test("Korean lemma lookup refuses a part-of-speech mismatch", () => {
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹어요",
-    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "noun" },
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "noun" } },
   });
 
   assert.deepEqual(results, []);
@@ -147,11 +147,21 @@ test("Korean lookup trims edge whitespace but preserves internal spacing", () =>
   const internalWhitespace = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹 어요",
-    analysis: { surfaceForm: "먹 어요", lemma: "먹다", partOfSpeech: "verb" },
+    analysis: { surfaceForm: "먹 어요", lemma: "먹다", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "verb" } },
   });
 
   assert.equal(edgeWhitespace.length, 1);
   assert.deepEqual(internalWhitespace, []);
+});
+
+test("Korean POS matching requires the same explicit tag namespace", () => {
+  const results = lookupGlosses(koreanEntries, {
+    language: "ko",
+    surfaceForm: "먹어요",
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: { scheme: "kiwi-sejong-v1", tag: "VV" } },
+  });
+
+  assert.deepEqual(results, []);
 });
 
 test("unknown words return no invented gloss", () => {
