@@ -1,12 +1,13 @@
 # NEXT_TASK
-ID: T005
-Goal: Select a legally viable, offline Japanese/Korean lexical-gloss data strategy for the keyboard and learning app.
+ID: T006
+Goal: Define a source-agnostic offline glossary domain contract and deterministic lookup acceptance tests without importing third-party dictionaries.
 Acceptance:
-- Compare Japanese-English lexical sources (including JMdict, KANJIDIC2, Japanese Usage Dictionary, and viable alternatives) for English gloss quality, coverage, attribution/share-alike duties, update terms and data size.
-- Compare Korean-English dictionary/lexicon sources and available romanization/word segmentation resources; distinguish open-source code licences from dataset/content licences.
-- Evaluate tokenizer/morphological segmentation needs for Japanese gloss display and Korean spacing/morphology; do not conflate IME conversion dictionaries with learner-facing English gloss dictionaries.
-- Recommend a minimal offline dataset and licensing approach, or explicitly conclude no suitable source is cleared yet. Identify whether source data can be redistributed in an app and what notices/attribution are required.
-- Produce an acceptance plan using original/synthetic examples only; do not copy third-party dictionary entries into fixtures or the repo.
-Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**, STATE.md.
-Out of scope: bundling dictionaries, adding dependencies, importing third-party data/code, online dictionary APIs, user accounts, paid services, lyric lookup.
-Line budget <=350 changed lines. Verification: primary upstream licence and documentation evidence; no claims of legal clearance beyond the published terms.
+- Inspect the current app's language/vocabulary domain structure and follow existing conventions.
+- Design typed records for source provenance/version/licence, language, surface form, lemma, reading, part of speech, sense, English gloss and optional learner metadata.
+- Define separate Japanese morphology-to-lemma and Korean inflected-form-to-lemma lookup contracts; do not mix transliteration, IME conversion, lexical glossing and sentence translation.
+- Implement only the minimal domain types/helpers and unit tests using original/synthetic examples. Include ambiguous Japanese あつい examples, unknown-word fallback, Korean inflection/spacing cases and source-provenance preservation.
+- Keep source data in separate licence zones; no real dictionary entries, downloaded data, third-party examples, audio or dictionary dependencies.
+- Run typecheck/lint/unit tests and report actual outputs. Do not claim keyboard native integration.
+Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**, STATE.md, existing app source/test paths required by the design.
+Out of scope: native keyboard extensions/IME, Mozc/libhangul adoption, dictionary imports, external APIs, network services, accounts, paid services, lyric lookup.
+Line budget <=350 changed lines. Verification: CI/test output for changed code; source-independent synthetic fixtures only.
