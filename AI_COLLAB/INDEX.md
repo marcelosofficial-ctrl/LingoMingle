@@ -13,7 +13,8 @@
 | AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, package compatibility, SRS and reuse review |
 | AI_COLLAB/COMPETITOR_AND_LEARNING_REVIEW_20261111.md | Kana apps, licensing, Hangul letter origins, mnemonic and retrieval evidence |
 | AI_COLLAB/research/KEYBOARD_TRANSLITERATION_FEASIBILITY_20261113.md | Keyboard product UX, platform constraints and competitor landscape |
-| AI_COLLAB/research/KEYBOARD_TRANSLITERATION_ENGINES_20261113.md | Mozc/libhangul/librime/Fcitx reuse, licences, architecture, gates and unknowns |
+| AI_COLLAB/research/KEYBOARD_TRANSLITERATION_ENGINES_20261113.md | Mozc/libhangul/librime/Fcitx reuse, licences, architecture and corrected Romaja findings |
+| AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md | T004 Mozc/libhangul source, build targets, dictionary/licence scope, LGPL and build matrix |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
