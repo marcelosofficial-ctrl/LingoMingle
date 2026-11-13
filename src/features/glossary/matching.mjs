@@ -36,6 +36,7 @@ export function lookupGlosses(entries, key) {
       continue;
     }
 
+    if (/\s/u.test(analysis.surfaceForm.trim())) continue;
     if (normalize(entry.lemma) !== normalize(analysis.lemma)) continue;
     if (entry.partOfSpeech !== analysis.partOfSpeech) continue;
     matches.push({ entry, matchedBy: "lemma-pos", matchedForm: entry.lemma });
