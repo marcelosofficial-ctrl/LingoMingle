@@ -1,10 +1,11 @@
 # CHECKPOINT
-Unit: T006 glossary analyzer, POS namespace and spacing contract.
-Status: IMPLEMENTED; latest CI Run #46 queued.
+Unit: T006 offline glossary contract, analyzer safety, Korean spacing and POS namespace.
+Status: COMPLETE and VERIFIED by GitHub CI.
 Canonical repo: marcelosofficial-ctrl/LingoMingle.
 Branch: lingomingle-foundation-2026-11-10.
-Code commits: analyzer surface binding 15bad8b; Korean token whitespace guard 7c5b5c8; POS namespace contract 28e6e27; POS fixture corrections 865c360 and f6d38e5.
-Run #42 (43400504631) on 15bad8b: typecheck PASS, lint PASS, tests FAIL 13/14; failure correctly exposed Korean internal-whitespace acceptance. Guard added in 7c5b5c8. Runs #43–45 were cancelled by subsequent pushes before useful full verification. Run #46 (43400997300) targets latest code SHA f6d38e573cf5ecccd297a91aa0af727b35b472bb and is queued; do not close T006 until it finishes.
-Types: GlossPartOfSpeech is {scheme, tag}. Korean morphology and dictionary entries must use the same versioned POS namespace. Kiwi Sejong-derived tags cannot be compared directly with NIKL labels. Japanese analysis has optional POS. Analyzer surface must match query; Korean morphology refuses internal whitespace; edge whitespace is trimmed.
-Research recheck: NIKL official full-dictionary panel has Excel/XML/JSON updated 2026-10; login requirement UNKNOWN. Kiwi v0.24.1 Apache-2.0 offers Android AAR 13.86 MB, iOS XCFramework 46.44 MB and separate 87.97 MB model. Proof only; no adoption. Current Sudachi file-level notices and V1 format change recorded.
-Next: verify Run #46; then close T006 and queue T007 Kiwi v0.24.1 native/WASM feasibility proof. No user action.
+Latest code SHA: f6d38e573cf5ecccd297a91aa0af727b35b472bb. CI Run #46 (43400997300) completed SUCCESS: npm install, typecheck, lint and npm test all passed; TAP 15/15 passed, 0 failed, 0 skipped. Run #42 previously exposed a Korean internal-whitespace defect; it was fixed and the latest run confirms it.
+Code files: src/features/glossary/types.ts, matching.mjs, matching.d.mts, index.ts, tests/glossary.test.mjs.
+Contract: GlossSource records version/licence/attribution/provenance. GlossEntry carries language, surface forms, lemma, reading, POS namespace, senses and optional learner metadata. Japanese/Korean analyzer outputs must identify the exact queried token; Japanese lookup uses reading/lemma, Korean uses lemma + POS. POS compares explicit {scheme, tag}; no raw Kiwi/NIKL tag comparison. Korean morphology rejects internal whitespace; edge whitespace is trimmed. Exact surface matching can work without morphology. Unknown words return no invented gloss.
+T004/T005 research recheck: AI_COLLAB/research/KEYBOARD_GLOSS_RESEARCH_RECHECK_20261113.md. NIKL official full dictionary download panel offers Excel/XML/JSON, last uploaded 2026-10; authentication conditions UNKNOWN. Kiwi v0.24.1 is best Korean morphology proof candidate but its base model archive is 87.97 MB; no adoption. Sudachi file-level licensing and format issues documented. KANJIDIC2 SKIP is not NC-SA; owner says CC BY-SA 4.0, while EDRDG page still says prior permission for commercial apps. Omit pending written clarification.
+Commits: analyzer 15bad8b; Korean whitespace 7c5b5c8; POS namespace 28e6e27; fixture corrections f6d38e5; research/docs recheck commits 584426c, 69d70f0, 4555756, 94ceb5f.
+Next: T007 Kiwi v0.24.1 Korean morphology feasibility spike (native Android/iOS and WASM), no dependency/model adoption. No user action.
