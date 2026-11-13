@@ -1,33 +1,37 @@
 # Korean POS crosswalk | 2026-11-13
 
-## Source vocabularies
+## Primary source findings
 
-Kiwi uses a Sejong-derived tag set, with project-specific tags and regular/irregular suffix variants. Its published tag list includes NNG/NNP/NNB, NR/NP, VV/VA/VX, MM, MAG/MAJ, IC, J* particles, E* endings, X* affixes, VCP/VCN, punctuation and foreign/numeric tags. Since Kiwi v0.12, VV/VA/VX/XSA may carry -R or -I suffixes for regular/irregular conjugation.
+**Kiwi v0.24.1:** the upstream README documents the Sejong-derived categories and Kiwi-specific additions. include/kiwi/Types.h at current upstream main defines the enum, including NNG/NNP/NNB, VV/VA/VX, MAG, NR/NP, MM/MAJ, IC, XPN/XSN/XSV/XSA/XSM/XR, VCP/VCN, punctuation, foreign/numeric, web and user tags. The README states that since 0.12.0, VV/VA/VX/XSA may carry -R (regular) or -I (irregular) suffixes. The pinned v0.24.1 enum uses the irregular flag internally; adapters accept the documented string suffix form only for tags whose base category is mapped.
 
-NIKL Korean Basic Dictionary's API documents POS filter codes:
-0 all; 1 noun; 2 pronoun; 3 numeral; 4 particle; 5 verb; 6 adjective; 7 determiner; 8 adverb; 9 interjection; 10 affix; 11 bound noun; 12 auxiliary verb; 13 auxiliary adjective; 14 ending; 15 no POS. Result records also expose a POS string. This means filter codes and returned POS strings are different representations and both need a deterministic adapter.
+**NIKL Korean Basic Dictionary:** its official API docs distinguish POS search-filter codes (0–15) from the returned result field pos, whose type is string. The API example shows the result field as a Korean POS label. The official dictionary's entry pages independently display labels such as 명사, 동사 and 의존 명사. The code therefore accepts actual Korean labels only. Numeric values 0–15 are filter controls, not dictionary POS values, and are rejected by the lexical crosswalk. This fixes a prior adapter mistake that treated filter codes as entry tags.
 
-## Canonical scheme
+Sources:
+- Kiwi README/tag table: https://github.com/bab2min/Kiwi
+- Kiwi enum: https://github.com/bab2min/Kiwi/blob/main/include/kiwi/Types.h
+- NIKL English API specification: https://krdict.korean.go.kr/eng/openApi/openApiInfo
+- NIKL official entry example for noun: https://krdict.korean.go.kr/eng/dicSearch/SearchView?ParaWordNo=23649
+- NIKL official Korean entry for bound noun: https://krdict.korean.go.kr/kor/dicSearch/SearchView?ParaWordNo=64518
+- NIKL official advanced search POS labels: https://krdict.korean.go.kr/eng/dicSearchDetail/searchDetailWords
 
-Use versioned scheme ID lingomingle-pos-v1 with tags:
-- noun, pronoun, numeral, particle, verb, adjective, determiner, adverb, interjection, affix, bound-noun, auxiliary-verb, auxiliary-adjective, ending.
+## Canonical scheme and mapping
 
-Mapping policy:
-- Kiwi NNG and NNP both map to noun because NIKL does not distinguish common/proper nouns in its POS filter taxonomy. Preserve the original Kiwi tag in GlossPartOfSpeech.source.
-- Kiwi NNB maps to bound-noun; NR to numeral; NP to pronoun; VV to verb; VA to adjective; MM to determiner; MAG/MAJ to adverb; IC to interjection; J* particle tags to particle; E* ending tags to ending; X* affix tags to affix.
-- Kiwi -R / -I variants map using the base tag but preserve the full original source tag.
-- Kiwi VX is unresolved because the single auxiliary-predicate tag cannot distinguish NIKL auxiliary verb vs auxiliary adjective. VCP/VCN copula tags have no matching NIKL POS category. Punctuation, foreign scripts, numbers, unknown and project-specific tags stay unresolved.
-- NIKL codes 1–14 and corresponding Korean labels map to the canonical tags. Codes 0 and 15 are not lexical POS categories and stay unresolved.
-- Unresolved POS must not be guessed. The glossary's Korean lemma/POS matcher requires a canonical POS on both the dictionary entry and analyzer token. Exact surface matches remain available without morphology.
+Canonical namespace: lingomingle-pos-v1. Source namespaces are kiwi-postag-v0.24.1 and nikl-basic-pos-api-v1. The NIKL namespace version identifies this adapter's expected API label representation, not a versioned dictionary data release.
 
-## Implementation
+Canonical tags: noun, pronoun, numeral, particle, verb, adjective, determiner, adverb, interjection, affix, bound-noun, auxiliary-verb, auxiliary-adjective, ending.
 
-src/features/glossary/korean-pos.mjs implements a pure deterministic mapper. It accepts only kiwi-sejong-v1 and nikl-basic-v1, returns null for unknown/ambiguous tags, and returns canonical scheme/tag plus original source scheme/tag when mapped. The KoreanTokenAnalysis.partOfSpeech field is optional so an unresolved analyzer tag cannot be forced into a false match.
+- Kiwi NNG and NNP both map to noun because NIKL's taxonomy does not distinguish common/proper nouns. Raw tag remains attached as source provenance.
+- NNB maps to bound-noun; NR to numeral; NP to pronoun; VV to verb; VA to adjective; MM to determiner; MAG/MAJ to adverb; IC to interjection.
+- All J* particles map to particle; E* endings to ending; XPN/XSN/XSV/XSA/XSM affixes to affix. XR root has no NIKL POS counterpart and stays unresolved.
+- Kiwi VX is unresolved because its auxiliary-predicate class cannot distinguish NIKL auxiliary verb from auxiliary adjective. VCP/VCN copula tags have no NIKL POS category. Punctuation, foreign, numeric, web, private and unknown tags stay unresolved.
+- Kiwi -R/-I variants are reduced to their documented base tag for classification, while the exact original tag is preserved in source metadata.
+- NIKL result labels map only when they match the official Korean POS label. Numeric filter codes 0–15 are never accepted as lexical tags.
+- Unknown or ambiguous values return null. Unresolved POS cannot satisfy Korean lemma/POS matching; exact surface matches remain available.
 
-tests/korean-pos.test.mjs uses synthetic POS tags only. It covers common/proper/bound nouns, irregular suffix variants, verbs/adjectives, particles/endings/affixes, NIKL codes and Korean labels, ambiguous auxiliary/copula tags, unknown tags, source-tag preservation, cross-source canonical matching and unresolved fallback. No dictionary entries or corpus examples are included.
+## Implementation and acceptance
 
-## Primary references
+src/features/glossary/korean-pos.mjs is a pure deterministic crosswalk. It validates source namespaces, uses own-property checks so JavaScript prototype names cannot become accidental POS categories, preserves raw tags, and returns null for unresolved tags.
 
-- Kiwi POS tag list and suffix behavior: https://github.com/bab2min/Kiwi
-- Kiwi POS enum: https://github.com/bab2min/Kiwi/blob/main/include/kiwi/Types.h
-- NIKL POS code and response fields: https://krdict.korean.go.kr/eng/openApi/openApiInfo
+tests/korean-pos.test.mjs uses synthetic labels/tags only. It covers all NIKL label categories, numeric filter-code rejection, common/proper/bound nouns, regular/irregular variants, particle/ending/affix families, auxiliary/copula ambiguity, XR and non-lexical Kiwi tags, unknown source namespaces, inherited-property names, canonical cross-source matching and unresolved fallback. No dictionary entries or corpus examples are included.
+
+The crosswalk is a first-pass taxonomy adapter. Before importing a NIKL snapshot, validate every distinct returned pos label from the permitted export and add only source-observed aliases. Do not assume the query filter-code list is the complete set of result labels.
