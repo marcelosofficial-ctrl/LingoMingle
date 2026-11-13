@@ -20,6 +20,7 @@
 | AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md | T007 Kiwi Android/iOS/WASM source, upstream CI, model footprint, Expo/Hermes integration and proof matrix |
 | AI_COLLAB/research/KOREAN_POS_CROSSWALK_20261113.md | T008 versioned Kiwi/NIKL POS mapping, explicit ambiguous tags and synthetic acceptance cases |
 | AI_COLLAB/research/NIKL_FULL_EXPORT_AND_RIGHTS_20261113.md | Official NIKL text licence, full/custom export paths, fields, multimedia exclusions and import gates |
+| AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | T009 provisional field mapping, import pipeline, synthetic gates, attribution and unresolved export blockers |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
@@ -33,7 +34,7 @@
 1. Separate repo. Never touch RevDev or PocketCode here.
 2. Continuation read order: BOOT, STATE, NEXT_TASK, INBOX. Find other files through this index.
 3. Never open a file over 1,500 words whole; shard source research into <=1,300-word files.
-4. Commit before summary; ~350 changed lines per work unit; overwrite CHECKPOINT after each unit.
+4. Commit before summary; ~350 lines per work unit; overwrite CHECKPOINT after each unit.
 5. Final <=15 lines: done(paths, commit), latest CI, next, user actions <=3. Tag VERIFIED/INFERRED/UNKNOWN. Never claim tests passed without output.
 6. Phone-first user actions under 3 minutes, no terminal or secrets in chat.
 7. Adopt before writing. Review exact licence and log name/version/SPDX/purpose/link/attribution before import.
@@ -42,7 +43,7 @@
 10. Pin Expo SDK and read current docs before Router/native-tabs/glass APIs.
 11. STATE <=400 words; BOOT <=250; every file <=1,500 words; NEXT_TASK one task.
 12. Secrets only in GitHub/EAS secrets.
-13. Verify [INFERRED]/[UNKNOWN] claims when they block work.
+13. Verify [INFERRED]/[UNKNOWN] claims when they block task.
 14. Linux CI: typecheck, lint, unit tests; report latest actual status.
 15. Claude C00/C01 workflow wins over conflicting research workflow.
 ## Source register
