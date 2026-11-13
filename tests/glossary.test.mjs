@@ -32,7 +32,7 @@ const japaneseEntries = [
     surfaceForms: ["厚い"],
     lemma: "厚い",
     reading: "あつい",
-    partOfSpeech: "adjective",
+    partOfSpeech: { scheme: "synthetic-pos-v1", tag: "adjective" },
     senses: [{ id: "s1", englishGloss: "thick" }],
     priority: 3,
   },
@@ -142,7 +142,7 @@ test("Korean lookup trims edge whitespace but preserves internal spacing", () =>
   const edgeWhitespace = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: " 먹어요 ",
-    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: { scheme: "synthetic-pos-v1", tag: "verb" } },
   });
   const internalWhitespace = lookupGlosses(koreanEntries, {
     language: "ko",
