@@ -24,7 +24,7 @@ Canonical tags: noun, pronoun, numeral, particle, verb, adjective, determiner, a
 - NNB maps to bound-noun; NR to numeral; NP to pronoun; VV to verb; VA to adjective; MM to determiner; MAG/MAJ to adverb; IC to interjection.
 - All J* particles map to particle; E* endings to ending; XPN/XSN/XSV/XSA/XSM affixes to affix. XR root has no NIKL POS counterpart and stays unresolved.
 - Kiwi VX is unresolved because its auxiliary-predicate class cannot distinguish NIKL auxiliary verb from auxiliary adjective. VCP/VCN copula tags have no NIKL POS category. Punctuation, foreign, numeric, web, private and unknown tags stay unresolved.
-- Kiwi -R/-I variants are reduced to their documented base tag for classification, while the exact original tag is preserved in source metadata.
+- Kiwi -R/-I variants are accepted only for the documented VV/VA/VX/XSA bases. VX remains unresolved; VV/VA/XSA are reduced to their base tag for classification, while the exact original tag is preserved. Invalid suffixes on NNG, particles or XSM are rejected.
 - NIKL result labels map only when they match the official Korean POS label. Numeric filter codes 0–15 are never accepted as lexical tags.
 - Unknown or ambiguous values return null. Unresolved POS cannot satisfy Korean lemma/POS matching; exact surface matches remain available.
 

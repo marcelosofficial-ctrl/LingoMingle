@@ -61,7 +61,7 @@ test("unknown POS source schemes are never guessed", () => {
 
 test("mapped Kiwi and NIKL verbs share canonical POS and remain traceable", () => {
   const kiwiVerb = kiwi("VV");
-  const niklVerb = nikl("5");
+  const niklVerb = nikl("동사");
 
   assert.equal(kiwiVerb.scheme, niklVerb.scheme);
   assert.equal(kiwiVerb.tag, niklVerb.tag);
@@ -70,7 +70,7 @@ test("mapped Kiwi and NIKL verbs share canonical POS and remain traceable", () =
 });
 
 test("canonical crosswalk result can safely match a Korean gloss entry", () => {
-  const pos = nikl("5");
+  const pos = nikl("동사");
   const entries = [{
     id: "synthetic-eat",
     sourceId: "synthetic-nikl",
@@ -102,7 +102,7 @@ test("unresolved POS cannot pass Korean lemma matching", () => {
     language: "ko",
     surfaceForms: ["먹다"],
     lemma: "먹다",
-    partOfSpeech: nikl("5"),
+    partOfSpeech: nikl("동사"),
     senses: [{ id: "synthetic-sense", englishGloss: "synthetic verb meaning" }],
     priority: 1,
   }];
@@ -123,5 +123,8 @@ test("unknown and inherited object-property names never become false POS tags", 
 });
 test("Kiwi derived adverb suffix is an affix; root and private tags stay unresolved", () => {
   assert.equal(kiwi("XSM").tag, "affix");
-  for (const tag of ["XR", "UN", "USER0", "W_URL", "Z_CODA"]) assert.equal(kiwi(tag), null, tag);
+  assert.equal(kiwi("XSA-I").tag, "affix");
+  for (const tag of ["XR", "UN", "USER0", "W_URL", "Z_CODA", "NNG-R", "JKS-I", "XSM-R"]) {
+    assert.equal(kiwi(tag), null, tag);
+  }
 });

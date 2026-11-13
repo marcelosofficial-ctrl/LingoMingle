@@ -26,7 +26,9 @@ export function mapKoreanPos(source) {
 
   let canonicalTag;
   if (source.scheme === "kiwi-postag-v0.24.1") {
-    const baseTag = rawTag.replace(/-(?:R|I)$/u, "");
+    const suffix = rawTag.match(/^([A-Z]+)-(?:R|I)$/u);
+    if (suffix && !["VV", "VA", "VX", "XSA"].includes(suffix[1])) return null;
+    const baseTag = suffix ? suffix[1] : rawTag;
     if (Object.hasOwn(KIWI_TAGS, baseTag)) canonicalTag = KIWI_TAGS[baseTag];
   } else if (source.scheme === "nikl-basic-pos-api-v1") {
     if (Object.hasOwn(NIKL_TAGS, rawTag)) canonicalTag = NIKL_TAGS[rawTag];
