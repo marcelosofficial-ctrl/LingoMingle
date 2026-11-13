@@ -9,3 +9,4 @@ export type {
 } from "./types";
 
 export { lookupGlosses } from "./matching.mjs";
+export { mapKoreanPos } from "./korean-pos.mjs";

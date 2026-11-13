@@ -23,6 +23,8 @@ export interface GlossPartOfSpeech {
   /** Stable namespace for the tag set or an explicit crosswalk, not a display label. */
   scheme: string;
   tag: string;
+  /** Original analyzer/dictionary tag, retained for audits and future remapping. */
+  source?: { scheme: string; tag: string };
 }
 
 export interface GlossEntry {
@@ -56,7 +58,7 @@ export interface KoreanTokenAnalysis {
   /** Dictionary form supplied by a Korean morphology adapter. */
   lemma: string;
   /** POS must be mapped into the same explicit scheme as the glossary entry. */
-  partOfSpeech: GlossPartOfSpeech;
+  partOfSpeech?: GlossPartOfSpeech;
 }
 
 export interface JapaneseMorphologyAdapter {
