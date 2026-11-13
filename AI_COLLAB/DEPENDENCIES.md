@@ -9,6 +9,11 @@
 - WanaKana 5.3.1: MIT verified. Candidate for kana/romaji conversion only. Do not treat as tokenizer/dictionary or pronunciation evaluator.
 - ts-fsrs 6.0.0: MIT; FSRS-7 default; requires Node >=24 and has breaking API changes. Not adopted. Evaluate Hermes compatibility and current v5.4.2 compatibility before selection.
 - Kuromoji.js/fork: licence, Hermes compatibility, memory and dictionary size unknown.
+- JMdict / JMdict_e: EDRDG CC BY-SA 4.0; commercial redistribution permitted with attribution, share-alike for adaptations, app Sources/About acknowledgement and regular update procedure. Candidate Japanese-English word gloss data; no entries adopted.
+- KANJIDIC2: EDRDG CC BY-SA 4.0 for the dataset; SKIP code field is separately CC BY-NC-SA 4.0 and must be excluded. Character metadata only, not word glosses/tokenization.
+- NIKL Korean Basic Dictionary: text data CC BY-SA 2.0 Korea; learner-focused Korean-English entries and conjugations. Audio/multimedia have separate terms. Static export/bulk packaging path still needs confirmation; no API calls or user accounts in product.
+- Sudachi tokenizer code: Apache-2.0. SudachiDict data includes UniDic and NEologd-derived resources with separate provenance/notices; audit exact data files and measure footprint before use.
+- KOReader Korean-English Wiktionary-derived dictionary: CC BY-SA 4.0, 37,337 entries / 3.4 MB, but only 44.5% top-10k coverage; small benchmark candidate, not selected.
 - JMdict/KANJIDIC2/KanjiVG: CC BY-SA-family candidates; attribution/share-alike obligations need review.
 - Tatoeba licences vary per record; never assume one licence for all.
 - KanaDojo AGPL-3.0, Kanji Dojo GPL-3.0-or-later, Nihonoari GPL-3.0 and KanaSRS source-available: reference only; no code/assets adopted.
