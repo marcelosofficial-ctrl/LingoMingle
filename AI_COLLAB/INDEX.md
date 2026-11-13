@@ -17,6 +17,7 @@
 | AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md | T004 Mozc/libhangul source, build targets, dictionary/licence scope, LGPL and build matrix |
 | AI_COLLAB/research/KEYBOARD_GLOSS_DATA_RESEARCH_20261113.md | T005 Japanese/Korean English gloss sources, licences, tokenizer/data caveats and offline recommendation |
 | AI_COLLAB/research/KEYBOARD_GLOSS_RESEARCH_RECHECK_20261113.md | Red-team corrections, NIKL full-download confirmation, Kiwi v0.24.1 native/WASM evidence, Sudachi file-level licence and platform constraints |
+| AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md | T007 Kiwi Android/iOS/WASM source, upstream CI, model footprint, Expo/Hermes integration and proof matrix |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
