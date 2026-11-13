@@ -21,7 +21,7 @@ Keep the JMdict-derived database separate from proprietary app code and publish 
 
 ### KANJIDIC2
 
-Useful for kanji readings, English meanings, stroke counts, grades and frequency, but it is character-level reference data, not a word segmentation or word-gloss source. EDRDG lists it under CC BY-SA 4.0. The SKIP code field is separately identified as **CC BY-NC-SA 4.0**; omit that field entirely because non-commercial material is excluded by project policy. Maintain the field-level licence boundary rather than treating the entire file as uniformly licensed.
+Useful for kanji readings, English meanings, stroke counts, grades and frequency, but it is character-level reference data, not a word segmentation or word-gloss source. EDRDG lists it under CC BY-SA 4.0. The SKIP code field has a separate, conflicting notice history. Jack Halpern's current conditions page says the SKIP system is CC BY-SA 4.0 and allows commercial use with attribution, while the EDRDG general licence page still says commercial applications using SKIP require prior permission. This is not a CC BY-NC-SA 4.0 restriction. Exclude SKIP from the first data pack until EDRDG and the field owner clarify the conflict in writing; do not mislabel its licence.
 
 ### Japanese segmentation
 
