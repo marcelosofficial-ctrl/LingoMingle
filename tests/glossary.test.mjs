@@ -128,13 +128,16 @@ test("unknown words return no invented gloss", () => {
   }), []);
 });
 
-test("matches preserve the original dictionary source identifier", () => {
+test("matches preserve dictionary source and optional learner metadata", () => {
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹다",
   });
 
   assert.equal(results[0].entry.sourceId, "synthetic-ko");
+  assert.equal(results[0].entry.learnerLevel, "beginner");
+  assert.equal(results[0].entry.frequencyRank, 120);
+  assert.deepEqual(results[0].entry.domainLabels, ["food"]);
 });
 
 test("surface lookup normalizes compatibility forms and surrounding whitespace", () => {
