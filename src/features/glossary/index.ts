@@ -10,3 +10,4 @@ export type {
 
 export { lookupGlosses } from "./matching.mjs";
 export { mapKoreanPos } from "./korean-pos.mjs";
+export type { RawKoreanPos } from "./korean-pos.mjs";
