@@ -1,7 +1,12 @@
 # NEXT_TASK
-ID: T002
-Goal: Verify current Expo SDK and compatible starter stack, then create minimal TypeScript Expo shell with Linux CI.
-Acceptance: verify official current Expo docs for Router/SQLite/Reanimated/glass; pin exact SDK/package versions; tabs Songs, Alphabets, Review, You; strict TypeScript, lint and unit-test scaffold; Linux Actions CI on push/PR; native-only features isolated behind platform/capability checks.
-Files allowed: package.json/lockfile, app config, tsconfig, lint/test configs, app/**, src/theme/**, .github/workflows/ci.yml, STATE.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/INDEX.md.
-Out of scope: lyric API, accounts/backend, paywall, cloud sync, native Apple build, copyrighted content.
-Line budget <=350 changed lines. Verification: actual CI output for typecheck, lint and tests.
+ID: T003
+Goal: Evaluate a system-wide LingoMingle multilingual transliteration keyboard for Japanese and Korean. Produce a sourced technical/competitor/licensing feasibility review and staged implementation recommendation before any keyboard code is adopted or written.
+Acceptance:
+- Compare iOS custom keyboard and Android IME constraints, including privacy, text-context access, extension lifecycle, app compatibility and network/full-access limitations.
+- Compare Japanese romaji→kana→kanji conversion and Korean Latin→Hangul strategies; explicitly distinguish transliteration, IME conversion, machine translation and word glossing.
+- Study relevant competitors and open-source implementations; record exact licenses, component boundaries, dictionary/data risks and adoption decisions.
+- Specify a practical MVP, UX for sentence context and English glosses, privacy defaults, architecture boundaries and measurable acceptance tests.
+- Update INDEX, STATE and CHECKPOINT. Research files <=1,300 words; total changed lines <=350.
+Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/STATE.md only if state is stored there (otherwise STATE.md), AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**.
+Out of scope: implementation, native extensions, dependency adoption, network service, accounts, paid APIs, dictionary bundling, online lyric lookup.
+Verification: cite primary platform docs and upstream project/licence sources; mark unverified build/Hermes/platform claims UNKNOWN.
