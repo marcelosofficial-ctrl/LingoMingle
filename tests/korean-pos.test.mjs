@@ -66,7 +66,7 @@ test("mapped Kiwi and NIKL verbs share canonical POS and remain traceable", () =
   assert.equal(kiwiVerb.scheme, niklVerb.scheme);
   assert.equal(kiwiVerb.tag, niklVerb.tag);
   assert.deepEqual(kiwiVerb.source, { scheme: "kiwi-postag-v0.24.1", tag: "VV" });
-  assert.deepEqual(niklVerb.source, { scheme: "nikl-basic-pos-api-v1", tag: "5" });
+  assert.deepEqual(niklVerb.source, { scheme: "nikl-basic-pos-api-v1", tag: "동사" });
 });
 
 test("canonical crosswalk result can safely match a Korean gloss entry", () => {
