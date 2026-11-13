@@ -47,6 +47,9 @@ const koreanEntries = [
     lemma: "먹다",
     partOfSpeech: "verb",
     senses: [{ id: "s1", englishGloss: "to eat" }],
+    learnerLevel: "beginner",
+    frequencyRank: 120,
+    domainLabels: ["food"],
     priority: 1,
   },
 ];

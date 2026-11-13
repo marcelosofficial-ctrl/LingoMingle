@@ -28,6 +28,9 @@ export interface GlossEntry {
   reading?: string;
   partOfSpeech?: string;
   senses: readonly GlossSense[];
+  learnerLevel?: string;
+  frequencyRank?: number;
+  domainLabels?: readonly string[];
   /** Lower values sort earlier within the same lookup result. */
   priority: number;
 }
