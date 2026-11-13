@@ -17,9 +17,9 @@ Upstream source reviewed: `google/mozc` current `master`, especially `src/README
 
 ## Dictionary/data scope
 
-The OSS dictionary is not the commercial Google Japanese Input dictionary. `src/data/dictionary_oss/README.txt` states the main vocabulary is basically IPAdic mecab-ipadic 2.7.0-20070801, enriched with Okinawa Dictionary entries and Google-added compounds/words. It records IPAdic's notice/disclaimer and ICOT Free Software conditions; Okinawa Dictionary is stated to be public domain. Preserve all notices and the ICOT no-warranty terms if redistributing affected data. The README also says large web-corpus vocabulary and Japan Post postal-code data are not included in that OSS dictionary baseline.
+The OSS dictionary is not the commercial Google Japanese Input dictionary. `src/data/dictionary_oss/README.txt` states the main vocabulary is basically IPAdic mecab-ipadic 2.7.0-20070801, enriched with Okinawa Dictionary entries and Google-added compounds/words. It records IPAdic's notice/disclaimer and ICOT Free Software conditions; Okinawa Dictionary is stated to be public domain. Preserve all notices and the ICOT no-warranty terms if redistributing affected data. The README also says large web-corpus vocabulary and Japan Post postal-code data are not included in that OSS dictionary baseline. The current OSS dataset target shown in `data_manager/oss/BUILD.bazel` includes `dictionary_manual:domain.txt` and the external usage dictionary. The ten `dictionary00.txt`–`dictionary09.txt` files and connection matrix are not an English-gloss database.
 
-The OSS dataset build additionally consumes `@ja_usage_dict//:usage_dict.txt` (Japanese Usage Dictionary, pinned as 2025-01-25 in `MODULE.bazel`), `data/dictionary_manual:domain.txt`, rules, emoji/emoticon/single-kanji/symbol and other data. Their licences were **not** all individually cleared. Do not infer that the top-level BSD-3-Clause code licence covers these assets.
+The OSS dataset build additionally consumes `@ja_usage_dict//:usage_dict.txt` (Japanese Usage Dictionary, pinned as 2025-01-25 in `MODULE.bazel`), `data/dictionary_manual:domain.txt`, rules, emoji/emoticon/single-kanji/symbol and other data. The external Japanese Usage Dictionary has its own BSD-3-Clause LICENSE and supplies Japanese homonym definitions, not English glosses. The manual dictionary README describes the data role but does not state a separate data licence for each TSV; do not infer the code licence clears every data asset. Other rule/emoji/single-kanji/symbol data still need provenance/licence inventory. Do not infer that the top-level BSD-3-Clause code licence covers all assets.
 
 Ten dictionary text shards plus `connection_single_column.txt` total **96,911,288 bytes (92.4 MiB)** in the upstream tree before generated dataset packaging. This is not a measured final binary or runtime footprint. It is a material warning for a memory-constrained iOS keyboard extension. A spike must measure generated `mozc.data`, resident memory, cold-start time and peak memory on devices.
 
@@ -39,8 +39,8 @@ iOS signing, App Store packaging and extension embedding may complicate the repl
 
 | Stage | Target | Required environment | Evidence |
 |---|---|---|---|
-| 1 | Mozc Android JNI | Linux/macOS, Bazelisk, pinned Bazel, Android NDK r29, SDK/NDK toolchain | Build `//src/android/jni:native_libs`; inspect ABI outputs, size, notices, offline startup |
-| 2 | Mozc iOS engine | macOS + Xcode/iOS SDK + compatible Bazel Apple toolchain | Attempt `//src/ios:ios_engine` for device/simulator; if unsupported, record exact blocker; no extension claim |
+| 1 | Mozc Android JNI | Linux/macOS, Bazelisk, pinned Bazel, Android NDK r29, SDK/NDK toolchain | Build `//android/jni:native_libs` (or `//android/jni:mozc.arm64` first) from the `src/` Bazel workspace; inspect ABI outputs, size, notices, offline startup |
+| 2 | Mozc iOS engine | macOS + Xcode/iOS SDK + compatible Bazel Apple toolchain | Attempt `//ios:ios_engine` for device/simulator; if unsupported, record exact blocker; no extension claim |
 | 3 | libhangul Android | NDK/CMake or Autotools cross-build, arm64 first | Shared library + JNI/Kotlin adapter; preedit/commit/backspace tests, licence packaging rehearsal |
 | 4 | libhangul iOS | Xcode/iOS SDK C/C++ build | Static/dynamic framework experiment; measure extension memory and validate LGPL replacement design |
 | 5 | host integrations | Android IME + iOS Custom Keyboard Extension | Context loss, selection/cursor, secure fields, next-keyboard, low-memory, offline, device tests |
