@@ -35,15 +35,43 @@ export interface GlossEntry {
   priority: number;
 }
 
-export interface GlossLookupKey {
-  language: GlossLanguage;
-  /** Original text currently being explained, not an assumed translation. */
+export interface JapaneseTokenAnalysis {
+  /** Must identify the exact token supplied as GlossLookupKey.surfaceForm. */
   surfaceForm: string;
-  /** Canonical lemma and reading are supplied by a language-specific analyzer. */
+  /** Kana reading supplied by a Japanese morphology/transliteration adapter. */
+  reading: string;
   lemma?: string;
-  reading?: string;
   partOfSpeech?: string;
 }
+
+export interface KoreanTokenAnalysis {
+  /** Must identify the exact eojeol/token supplied as GlossLookupKey.surfaceForm. */
+  surfaceForm: string;
+  /** Dictionary form supplied by a Korean morphology adapter. */
+  lemma: string;
+  /** Analyzer's POS tag, preserved without lossy cross-analyzer remapping. */
+  partOfSpeech: string;
+}
+
+export interface JapaneseMorphologyAdapter {
+  analyzeToken(surfaceForm: string): JapaneseTokenAnalysis | null;
+}
+
+export interface KoreanMorphologyAdapter {
+  analyzeToken(surfaceForm: string): KoreanTokenAnalysis | null;
+}
+
+export type GlossLookupKey =
+  | {
+      language: "ja";
+      surfaceForm: string;
+      analysis?: JapaneseTokenAnalysis;
+    }
+  | {
+      language: "ko";
+      surfaceForm: string;
+      analysis?: KoreanTokenAnalysis;
+    };
 
 export type GlossMatchKind = "surface" | "reading" | "lemma-reading" | "lemma-pos";
 

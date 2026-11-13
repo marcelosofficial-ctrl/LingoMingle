@@ -58,7 +58,7 @@ test("Japanese reading lookup preserves homonym candidates and their glosses", (
   const results = lookupGlosses(japaneseEntries, {
     language: "ja",
     surfaceForm: "atsui",
-    reading: "あつい",
+    analysis: { surfaceForm: "atsui", reading: "あつい" },
   });
 
   assert.deepEqual(results.map((match) => match.entry.id), [
@@ -78,8 +78,7 @@ test("Japanese inflected surface resolves only with matching lemma and reading",
   const results = lookupGlosses(japaneseEntries, {
     language: "ja",
     surfaceForm: "暑かった",
-    lemma: "暑い",
-    reading: "あつい",
+    analysis: { surfaceForm: "暑かった", lemma: "暑い", reading: "あつい" },
   });
 
   assert.equal(results.length, 1);
@@ -97,12 +96,21 @@ test("exact surface lookup returns the selected Japanese spelling", () => {
   assert.equal(results[0].matchedBy, "surface");
 });
 
-test("Korean inflected form resolves through lemma and part of speech", () => {
+test("Japanese morphology cannot attach an unrelated reading to another input", () => {
+  const results = lookupGlosses(japaneseEntries, {
+    language: "ja",
+    surfaceForm: "sushi",
+    analysis: { surfaceForm: "atsui", reading: "あつい" },
+  });
+
+  assert.deepEqual(results, []);
+});
+
+test("Korean inflected form resolves through analyzer lemma and part of speech", () => {
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹어요",
-    lemma: "먹다",
-    partOfSpeech: "verb",
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
   });
 
   assert.equal(results.length, 1);
@@ -110,15 +118,40 @@ test("Korean inflected form resolves through lemma and part of speech", () => {
   assert.equal(results[0].matchedBy, "lemma-pos");
 });
 
+test("Korean analyzer cannot attach an unrelated lemma to another input", () => {
+  const results = lookupGlosses(koreanEntries, {
+    language: "ko",
+    surfaceForm: "마셔요",
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
+  });
+
+  assert.deepEqual(results, []);
+});
+
 test("Korean lemma lookup refuses a part-of-speech mismatch", () => {
   const results = lookupGlosses(koreanEntries, {
     language: "ko",
     surfaceForm: "먹어요",
-    lemma: "먹다",
-    partOfSpeech: "noun",
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "noun" },
   });
 
   assert.deepEqual(results, []);
+});
+
+test("Korean lookup trims edge whitespace but preserves internal spacing", () => {
+  const edgeWhitespace = lookupGlosses(koreanEntries, {
+    language: "ko",
+    surfaceForm: " 먹어요 ",
+    analysis: { surfaceForm: "먹어요", lemma: "먹다", partOfSpeech: "verb" },
+  });
+  const internalWhitespace = lookupGlosses(koreanEntries, {
+    language: "ko",
+    surfaceForm: "먹 어요",
+    analysis: { surfaceForm: "먹 어요", lemma: "먹다", partOfSpeech: "verb" },
+  });
+
+  assert.equal(edgeWhitespace.length, 1);
+  assert.deepEqual(internalWhitespace, []);
 });
 
 test("unknown words return no invented gloss", () => {
