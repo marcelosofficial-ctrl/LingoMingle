@@ -1,12 +1,12 @@
 # NEXT_TASK
-ID: T004
-Goal: Run a bounded source-and-build feasibility spike for the proposed Japanese/Korean keyboard engines before any engine is adopted.
+ID: T005
+Goal: Select a legally viable, offline Japanese/Korean lexical-gloss data strategy for the keyboard and learning app.
 Acceptance:
-- Inspect Mozc build targets and source layout relevant to Android and iOS extension embedding; identify native toolchain, binary/runtime dependencies and practical integration boundary.
-- Inspect libhangul APIs for Hangul composition and determine exactly what it does not provide for Latin romanization; define the separate romanization adapter contract.
-- Audit Mozc dictionary_oss and third-party directory licence notices at file/component level; distinguish code licence from dictionary/content terms.
-- Audit libhangul LGPL-2.1 obligations for static vs dynamic linking and app distribution; do not assume compliance.
-- Produce a no-network prototype/spike plan, build matrix and go/no-go criteria. If the current environment cannot compile native targets, mark build verification UNKNOWN rather than claiming it.
+- Compare Japanese-English lexical sources (including JMdict, KANJIDIC2, Japanese Usage Dictionary, and viable alternatives) for English gloss quality, coverage, attribution/share-alike duties, update terms and data size.
+- Compare Korean-English dictionary/lexicon sources and available romanization/word segmentation resources; distinguish open-source code licences from dataset/content licences.
+- Evaluate tokenizer/morphological segmentation needs for Japanese gloss display and Korean spacing/morphology; do not conflate IME conversion dictionaries with learner-facing English gloss dictionaries.
+- Recommend a minimal offline dataset and licensing approach, or explicitly conclude no suitable source is cleared yet. Identify whether source data can be redistributed in an app and what notices/attribution are required.
+- Produce an acceptance plan using original/synthetic examples only; do not copy third-party dictionary entries into fixtures or the repo.
 Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**, STATE.md.
-Out of scope: shipping keyboard code, adding native targets/dependencies, bundling dictionaries, network services, paid APIs, accounts, lyric lookup.
-Line budget <=350 changed lines. Verification: upstream source/licence evidence; build output only if a real build is executed.
+Out of scope: bundling dictionaries, adding dependencies, importing third-party data/code, online dictionary APIs, user accounts, paid services, lyric lookup.
+Line budget <=350 changed lines. Verification: primary upstream licence and documentation evidence; no claims of legal clearance beyond the published terms.
