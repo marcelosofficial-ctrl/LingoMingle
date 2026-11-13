@@ -133,3 +133,23 @@ test("matches preserve the original dictionary source identifier", () => {
 
   assert.equal(results[0].entry.sourceId, "synthetic-ko");
 });
+
+test("surface lookup normalizes compatibility forms and surrounding whitespace", () => {
+  const entries = [{
+    id: "ja-normalized",
+    sourceId: "synthetic-ja",
+    language: "ja",
+    surfaceForms: ["ＡＢＣ"],
+    lemma: "ＡＢＣ",
+    senses: [{ id: "s1", englishGloss: "synthetic test token" }],
+    priority: 1,
+  }];
+
+  const results = lookupGlosses(entries, {
+    language: "ja",
+    surfaceForm: "  ABC  ",
+  });
+
+  assert.equal(results.length, 1);
+  assert.equal(results[0].matchedBy, "surface");
+});
