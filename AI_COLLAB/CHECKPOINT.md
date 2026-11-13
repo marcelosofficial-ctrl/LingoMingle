@@ -1,13 +1,14 @@
 # CHECKPOINT
-Unit: T004 keyboard engine source/build and licence feasibility.
-Status: COMPLETE as a source/licence research unit; no native code or dependency adopted.
+Unit: T005 offline Japanese/Korean English-gloss data source research.
+Status: COMPLETE as source-selection research only; no dictionary or tokenizer adopted/imported.
 Canonical repo: marcelosofficial-ctrl/LingoMingle.
 Branch: lingomingle-foundation-2026-11-10.
-Evidence: AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md; corrected summary in AI_COLLAB/research/KEYBOARD_TRANSLITERATION_ENGINES_20261113.md.
-Mozc: Android JNI target builds `libmozc.so` for arm64-v8a, armeabi-v7a, x86_64 and x86_32; engine only, no Android IME UI. Bazel workspace is `src/`; Android NDK r29 and Abseil/protobuf/module closure required. iOS engine source/target exists, but upstream `src/README.md` says iOS build is not officially supported; no extension wrapper supplied. Native build output NOT RUN; status UNKNOWN.
-Mozc data: IPAdic 2.7.0 vocabulary plus Okinawa dictionary and manual additions. IPAdic/ICOT notices and no-warranty terms must travel with redistribution; Okinawa source claims public domain. Japanese Usage Dictionary pinned 2025-01-25 has separate BSD-3-Clause licence and Japanese homonym definitions, not English glosses. Manual dictionary README does not individually clear all data assets. Other emoji/rules/single-kanji/symbol assets and external dependency licences still require closure. Ten dictionary shards plus connection matrix total 96,911,288 bytes (92.4 MiB) raw; final dataset/runtime footprint UNKNOWN.
-libhangul: LGPL-2.1-or-later; C API supports incremental preedit/commit/backspace; built-in `ro` Romaja keyboard exists. Corrected prior statement: not "no Latin input"; rather no guarantee of coverage for learner romanization variants, lexical/context disambiguation or English glosses. Distribution needs source/notices and compliant replacement/relink mechanism; static linking needs app object/relink materials. Qualified legal review required, especially iOS.
-Decision: conditional Android Mozc prototype GO after dependency/data audit; iOS Mozc HOLD until real toolchain build and extension memory proof; libhangul prototype conditional on LGPL packaging review. No dictionaries bundled.
-Commits: T004 source/build shard 112e195; corrected engine research 0734efe; dependency source/licence audit 0e5b292; dataset/build details 53b7a50; index 77f17da; state a6fffba; T005 queue 8660664; usage dictionary licence clarification 7e30fe1.
-CI: docs-only commits; no new CI expected. Latest code CI remains Run #36 on code SHA a3bdf071f12c7d9992a96a501b5cf90905edd177, successful install/typecheck/lint and 3/3 tests.
-Next: T005 offline Japanese/Korean English-gloss data strategy. No user action needed.
+Research: AI_COLLAB/research/KEYBOARD_GLOSS_DATA_RESEARCH_20261113.md. T004 source/build findings: AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md.
+Japanese: JMdict English is the strongest word-level gloss candidate; EDRDG CC BY-SA 4.0 allows commercial distribution with attribution/share-alike, a dedicated app Sources/About acknowledgement and regular data updates (daily generation; monthly update example). KANJIDIC2 is optional character metadata, not word glosses; exclude SKIP field under CC BY-NC-SA 4.0.
+Japanese tokenizer: Sudachi code Apache-2.0; SudachiDict includes UniDic and NEologd-derived data with source notices/provenance; exact data closure and footprint still need review. JMdict is not a tokenizer and does not provide all inflected forms.
+Korean: NIKL Korean Basic Dictionary text is CC BY-SA 2.0 Korea and contains learner definitions, English translations, POS/conjugation metadata; audio/multimedia have separate terms. Official API requires a key; site has search-result downloads, and a third-party converter documents JSON/XML export. Full permitted bulk snapshot path still needs confirmation. No scraping or runtime API use.
+Fallback: KOReader Wiktionary-derived Korean-English data CC BY-SA 4.0, 37,337 entries / 3.4 MB, 75.59% entries translated and 44.5% top-10k coverage; too sparse as primary. Kotobase mixed-source DB is too broad and requires source-by-source audit.
+Decision: prefer JMdict + NIKL Basic Dictionary as candidate sources; no source is cleared for import yet. Keep source data separate from proprietary app code, retain attribution/modification/version metadata, and obtain legal review for share-alike packaging/update design.
+Commits: T005 data research 147bdbd; dependency candidates e9cb51d; index a9d04ae; state 0c617b3; T006 queued 654dbf9.
+CI: documentation-only; no new CI expected. Latest code CI remains Run #36 on code SHA a3bdf071f12c7d9992a96a501b5cf90905edd177, successful install/typecheck/lint and 3/3 tests.
+Next: T006 source-agnostic offline glossary domain contract and synthetic unit tests. No user action needed.
