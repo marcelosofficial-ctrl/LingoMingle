@@ -1,12 +1,13 @@
 # CHECKPOINT
-Unit: T008 Korean POS crosswalk adapter and synthetic tests.
-Status: IMPLEMENTED; latest CI Run #48 pending.
+Unit: T008 Korean POS crosswalk completed and verified; T009 NIKL snapshot inspection queued.
+Status: T008 COMPLETE/VERIFIED.
 Canonical repo: marcelosofficial-ctrl/LingoMingle.
 Branch: lingomingle-foundation-2026-11-10.
-T006 COMPLETE/VERIFIED: CI #46 on code SHA f6d38e573cf5ecccd297a91aa0af727b35b472bb passed install/typecheck/lint and 15/15 tests.
-T007 COMPLETE as source-level research: AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md. Upstream Kiwi v0.24.1 Android AAR, Swift/XCFramework, and WASM builds verified; no LingoMingle integration or model adoption. Model archive 87.97 MB; app/extension memory remains UNKNOWN.
-T008 code: src/features/glossary/korean-pos.mjs maps Kiwi Sejong-derived and NIKL POS source tags into versioned lingomingle-pos-v1. It preserves raw source scheme/tag. Only unambiguous categories map; VX, VCP/VCN, punctuation, foreign/numeric and unknown tags return null. NIKL 0/15 remain unresolved. GlossPartOfSpeech.source stores provenance; KoreanTokenAnalysis.partOfSpeech is optional so unresolved tags cannot pass lemma matching.
-Tests: tests/korean-pos.test.mjs covers mapping groups, irregular suffixes, NIKL codes + Korean labels, ambiguous/unmapped tags, source preservation, canonical cross-source match and unresolved fallback. Synthetic POS tags only; no dictionary entries.
-T008 commits: mapper/types/tests 13fb790; public RawKoreanPos export 5877728; research shard fd11d1a; index eabc4f1.
-CI: Run #48 (43401844138) targets latest code SHA 5877728caa2238c7cf803ca36c3e8210ed1b3f43; currently pending/in progress. Run #47 was superseded and has no final result. Do not close T008 until #48 finishes.
-Next: verify #48; fix any failures; close T008 and queue T009 NIKL/JMdict snapshot acquisition and licensing/package audit.
+T006: CI #46 on code SHA f6d38e573cf5ecccd297a91aa0af727b35b472bb passed install/typecheck/lint and 15/15 tests.
+T007: source-level Kiwi v0.24.1 feasibility complete; upstream Android AAR, Swift/XCFramework and WASM builds verified. No LingoMingle integration/model adoption. Separate 87.97 MB model archive; runtime memory remains UNKNOWN.
+T008 code: src/features/glossary/korean-pos.mjs, korean-pos.d.mts, index.ts, types.ts, tests/korean-pos.test.mjs. Versioned source namespaces kiwi-postag-v0.24.1 and nikl-basic-pos-api-v1 map only unambiguous labels into lingomingle-pos-v1. Preserve raw tags. NIKL numeric filter codes 0-15 are rejected as lexical POS. Kiwi VX, VCP/VCN, XR, punctuation, foreign/numeric/web/user tags stay unresolved. -R/-I suffix accepted only for documented VV/VA/VX/XSA bases; VX still unresolved. Prototype property names rejected. Unresolved POS cannot satisfy Korean lemma/POS matching.
+T008 red-team corrections: (1) removed mistaken treatment of NIKL query filter codes as entry POS tags; official API distinguishes numeric filter parameter from string result field. (2) use own-property checks to prevent "__proto__"/constructor inherited-property false matches. (3) constrain Kiwi -R/-I suffix to documented base tags. (4) pin Kiwi source namespace to v0.24.1 and NIKL API-label adapter scheme; preserve exact raw tag. Two intermediate CI runs #49/#50 caught stale fixtures; fixed before final verification.
+T008 CI: Run #51 (43402893732) on code SHA 0cc227455554879195d00faac8939f40577945e SUCCESS. Install, typecheck, lint all succeeded; tests 27/27 passed, 0 failed, 0 skipped. Warnings: npm peer/deprecation and GitHub Actions Node 20 deprecation only; no step failures.
+Research: AI_COLLAB/research/KOREAN_POS_CROSSWALK_20261113.md; AI_COLLAB/research/NIKL_FULL_EXPORT_AND_RIGHTS_20261113.md. Official NIKL text data CC BY-SA 2.0 KR with attribution/share-alike; multimedia separately licensed. Full JSON/XML/Excel page shows upload 2026-10, but actual button URLs/schema/access are UNKNOWN. Separate custom export asks purpose/fields/translation/email and emails a download route. API requires key; no runtime API.
+T008 commits: crosswalk code/tests 13fb790; source/filter correction 1fa0c92; suffix/fixtures 4924d0b; final fixture 0cc2274; NIKL export rights research e78de01; index 52f4bca; dependencies 075d5ad; decision c461540; state cc86d16; T009 queue c89e1c8.
+Next: T009 inspect official NIKL full JSON/XML snapshot. Required user action: attach official 2026-10 full export file; do not attach API dumps or scraped data.
