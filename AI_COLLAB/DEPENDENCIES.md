@@ -21,3 +21,11 @@ Every future adoption records exact version, SPDX licence, purpose, upstream URL
 - Router 58.0.31 requires `expo-constants ^58.0.16`; updated the exact pin to 58.0.16 after Run #34 exposed an npm peer conflict against 58.0.15. Expo 58.0.24 accepts the 58.0.16 within its `~58.0.15` range. Run #35 must verify the resolved tree.
 
 - Router 58.0.31 also requires `expo-linking ^58.0.17`; aligned Expo, Linking and Status Bar to 58.0.24, 58.0.17 and 58.0.5 respectively, matching the SDK 58 template dependency set. Run #36 verifies the complete set.
+
+## Keyboard engine candidates (evaluated, not adopted; 2026-11-13)
+- Mozc: BSD-3-Clause for Mozc-authored code. Candidate Japanese IME engine. Third-party code and dictionary_oss have mixed/separate terms; audit each shipped component and dictionary before adoption. https://github.com/google/mozc
+- libhangul: LGPL-2.1. Candidate Korean Hangul composition engine; review dynamic/static linking and redistribution obligations. It does not supply the proposed English romanization front-end. https://github.com/libhangul/libhangul
+- librime: BSD-3-Clause core; runtime dependencies require separate SPDX review. Considered broad/heavy for first MVP. https://github.com/rime/librime
+- Fcitx5 Android: LGPL-2.1 framework reference; bundled plugins/engines have separate licences. Study integration, do not import wholesale. https://github.com/fcitx/fcitx5-android
+- FusionIME: GPL-3.0. UX/integration reference only; do not copy/link into proprietary app. https://github.com/Lee0701/FusionIME
+No keyboard engine, dictionary or dataset has been adopted or bundled. See AI_COLLAB/research/KEYBOARD_TRANSLITERATION_FEASIBILITY_20261113.md for platform constraints and open gates.
