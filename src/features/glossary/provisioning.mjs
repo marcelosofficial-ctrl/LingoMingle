@@ -1,4 +1,12 @@
-const REQUIRED_TABLES = ["glossary_source","glossary_entry","glossary_surface_form","glossary_sense","glossary_sense_label","glossary_domain_label"];
+const REQUIRED_COLUMNS = {
+  glossary_source:["id","name","version","source_url","license_id","license_url","attribution_text","retrieved_at","share_alike_required","modification_notes"],
+  glossary_entry:["id","source_id","language","lemma","normalized_lemma","reading","normalized_reading","pos_scheme","pos_tag","source_pos_scheme","source_pos_tag","learner_level","frequency_rank","priority"],
+  glossary_surface_form:["entry_id","ordinal","surface_form","normalized_form"],
+  glossary_sense:["id","entry_id","ordinal","english_equivalent","english_gloss"],
+  glossary_sense_label:["sense_id","ordinal","label"],
+  glossary_domain_label:["entry_id","ordinal","label"],
+};
+const REQUIRED_TABLES = Object.keys(REQUIRED_COLUMNS);
 export const GLOSSARY_PACK_DATABASE_NAME = "lingomingle-glossary-v1.sqlite";
 export const GLOSSARY_PACK_STAGING_NAME = ".lingomingle-glossary-v1.sqlite.staging";
 const active = new Map();
@@ -16,6 +24,10 @@ export async function validateGlossaryPackDatabase(db) {
     "SELECT name FROM sqlite_master WHERE type='table' AND name IN (?,?,?,?,?,?)", ...REQUIRED_TABLES,
   );
   if (REQUIRED_TABLES.some((name) => !tables.some((row) => row.name === name))) fail("incomplete-glossary-schema");
+  for (const [table, expected] of Object.entries(REQUIRED_COLUMNS)) {
+    const columns = await db.getAllAsync(`PRAGMA table_info(${table})`);
+    if (columns.map((row) => row.name).join("|") !== expected.join("|")) fail("glossary-table-shape-mismatch");
+  }
   const counts = await db.getFirstAsync(
     "SELECT (SELECT COUNT(*) FROM glossary_source) AS sources, (SELECT COUNT(*) FROM glossary_entry) AS entries",
   );

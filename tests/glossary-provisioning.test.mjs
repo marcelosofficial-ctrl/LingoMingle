@@ -2,7 +2,8 @@ import test from "node:test";
 import { Buffer } from "node:buffer";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { copyFile, existsSync, mkdir, mkdtemp, readFile, rename, rm, unlink, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { copyFile, mkdir, mkdtemp, readFile, rename, rm, unlink, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { DatabaseSync } from "node:sqlite";
@@ -134,6 +135,21 @@ test("rejects a pack with foreign-key violations before publication",async()=>{
     await copyFile(broken,f.sourceFile.uri);
     const expectedSha256=await f.sourceFile.digest("SHA-256");
     await assert.rejects(provisionGlossaryPack({...f,expectedSha256}),/foreign-key-check-failed/);
+    assert.equal(f.stagingFile.exists,false);assert.equal(f.destinationFile.exists,false);
+  }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
+test("rejects schema-v1 tables with incompatible column layouts",async()=>{
+  const f=await fixture();
+  try{
+    const bad=join(f.root,"wrong-columns.sqlite"),db=new DatabaseSync(bad);
+    db.exec(`PRAGMA application_id=${0x4c4d474c}; PRAGMA user_version=1;
+      CREATE TABLE glossary_source(id TEXT); CREATE TABLE glossary_entry(id TEXT);
+      CREATE TABLE glossary_surface_form(id TEXT); CREATE TABLE glossary_sense(id TEXT);
+      CREATE TABLE glossary_sense_label(id TEXT); CREATE TABLE glossary_domain_label(id TEXT);`);
+    db.close();await copyFile(bad,f.sourceFile.uri);
+    const expectedSha256=await f.sourceFile.digest("SHA-256");
+    await assert.rejects(provisionGlossaryPack({...f,expectedSha256}),/table-shape-mismatch/);
     assert.equal(f.stagingFile.exists,false);assert.equal(f.destinationFile.exists,false);
   }finally{await rm(f.root,{recursive:true,force:true});}
 });
