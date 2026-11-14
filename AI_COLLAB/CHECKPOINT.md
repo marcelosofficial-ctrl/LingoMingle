@@ -1,9 +1,10 @@
 # CHECKPOINT
-Unit: T013 synthetic SQLite glossary pack builder COMPLETE.
-T009-T013 COMPLETE. T014 QUEUED.
-T013 app inspection: expo-sqlite 58.0.16 is pinned but unused. No app schema, migration, repository or query adapter exists. Current contract is GlossSource/GlossEntry/GlossSense; in-memory lookup is matching.mjs.
-Engine: Node 22.13.1 built-in node:sqlite DatabaseSync, no npm dependency; experimental Stability 1.1, private build-time only. better-sqlite3 13.1.1 and sql.js 1.16.0 evaluated, not adopted.
-Builder: tools/nikl-importer/src/sqlite-pack.mjs; synthetic T012 JSONL/manifest only. STRICT normalized schema, source/entry/surface/sense/label tables, FK/unique/check constraints, NFKC/trim/lowercase lookup keys, indexes after bulk inserts, one IMMEDIATE transaction, schema/application IDs, bounded UTF-8 line reader, integrity/FK/count/priority-order lookup verification, deterministic DB/manifest hashes, sibling atomic rename and rollback/cancel cleanup.
-CI #72 (run 43545422615) on SHA 9041890 SUCCESS: root install, typecheck, lint, app tests 35/35, tool install, importer tests 10/10. Node v22.13.1 / SQLite 3.47.2. Synthetic pack: 2 entries, 86,016 bytes, 460.94 ms, 76,368 KiB process peak RSS. Not a real-data projection.
-T013 report: AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md. No real NIKL data, production DB, app DB mutation, app bundling, external upload or paid service.
-Next: T014 read-only Expo SQLite repository/migration contract, synthetic packs only. User action: none.
+Unit: T014 read-only Expo SQLite glossary repository COMPLETE (synthetic-only).
+Branch head before this unit: b8864e109d1857b8ef8df1963e72021d68f597c4. T013 latest CI #73 succeeded on that head. T014 CI pending.
+Files: src/features/glossary/sqlite-repository.mjs, sqlite-repository.d.mts, glossary index export, tests/glossary-sqlite-repository.test.mjs, AI_COLLAB/research/NIKL_SQLITE_REPOSITORY_SPIKE_20261114.md.
+Contract: repository accepts a dedicated already-open SQLiteDatabase; does not open/create/copy/migrate. Verifies application_id 0x4c4d474c, user_version 1 and six required tables, enables/verifies PRAGMA query_only=ON, and exposes lookup + idempotent close only. Caller owns cleanup if factory validation fails.
+Mapping: all GlossEntry fields, including source POS provenance, English equivalent/gloss, labels, learner level, frequency rank and domain labels. Lookup preserves NFKC/trim/lowercase, Japanese reading/optional lemma/POS, Korean exact lemma/POS namespace, exact-surface precedence and priority/ID ordering.
+Tests build a real SQLite schema-v1 pack from invented JSONL via T013's builder and query it through a Node read-only SQLite adapter implementing Expo's async method shape. Native Expo Go/iOS/Android validation NOT RUN.
+SDK docs: openDatabaseAsync/getFirstAsync/getAllAsync/execAsync/closeAsync available; no SQLiteOpenOptions readOnly flag. expo-sqlite 58.0.16 remains pinned; SDK 58 docs recommend ~58.0.17, patch alignment deferred.
+No real NIKL data, production DB, app bundle, external upload or paid service.
+Next: T015 safe provisioning of an existing pack into app-private storage, synthetic fixtures only. User action: none.

@@ -25,7 +25,7 @@
 | AI_COLLAB/research/NIKL_STREAMING_PIPELINE_20261114.md | T011 ZIP/JSON tool comparison, Node 22 build-time architecture, safety limits and GitHub Actions custody assessment |
 | AI_COLLAB/research/NIKL_STORE_RIGHTS_REVIEW_20261114.md | T011 CC BY-SA 2.0 KR, Apple FairPlay/EULA, Google Play DDA, packaging matrix and counsel questions |
 | AI_COLLAB/research/NIKL_T011_RECHECK_20261114.md | T011 exact package metadata, source resource envelope, parser trust warning and platform/licence recheck |
-| AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md | T012 synthetic-only ZIP/JSON streaming prototype, bounds, CI, benchmark and hard stops |\n| AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md | T013 synthetic SQLite schema, engine comparison, deterministic build and verification gates |
+| AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md | T012 synthetic-only ZIP/JSON streaming prototype, bounds, CI, benchmark and hard stops |\n| AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md | T013 synthetic SQLite schema, engine comparison, deterministic build and verification gates |\n| AI_COLLAB/research/NIKL_SQLITE_REPOSITORY_SPIKE_20261114.md | T014 read-only Expo SQLite repository, SDK 58 compatibility and synthetic validation |
 | AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | Superseded public-source preview; actual schema is in NIKL_SNAPSHOT_INSPECTION_20261114.md |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
