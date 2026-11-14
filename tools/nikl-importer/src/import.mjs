@@ -26,6 +26,7 @@ const DEFAULT_LIMITS = Object.freeze({
   maxRecords: 60_000,
   maxRecordBytes: 2_000_000,
   maxPackedLength: 1_000_000,
+  maxInputChunkBytes: 1_000_000,
   maxDepth: 64,
 });
 
@@ -129,13 +130,18 @@ function duplicateKeyGuard() {
 
 function createMemberPipeline(limits, totals, compressedSize) {
   let memberBytes = 0;
+  const parserChunkBytes = Math.max(1, Math.min(16 * 1024, Math.floor(limits.maxPackedLength / 2)));
   const byteLimit = new Transform({
     transform(chunk, _encoding, callback) {
       memberBytes += chunk.length;
       totals.actualExpandedBytes += chunk.length;
       try {
         validateActualExpansion(memberBytes, compressedSize, totals.actualExpandedBytes, limits);
-        callback(null, chunk);
+        if (chunk.length > limits.maxInputChunkBytes) fail("input-chunk-size-limit");
+        for (let offset = 0; offset < chunk.length; offset += parserChunkBytes) {
+          this.push(chunk.subarray(offset, Math.min(offset + parserChunkBytes, chunk.length)));
+        }
+        callback();
       } catch (error) {
         callback(error);
       }
