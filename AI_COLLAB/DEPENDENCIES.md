@@ -40,6 +40,6 @@ No keyboard engine, dictionary or dataset has been adopted or bundled. Native bu
 - `@zip.js/zip.js` 2.25.0: BSD-3-Clause; exact upstream tag manifest confirms Node >=18 and zero runtime dependencies. CRC-32 verification is opt-in and enabled in the prototype.
 - `stream-json` 3.9.0: BSD-3-Clause, ESM, no explicit engines field; its one runtime dependency is `stream-chain` 4.4.2.
 - `stream-chain` 4.4.2: BSD-3-Clause, zero runtime dependencies.
-- Exact pins are isolated in `tools/nikl-importer/package.json` and package-lock.json. CI #66 verified the synthetic-only package on Node 22.13.1. None is present in app package.json or the Expo runtime.
+- Exact pins are isolated in `tools/nikl-importer/package.json` and package-lock.json. CI #67 verified the synthetic-only package on Node 22.13.1 (35/35 app tests and 7/7 importer tests). None is present in app package.json or the Expo runtime.
 - Security boundary: upstream stream-json says it is not designed for hostile JSON. The importer requires fixture-NN.json names and must not process the actual NIKL archive. See AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md.
 - Alternatives evaluated but not adopted: `yauzl` 3.4.0 (MIT; Node >=12; `pend` 1.2.0 MIT) and `fflate` 0.8.3 (MIT). Neither supplies the same explicit CRC-32 read verification path used by this prototype.
