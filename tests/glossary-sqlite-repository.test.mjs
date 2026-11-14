@@ -58,7 +58,10 @@ test("read-only repository maps all metadata and preserves lookup order",async()
       analysis:{surfaceForm:"暑かった",lemma:"暑い",reading:"あつい",
         partOfSpeech:{scheme:"synthetic-pos-v1",tag:"adjective"}}});
     assert.deepEqual(reading.map((x)=>x.entry.id),["ja-2","ja-1"]);
-    assert.ok(reading.every((x)=>x.matchedBy==="reading"&&x.matchedForm==="あつい"));
+    assert.ok(reading.every((x)=>x.matchedBy==="lemma-reading"&&x.matchedForm==="あつい"));
+    const readingOnly=await repo.lookupGlosses({language:"ja",surfaceForm:"あつかった",
+      analysis:{surfaceForm:"あつかった",reading:"あつい"}});
+    assert.ok(readingOnly.every((x)=>x.matchedBy==="reading"));
     const korean=await repo.lookupGlosses({language:"ko",surfaceForm:"먹어요",
       analysis:{surfaceForm:"먹어요",lemma:"먹다",partOfSpeech:{scheme:"lingomingle-pos-v1",tag:"verb"}}});
     assert.equal(korean.length,1);

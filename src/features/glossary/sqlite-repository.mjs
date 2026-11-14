@@ -88,7 +88,7 @@ export async function createGlossaryRepository(db) {
         "AND (? IS NULL OR e.pos_scheme IS NULL OR (e.pos_scheme=? AND e.pos_tag=?))",
         normalize(analysis.reading),lemma,lemma,pos?.scheme??null,pos?.scheme??null,pos?.tag??null,
       );
-      for(const row of rows) if(!candidates.has(row.id)) candidates.set(row.id,"reading");
+      for(const row of rows) if(!candidates.has(row.id)) candidates.set(row.id,lemma?"lemma-reading":"reading");
     } else if(analysis&&key.language==="ko") {
       const rows=await db.getAllAsync(
         "SELECT e.id FROM glossary_entry e WHERE e.language='ko' AND e.normalized_lemma=? "+
