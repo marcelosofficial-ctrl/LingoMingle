@@ -215,7 +215,17 @@ test("rejects duplicate JSON keys and parser depth/string limits", async () => {
       outputDir: join(parent, "long-string"),
       expectedMemberNames: [MEMBER_A],
       limits: { maxPackedLength: 1_000 },
-    }), /maxPackedLength|packed|length/i);
+    }), /packed-value-size-limit|maxPackedLength|packed|length/i);
+
+    const wide = wordEntry(4003);
+    wide.extra = "x".repeat(600);
+    const wideArchive = await makeArchive(parent, [[MEMBER_A, document([wide])]]);
+    await assert.rejects(importSyntheticArchive({
+      archivePath: wideArchive,
+      outputDir: join(parent, "wide-record"),
+      expectedMemberNames: [MEMBER_A],
+      limits: { maxRecordBytes: 512, maxPackedLength: 1_000 },
+    }), /record-size-limit/);
   } finally {
     await rm(parent, { recursive: true, force: true });
   }

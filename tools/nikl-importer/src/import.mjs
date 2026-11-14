@@ -153,6 +153,65 @@ function packedValueGuard(maxLength) {
   });
 }
 
+function tokenByteLength(token) {
+  if (token.name === "keyValue") return Buffer.byteLength(token.value, "utf8") + 3;
+  if (token.name === "stringValue") return Buffer.byteLength(token.value, "utf8") + 2;
+  if (token.name === "numberValue") return Buffer.byteLength(token.value, "utf8");
+  if (token.name === "nullValue") return 4;
+  if (token.name === "trueValue") return 4;
+  if (token.name === "falseValue") return 5;
+  if (token.name === "stringChunk") return Buffer.byteLength(token.value, "utf8");
+  return 1;
+}
+
+function recordByteGuard(maxBytes) {
+  let inLexicalArray = false;
+  let recordDepth = 0;
+  let recordBytes = 0;
+  return new Transform({
+    writableObjectMode: true,
+    readableObjectMode: true,
+    transform(token, _encoding, callback) {
+      if (recordDepth === 0) {
+        if (!inLexicalArray && token.name === "startArray") {
+          inLexicalArray = true;
+          callback(null, token);
+          return;
+        }
+        if (inLexicalArray && token.name === "endArray") {
+          inLexicalArray = false;
+          callback(null, token);
+          return;
+        }
+        if (inLexicalArray && token.name === "startObject") {
+          recordDepth = 1;
+          recordBytes = tokenByteLength(token);
+          callback(null, token);
+          return;
+        }
+        if (inLexicalArray) {
+          callback(new Error("invalid-lexical-entry-shape"));
+          return;
+        }
+        callback(null, token);
+        return;
+      }
+
+      recordBytes += tokenByteLength(token);
+      if (recordBytes > maxBytes) {
+        callback(new Error("record-size-limit"));
+        return;
+      }
+      if (token.name === "startObject" || token.name === "startArray") recordDepth += 1;
+      else if (token.name === "endObject" || token.name === "endArray") {
+        recordDepth -= 1;
+        if (recordDepth === 0) recordBytes = 0;
+      }
+      callback(null, token);
+    },
+  });
+}
+
 function createMemberPipeline(limits, totals, compressedSize) {
   let memberBytes = 0;
   const parserChunkBytes = Math.max(1, Math.min(16 * 1024, Math.floor(limits.maxPackedLength / 2)));
@@ -178,6 +237,7 @@ function createMemberPipeline(limits, totals, compressedSize) {
     packedValueGuard(limits.maxPackedLength),
     duplicateKeyGuard(),
     pick({ filter: "LexicalResource.Lexicon.LexicalEntry" }),
+    recordByteGuard(limits.maxRecordBytes),
     streamArray(),
   ]);
   return { stream, getMemberBytes: () => memberBytes };
