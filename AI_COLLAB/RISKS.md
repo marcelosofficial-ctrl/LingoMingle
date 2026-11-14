@@ -12,3 +12,6 @@ K10 Licence contamination: dependency ledger and licence audit.
 K11 Duplicate repository LingoMingle- exists; canonical is LingoMingle. Archive/delete duplicate manually after checking the migrated branch; no automated archive/delete action is available here.
 K12 Store fees: PWA/APK first; G2 blocks paid enrollment.
 K13 Package lock absent; direct package versions pinned but transitive dependency tree not reproducible until package-lock.json is committed.
+K14 NIKL stream-json parser is explicitly not designed for hostile JSON. T012 importer is fixture-only and rejects actual NIKL member names; real source processing requires a separately reviewed parser trust boundary.
+K15 Node node:sqlite is experimental Stability 1.1. Current use is limited to private Node 22.13.1 build tooling; re-test and re-evaluate before Node upgrades or any app/runtime use.
+K16 CI #72 warns actions/checkout@v4 and actions/setup-node@v4 target Node 20 while GitHub runners force Node 24. Upgrade action majors after compatibility review before GitHub removes compatibility.

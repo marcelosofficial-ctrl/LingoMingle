@@ -45,8 +45,11 @@ CI #72's two-entry fixture emitted an 86,016-byte SQLite file in 460.94 ms with 
 ## Sources
 
 - Node 22.13.0 release: https://nodejs.org/en/blog/release/v22.13.0
-- Node SQLite API / Stability 1.1: https://nodejs.org/download/release/v22.23.0/docs/api/sqlite.html
-- better-sqlite3 13.1.1 npm metadata: https://www.npmjs.com/package/better-sqlite3
+- Node 22.13.1 SQLite API / Stability 1.1: https://nodejs.org/download/release/v22.13.1/docs/api/sqlite.html
+- Node 22.13.1 bundled SQLite version header: https://github.com/nodejs/node/blob/v22.13.1/deps/sqlite/sqlite3.h
+- better-sqlite3 13.1.1 exact upstream manifest: https://github.com/WiseLibs/better-sqlite3/blob/v13.1.1/package.json
+- better-sqlite3 13.0.3 clean-install node-gyp issue (13.1.1 not independently verified on Windows): https://github.com/WiseLibs/better-sqlite3/issues/1516
 - better-sqlite3 upstream package manifest: https://github.com/WiseLibs/better-sqlite3/blob/master/package.json
 - sql.js 1.16.0 npm metadata and WASM description: https://www.npmjs.com/package/sql.js
-- sql.js upstream package manifest: https://github.com/sql-js/sql.js/blob/master/package.json
+- sql.js 1.16.0 exact package metadata: https://www.npmjs.com/package/sql.js
+- sql.js upstream README: https://github.com/sql-js/sql.js/blob/master/README.md

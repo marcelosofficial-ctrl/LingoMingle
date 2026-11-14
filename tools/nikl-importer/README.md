@@ -24,3 +24,11 @@ The package lock pins all three runtime packages. zip.js 2.25.0 metadata was che
 - CRC-32 detects accidental corruption, not malicious replacement or authenticity.
 
 No NIKL source entries, translations, examples, archive or derived records belong in this package or its tests.
+
+## Synthetic SQLite pack builder (T013)
+
+The private build tool also exposes buildSyntheticSqlitePack in src/sqlite-pack.mjs. It accepts only entries.jsonl plus the matching T012 manifest with sourceKind synthetic-only and fixture-NN.json member names. It verifies input hashes, validates the glossary contract, writes schema v1 with normalized lookup indexes, and performs all inserts in one transaction. It checks SQLite integrity, foreign keys, row counts and representative priority/ID lookup order before publishing a manifest and database by same-filesystem directory rename.
+
+The engine is Node 22.13.1 built-in node:sqlite DatabaseSync. It adds no npm dependency and is not an Expo/app runtime API. Node reports this module as experimental (Stability 1.1); do not upgrade Node without re-running the pack tests. CI #72 passed 10/10 importer tests. The two-entry synthetic database was 86,016 bytes. This is a fixture measurement only.
+
+The SQLite builder must never process the actual NIKL archive. No real source records, production database, app database or distributable pack are included.

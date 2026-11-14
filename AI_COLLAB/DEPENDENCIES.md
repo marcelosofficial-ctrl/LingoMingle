@@ -45,7 +45,9 @@ No keyboard engine, dictionary or dataset has been adopted or bundled. Native bu
 - Alternatives evaluated but not adopted: `yauzl` 3.4.0 (MIT; Node >=12; `pend` 1.2.0 MIT) and `fflate` 0.8.3 (MIT). Neither supplies the same explicit CRC-32 read verification path used by this prototype.
 
 
-## T013 SQLite pack engine (evaluated 2026-11-14)
-- Selected built-in Node node:sqlite / DatabaseSync on Node 22.13.1 for the isolated pack-builder. No npm dependency, native addon or WASM asset. Node unflagged the module in 22.13.0, but API remains experimental Stability 1.1 (Active development); private build-time only. CI #72 on 9041890 passed app typecheck/lint, 35/35 app tests and 10/10 importer tests, including reader/count/order hardening.
-- Evaluated, not adopted: better-sqlite3 13.1.1 MIT, Node >=22, native Node-API addon and node-addon-api dependency with platform prebuild/native-build fallback; sql.js 1.16.0 MIT, zero runtime npm dependencies, Emscripten/WASM and in-memory DB with full typed-array export. Neither is needed for the private Node builder.
-- No SQLite engine, pack builder or pack-generation dependency is added to Expo app runtime. See AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md.
+## T013 SQLite pack engine (private build-tool only; 2026-11-14)
+- Selected built-in Node 22.13.1 node:sqlite / DatabaseSync. No npm package, native addon or WASM dependency. Node's SQLite module is Stability 1.1 (Active development), unflagged since 22.13.0; keep it isolated to the pinned build tool and re-test before any Node upgrade. Node 22.13.1 embeds SQLite 3.47.2.
+- better-sqlite3 13.1.1: MIT, Node >=22, native Node-API addon and node-addon-api ^8.0.0 (MIT), platform prebuilds/native-build fallback. Issue #1516 documents clean-install node-gyp/Python failure for 13.0.3; 13.1.1 clean Windows install was not independently verified, so it remains unselected.
+- sql.js 1.16.0: MIT, zero runtime npm dependencies, Emscripten/WebAssembly, in-memory database and full typed-array export. This creates a database-sized memory copy at export; not selected for the file-backed builder.
+- CI #72 on 9041890 verified Node 22.13.1 / SQLite 3.47.2 and 10/10 isolated importer tests. No SQLite dependency or pack-builder code is added to app package.json. See NIKL_SQLITE_PACK_SPIKE_20261114.md.
+- No real NIKL data or production database generated; store distribution remains HOLD pending qualified legal review.
