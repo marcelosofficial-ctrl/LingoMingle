@@ -64,12 +64,16 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     const b=await build(bundle,join(parent,"pack-b"));
     assert.deepEqual(a.manifest.counts,{sources:1,entries:2,surfaceForms:3,senses:2,senseLabels:2,domainLabels:1});
     assert.equal(a.manifest.schemaVersion,1);
+    assert.equal(a.manifest.sqliteVersion,"3.47.2");
+    assert.ok(a.manifest.database.bytes>0);
+    console.log("SYNTHETIC_SQLITE_PACK_METRICS",JSON.stringify({node:process.version,sqliteVersion:a.manifest.sqliteVersion,databaseBytes:a.manifest.database.bytes,elapsedMs:a.elapsedMs,processPeakRssKiB:a.processPeakRssKiB,counts:a.manifest.counts}));
     assert.equal(a.manifest.database.sha256,b.manifest.database.sha256);
     assert.equal(await readFile(join(a.outputDir,"manifest.json"),"utf8"),await readFile(join(b.outputDir,"manifest.json"),"utf8"));
     const db=new DatabaseSync(join(a.outputDir,"glossary.sqlite"),{readOnly:true});
     assert.equal(db.prepare("PRAGMA integrity_check").get().integrity_check,"ok");
     assert.deepEqual(db.prepare("PRAGMA foreign_key_check").all(),[]);
     assert.equal(db.prepare("PRAGMA user_version").get().user_version,1);
+    assert.equal(db.prepare("PRAGMA application_id").get().application_id,0x4c4d474c);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_source").get().n,1);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_sense").get().n,2);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='index' AND name IN ('idx_surface_lookup','idx_lemma_pos_lookup','idx_reading_lookup')").get().n,3);
@@ -85,6 +89,7 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     assert.equal(sample.priority,0.25);
     assert.equal(sample.frequency_rank,3.5);
     assert.equal(db.prepare("SELECT id FROM glossary_entry WHERE language=? AND normalized_lemma=? AND pos_scheme=? AND pos_tag=?").get("ko","lm_synthetic_1001","lingomingle-pos-v1","noun").id,"nikl-kbd:1001");
+    assert.equal(db.prepare("SELECT id FROM glossary_surface_form WHERE normalized_form=?").get("abc").id,"nikl-kbd:1001");
     assert.equal(db.prepare("SELECT id FROM glossary_entry WHERE language=? AND normalized_reading=?").get("ko","kana").id,"nikl-kbd:1001");
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_sense_label").get().n,2);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_domain_label").get().n,1);
