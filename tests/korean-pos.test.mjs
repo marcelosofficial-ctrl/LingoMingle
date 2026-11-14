@@ -49,9 +49,10 @@ test("ambiguous or unsupported Kiwi tags remain unresolved", () => {
   }
 });
 
-test("NIKL all-POS and no-POS values remain unresolved", () => {
+test("NIKL all-POS, no-POS and numeric filter values remain unresolved", () => {
   assert.equal(nikl("0"), null);
   assert.equal(nikl("15"), null);
+  assert.equal(nikl("품사 없음"), null);
 });
 
 test("unknown POS source schemes are never guessed", () => {
@@ -69,7 +70,7 @@ test("mapped Kiwi and NIKL verbs share canonical POS and remain traceable", () =
   assert.deepEqual(niklVerb.source, { scheme: "nikl-basic-pos-api-v1", tag: "동사" });
 });
 
-test("canonical crosswalk result can safely match a Korean gloss entry", () => {
+test("canonical crosswalk result preserves sense-level English equivalent and definition", () => {
   const pos = nikl("동사");
   const entries = [{
     id: "synthetic-eat",
@@ -78,7 +79,11 @@ test("canonical crosswalk result can safely match a Korean gloss entry", () => {
     surfaceForms: ["먹다"],
     lemma: "먹다",
     partOfSpeech: pos,
-    senses: [{ id: "synthetic-sense", englishGloss: "synthetic verb meaning" }],
+    senses: [{
+      id: "synthetic-sense",
+      englishEquivalent: "synthetic equivalent",
+      englishGloss: "synthetic verb meaning",
+    }],
     priority: 1,
   }];
   const results = lookupGlosses(entries, {
@@ -93,6 +98,8 @@ test("canonical crosswalk result can safely match a Korean gloss entry", () => {
 
   assert.equal(results.length, 1);
   assert.equal(results[0].matchedBy, "lemma-pos");
+  assert.equal(results[0].entry.senses[0].englishEquivalent, "synthetic equivalent");
+  assert.equal(results[0].entry.senses[0].englishGloss, "synthetic verb meaning");
 });
 
 test("unresolved POS cannot pass Korean lemma matching", () => {
