@@ -1,38 +1,49 @@
-# T016 Expo asset adapter preflight (2026-11-14)
+# T016 SDK 58 FileSystem source verification (2026-11-14)
 
-Status: SDK/API contract researched; implementation not started. This is a bounded preflight, not T016 completion.
+Status: SDK source contract VERIFIED. App integration NOT STARTED. This pass deliberately follows the current NEXT_TASK.md wording: add only the compatible expo-file-system patch, not an additional direct Expo Asset dependency.
 
-## Verified SDK 58 package and API facts
+## Exact upstream package
 
-- Versioned SDK 58 FileSystem docs recommend expo-file-system ~58.0.13. The public API exports File, Directory, and Paths; File.digest("SHA-256") returns lowercase hexadecimal; copy, move, exists, delete, parentDirectory, name, and uri are available on iOS and Android. Source: https://docs.expo.dev/versions/v58.0.0/sdk/filesystem/
-- Versioned SDK 58 Asset docs recommend expo-asset ~58.0.21. Asset.fromModule(require(...)) resolves a Metro asset and downloadAsync() gives a localUri. The downloaded asset is placed in cache and is not guaranteed to persist across sessions. It is a temporary source only; copy it into SQLite's durable app-private directory before returning a connection. Source: https://docs.expo.dev/versions/v58.0.0/sdk/asset/
-- The expo-asset config plugin explicitly supports SQLite database assets with the .db extension. Bundle the synthetic pack as .db, not .sqlite, and pass its Metro module ID to Asset.fromModule. The app-owned installed filename remains T015's .sqlite name. Source: https://docs.expo.dev/versions/v58.0.0/sdk/asset/
-- Asset.hash is MD5, so it is not an acceptable substitute for T015's SHA-256. Compute SHA-256 over the downloaded local file with File.digest.
-- Never use SQLiteProvider assetSource as the verified install or replacement path. T015's source review established that it skips an existing destination by default and does not validate the existing file.
-- File.copy/move parameter types accept File or Directory, while T015's injected GlossaryPackFile interface has a narrower copy/move signature. The native adapter should wrap Expo File instances behind small structural objects, forwarding operations to native File objects. Do not cast the Expo File class directly to GlossaryPackFile.
-- SQLite openDatabaseAsync accepts the filename and options; supply SQLite.defaultDatabaseDirectory explicitly. The resulting dedicated connection goes through provisionGlossaryPack, then createGlossaryRepository. On repository-construction failure, close the validated connection. On successful transfer, repository.close owns connection teardown.
+SDK 58 branch source at https://github.com/expo/expo/tree/sdk-58/packages/expo-file-system reports:
+- package version 58.0.13
+- SPDX/package license MIT
+- peer dependencies expo and react-native
+- no runtime dependencies in package.json
+- source package manifest is the package actually pinned by the SDK 58 branch.
 
-## Repository constraints discovered
+The repo currently pins Expo 58.0.24 and React Native 0.88.1, and expo-file-system is absent from root package.json. Add only exact expo-file-system 58.0.13; do not upgrade Expo, SQLite, Router or React Native as part of T016.
 
-- Root package.json pins direct dependencies exactly, but there is no root package-lock.json or other root lockfile. CI currently runs npm install, not npm ci. The only lockfile is isolated under tools/nikl-importer. Adding runtime packages without deciding the root lockfile policy leaves transitive resolution non-reproducible.
-- The app currently has no assets directory, no bundled SQLite pack, and no glossary lifecycle/provider in app/_layout.tsx. T016 must create a tiny synthetic-only schema-v1 SQLite pack and wire its module reference; no real NIKL data or generated production pack is permitted.
-- A .db synthetic fixture should contain only invented Japanese/Korean strings and a clearly synthetic source record. Record its SHA-256 as a reviewed constant and test that the bundled bytes match it.
-- The app is currently a skeleton. A root-level provider should initialise once, retain the repository for app lifetime, render children only after initialization (or expose an explicit unavailable state), and close on teardown. Avoid opening a second database connection or sharing the pack with user-data writes.
+## Source-verified API/type details
 
-## Required implementation sequence
+Files inspected directly from the Expo SDK 58 source:
+- packages/expo-file-system/src/File.ts
+- packages/expo-file-system/src/File.types.ts
+- packages/expo-file-system/src/Paths.ts
+- packages/expo-file-system/package.json
+- packages/expo-sqlite/src/SQLiteDatabase.ts
 
-1. Resolve root lockfile policy. If adding package-lock.json, generate it from npm on Node 22.13.1 and commit it as a dedicated mechanical unit; do not hand-author or fabricate transitive resolutions. Preserve the <=350-line work-unit budget by separating generated lockfile work.
-2. Add exact SDK-compatible direct dependencies: expo-file-system 58.0.13 and expo-asset 58.0.21, after lockfile policy is settled. Do not run broad Expo dependency upgrades.
-3. Generate and commit the minimal synthetic .db pack using the existing T013 builder and synthetic manifest/JSONL inputs. No real NIKL archive/text.
-4. Add expo-asset plugin config for the .db fixture; add a native adapter with wrappers around File instances and a single openDatabaseAsync call in SQLite.defaultDatabaseDirectory.
-5. Add lifecycle/provider tests with injected adapters, plus startup cleanup tests for stale staging and interrupted reserved targets. Verify a valid existing pack is never overwritten.
-6. Run CI. Native Expo Go/iOS/Android tests remain NOT RUN until actual device/runtime output is available.
+Verified:
+- `new File(...uris)` accepts URI strings, File objects and Directory objects.
+- File exposes `name`, `uri`, `parentDirectory`, `exists`, `digest`, `copy`, `move` and `delete`.
+- FileDigestAlgorithm includes the exact literal `"SHA-256"`.
+- `RelocationOptions.overwrite` defaults to false. File copy/move accept `File | Directory`, which is wider than T015's `GlossaryPackFile` interface. Use an adapter wrapper that unwraps its own wrapped destination to the original Expo File. Do not cast File to GlossaryPackFile.
+- Paths.cache is OS-evictable; Paths.document is durable general app storage. The pack destination remains SQLite's `defaultDatabaseDirectory`, not either of those Paths shortcuts.
+- SDK 58 SQLite `openDatabaseAsync(databaseName, options?, directory?)` accepts the directory as the third argument. It ensures the database path exists before opening. Therefore only call it for the exact staging or final filename after T015 has verified that file exists and has the expected digest.
+- `SQLite.defaultDatabaseDirectory` must be passed explicitly to every open call. The coordinator's `openDatabase(name)` callback should not accept arbitrary caller-supplied names outside its two reserved filenames.
 
-## Gate status
+## Important remaining design questions
 
-- SDK 58 API/package recommendations: VERIFIED from versioned Expo docs.
-- Native File.copy/move crash durability: UNKNOWN; T015 explicitly makes no atomicity guarantee.
-- Actual bundled asset behavior on iOS/Android: NOT RUN.
-- Root dependency lock reproducibility: BLOCKED pending root lockfile policy and generated lockfile.
-- App provider wiring and lifecycle: NOT IMPLEMENTED.
-- Real NIKL import, production pack and store distribution: HOLD as before.
+1. The current NEXT_TASK requires only the expo-file-system patch. The prior preflight discussed expo-asset 58.0.21 and Asset.fromModule, but that would add another direct dependency contrary to the narrower current task. Do not silently add it. Resolve the bundled asset's Metro-to-local-File URI using the already-installed SDK dependency graph or revise the task/dependency scope with evidence before implementation.
+2. The root has no package-lock.json. CI currently runs `npm install`; only the importer subproject has a lockfile. A deterministic root lockfile cannot be safely hand-authored from direct package versions. It must be generated by npm on the pinned Node/npm toolchain and reviewed as a mechanical dependency-resolution change.
+3. This execution environment has GitHub read/write access but no DNS/network access from its local shell (a GitHub clone attempt failed with `Could not resolve host: github.com`). npm cannot resolve the dependency graph here. No lockfile or package changes were made.
+4. Native iOS/Android Expo runtime validation is not available from GitHub source inspection or Linux unit tests. Keep it NOT RUN until device output exists.
+
+## Safe next sequence
+
+1. Generate the root lockfile with npm on the pinned Node 22.13.1 / npm 10 toolchain, without broad package updates; commit the generated lockfile separately.
+2. Add exact expo-file-system 58.0.13 and implement a small wrapper adapter around File objects.
+3. Resolve the bundled synthetic database asset without adding an unapproved second runtime dependency. If expo-asset must be a direct dependency, amend the task and lockfile explicitly rather than relying on a transitive import.
+4. Add synthetic-only app fixture, startup/provider lifecycle, and adapter tests. Run CI, then test on iOS and Android devices.
+5. Keep all real NIKL import and store distribution gates closed.
+
+No runtime code, dependency, lockfile, synthetic database or native behavior is claimed as delivered by this source-verification pass.
