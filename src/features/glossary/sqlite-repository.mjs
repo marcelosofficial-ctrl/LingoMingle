@@ -19,7 +19,7 @@ function lookupInput(key) {
     return {surface,analysis};
   }
   if (key.language==="ko" && typeof analysis.lemma==="string" && normalize(analysis.lemma)
-    && !/\\s/u.test(analysis.surfaceForm.trim())
+    && !/\s/u.test(analysis.surfaceForm.trim())
     && typeof analysis.partOfSpeech?.scheme==="string" && analysis.partOfSpeech.scheme
     && typeof analysis.partOfSpeech?.tag==="string" && analysis.partOfSpeech.tag) {
     return {surface,analysis};
