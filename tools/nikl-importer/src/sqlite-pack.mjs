@@ -1,9 +1,8 @@
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { performance } from "node:perf_hooks";
-import { createInterface } from "node:readline";
 import { DatabaseSync } from "node:sqlite";
 
 const SCHEMA_VERSION = 1;
@@ -94,13 +93,35 @@ function validateEntry(entry, sources) {
   if (typeof entry.priority !== "number" || !Number.isFinite(entry.priority)) fail("invalid-priority");
   if (entry.domainLabels !== undefined) validateStrings(entry.domainLabels, "invalid-domain-labels");
 }
+async function* readBoundedLines(stream, maxBytes) {
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let pending = "";
+  for await (const chunk of stream) {
+    let text;
+    try { text = decoder.decode(chunk, { stream: true }); } catch { fail("invalid-jsonl-utf8"); }
+    while (text.length) {
+      const newline = text.indexOf("\n");
+      pending += newline === -1 ? text : text.slice(0, newline);
+      const line = newline !== -1 && pending.endsWith("\r") ? pending.slice(0, -1) : pending;
+      if (Buffer.byteLength(line, "utf8") > maxBytes) fail("jsonl-line-size-limit");
+      if (newline === -1) break;
+      yield line;
+      pending = "";
+      text = text.slice(newline + 1);
+    }
+  }
+  try { pending += decoder.decode(); } catch { fail("invalid-jsonl-utf8"); }
+  if (Buffer.byteLength(pending, "utf8") > maxBytes) fail("jsonl-line-size-limit");
+  if (pending.length) yield pending;
+}
+
 async function sha256File(path) {
   const hash = createHash("sha256");
   for await (const chunk of createReadStream(path)) hash.update(chunk);
   return hash.digest("hex");
 }
 async function exists(path) {
-  try { await stat(path); return true; } catch (error) { if (error.code === "ENOENT") return false; throw error; }
+  try { await lstat(path); return true; } catch (error) { if (error.code === "ENOENT") return false; throw error; }
 }
 
 export async function buildSyntheticSqlitePack({
@@ -135,7 +156,7 @@ export async function buildSyntheticSqlitePack({
     entries: 0, surfaceForms: 0, senses: 0, senseLabels: 0, domainLabels: 0,
   };
   let db, inTransaction = false, input;
-  let firstEntry = null;
+  let firstEntry = null, expectedLookup = null;
   try {
     db = new DatabaseSync(dbPath, { enableForeignKeyConstraints: true, allowExtension: false });
     db.exec("PRAGMA foreign_keys=ON; PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA page_size=4096;");
@@ -151,15 +172,20 @@ export async function buildSyntheticSqlitePack({
     const senseInsert = db.prepare("INSERT INTO glossary_sense VALUES (?,?,?,?,?)");
     const senseLabelInsert = db.prepare("INSERT INTO glossary_sense_label VALUES (?,?,?)");
     const domainLabelInsert = db.prepare("INSERT INTO glossary_domain_label VALUES (?,?,?)");
-    input = createReadStream(inputPath);
-    const lines = createInterface({ input, crlfDelay: Infinity });
-    for await (const line of lines) {
+    input = createReadStream(inputPath, { signal });
+    for await (const line of readBoundedLines(input, limits.maxRecordBytes)) {
       if (signal?.aborted) throw signal.reason ?? new Error("pack-aborted");
-      if (!line.trim() || Buffer.byteLength(line,"utf8") > limits.maxRecordBytes) fail("invalid-jsonl-line");
+      if (!line.trim()) fail("invalid-jsonl-line");
       let entry;
       try { entry = JSON.parse(line); } catch { fail("invalid-jsonl"); }
       validateEntry(entry, sourceIds);
       if (!firstEntry) firstEntry = entry;
+      const lookupForm = normalizeLookup(firstEntry.surfaceForms[0]);
+      if (entry.surfaceForms.some((form) => normalizeLookup(form) === lookupForm)
+        && (!expectedLookup || entry.priority < expectedLookup.priority
+          || (entry.priority === expectedLookup.priority && entry.id < expectedLookup.id))) {
+        expectedLookup = entry;
+      }
       counts.entries += 1;
       if (counts.entries > limits.maxRecords) fail("record-count-limit");
       const pos = entry.partOfSpeech;
@@ -187,8 +213,18 @@ export async function buildSyntheticSqlitePack({
     if (db.prepare("PRAGMA user_version").get().user_version !== SCHEMA_VERSION) fail("schema-version-check-failed");
     const unique = db.prepare("SELECT COUNT(*) AS total,COUNT(DISTINCT id) AS distinct_count FROM glossary_entry").get();
     if (unique.total !== counts.entries || unique.distinct_count !== counts.entries) fail("entry-uniqueness-check-failed");
+    const actualCounts = {
+      sources: db.prepare("SELECT COUNT(*) AS n FROM glossary_source").get().n,
+      entries: unique.total,
+      surfaceForms: db.prepare("SELECT COUNT(*) AS n FROM glossary_surface_form").get().n,
+      senses: db.prepare("SELECT COUNT(*) AS n FROM glossary_sense").get().n,
+      senseLabels: db.prepare("SELECT COUNT(*) AS n FROM glossary_sense_label").get().n,
+      domainLabels: db.prepare("SELECT COUNT(*) AS n FROM glossary_domain_label").get().n,
+    };
+    if (Object.entries(actualCounts).some(([key, value]) =>
+      value !== (key === "sources" ? sourceList.length : counts[key]))) fail("row-count-check-failed");
     const lookup = db.prepare("SELECT e.id FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.normalized_form=? ORDER BY e.priority,e.id LIMIT 1").get(normalizeLookup(firstEntry.surfaceForms[0]));
-    if (lookup?.id !== firstEntry.id) fail("representative-lookup-failed");
+    if (lookup?.id !== expectedLookup?.id) fail("representative-lookup-failed");
     db.close(); db = undefined;
     const dbInfo = await stat(dbPath);
     const manifest = {

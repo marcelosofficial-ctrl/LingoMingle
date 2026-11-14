@@ -54,6 +54,8 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     const bundle=await makeInput(parent);
     const rows=await records(bundle);
     rows[0].priority=0.25;
+    rows[1].priority=0.1;
+    rows[1].surfaceForms[0]=rows[0].surfaceForms[0];
     rows[0].frequencyRank=3.5;
     rows[0].reading="ＫＡＮＡ";
     rows[0].surfaceForms.push("ＡＢＣ");
@@ -77,7 +79,7 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_source").get().n,1);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_sense").get().n,2);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='index' AND name IN ('idx_surface_lookup','idx_lemma_pos_lookup','idx_reading_lookup')").get().n,3);
-    const sample=db.prepare("SELECT e.lemma,e.normalized_lemma,e.reading,e.normalized_reading,e.priority,e.frequency_rank,e.pos_scheme,e.pos_tag,e.source_pos_scheme,e.source_pos_tag,e.learner_level FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.normalized_form=?").get("lm_synthetic_1001");
+    const sample=db.prepare("SELECT e.lemma,e.normalized_lemma,e.reading,e.normalized_reading,e.priority,e.frequency_rank,e.pos_scheme,e.pos_tag,e.source_pos_scheme,e.source_pos_tag,e.learner_level FROM glossary_entry e WHERE e.id=?").get("nikl-kbd:1001");
     assert.equal(sample.lemma,"LM_SYNTHETIC_1001");
     assert.equal(sample.normalized_lemma,"lm_synthetic_1001");
     assert.equal(sample.normalized_reading,"kana");
@@ -88,8 +90,9 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     assert.equal(sample.learner_level,"초급");
     assert.equal(sample.priority,0.25);
     assert.equal(sample.frequency_rank,3.5);
+    assert.equal(db.prepare("SELECT e.id FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.normalized_form=? ORDER BY e.priority,e.id LIMIT 1").get("lm_synthetic_1001").id,"nikl-kbd:1002");
     assert.equal(db.prepare("SELECT id FROM glossary_entry WHERE language=? AND normalized_lemma=? AND pos_scheme=? AND pos_tag=?").get("ko","lm_synthetic_1001","lingomingle-pos-v1","noun").id,"nikl-kbd:1001");
-    assert.equal(db.prepare("SELECT id FROM glossary_surface_form WHERE normalized_form=?").get("abc").id,"nikl-kbd:1001");
+    assert.equal(db.prepare("SELECT entry_id FROM glossary_surface_form WHERE normalized_form=?").get("abc").entry_id,"nikl-kbd:1001");
     assert.equal(db.prepare("SELECT id FROM glossary_entry WHERE language=? AND normalized_reading=?").get("ko","kana").id,"nikl-kbd:1001");
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_sense_label").get().n,2);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_domain_label").get().n,1);
@@ -104,6 +107,11 @@ test("malformed JSONL, duplicate IDs and SQL constraint failures never publish p
     const malformed=await makeInput(parent,[2001]);
     await rewriteInput(malformed,["{bad-json"]);
     await assert.rejects(build(malformed,join(parent,"bad-json")),/invalid-jsonl/);
+
+    const oversized=await makeInput(parent,[2006]);
+    const oversizedRows=await records(oversized);
+    await rewriteInput(oversized,oversizedRows.map(JSON.stringify));
+    await assert.rejects(build(oversized,join(parent,"oversized-line"),{limits:{maxRecordBytes:32}}),/jsonl-line-size-limit/);
 
     const duplicate=await makeInput(parent,[2002,2003]);
     const rows=await records(duplicate);
