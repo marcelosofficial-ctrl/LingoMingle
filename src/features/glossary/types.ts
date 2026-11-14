@@ -15,7 +15,10 @@ export interface GlossSource {
 
 export interface GlossSense {
   id: string;
+  /** English definition/meaning for this sense. */
   englishGloss: string;
+  /** English equivalent word or phrase for this sense, when the source provides one. */
+  englishEquivalent?: string;
   labels?: readonly string[];
 }
 
