@@ -12,11 +12,6 @@ import { pick } from "stream-json/filters/pick.js";
 import { streamArray } from "stream-json/streamers/stream-array.js";
 import { createNiklEntryNormalizer } from "../../../src/features/glossary/nikl-json.mjs";
 
-export const DEFAULT_MEMBER_NAMES = Object.freeze([
-  ...Array.from({ length: 10 }, (_, index) => `${index + 1}_5000_20261019.json`),
-  "11_3671_20261019.json",
-]);
-
 const DEFAULT_LIMITS = Object.freeze({
   maxArchiveBytes: 100_000_000,
   maxMembers: 11,
@@ -135,16 +130,16 @@ function packedValueGuard(maxLength) {
     writableObjectMode: true,
     readableObjectMode: true,
     transform(token, _encoding, callback) {
-      if (token.name === "startString" || token.name === "startKey") {
+      if (token.name === "startString" || token.name === "startKey" || token.name === "startNumber") {
         active = token.name;
         packedLength = 0;
-      } else if (token.name === "stringChunk" && active) {
+      } else if ((token.name === "stringChunk" && active) || (token.name === "numberChunk" && active === "startNumber")) {
         packedLength += token.value.length;
         if (packedLength > maxLength) {
           callback(new Error("packed-value-size-limit"));
           return;
         }
-      } else if (token.name === "endString" || token.name === "endKey") {
+      } else if (token.name === "endString" || token.name === "endKey" || token.name === "endNumber") {
         active = null;
         packedLength = 0;
       }
@@ -233,7 +228,7 @@ function createMemberPipeline(limits, totals, compressedSize) {
   });
   const stream = chain([
     byteLimit,
-    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength, packKeys: true, streamKeys: true, streamStrings: true }),
+    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength, packKeys: true, streamKeys: true, streamStrings: true, streamNumbers: true }),
     packedValueGuard(limits.maxPackedLength),
     duplicateKeyGuard(),
     pick({ filter: "LexicalResource.Lexicon.LexicalEntry" }),
@@ -302,12 +297,16 @@ async function processMember(entry, output, normalizer, totals, limits, signal, 
 export async function importSyntheticArchive({
   archivePath,
   outputDir,
-  expectedMemberNames = DEFAULT_MEMBER_NAMES,
+  expectedMemberNames,
   limits: limitOverrides = {},
   signal,
   onProgress,
 }) {
   if (!archivePath || !outputDir) fail("archive-and-output-required");
+  if (!Array.isArray(expectedMemberNames) || expectedMemberNames.length === 0
+    || expectedMemberNames.some((name) => !/^fixture-\\d{2}\\.json$/u.test(name))) {
+    fail("synthetic-member-allowlist-required");
+  }
   if (signal?.aborted) throw signal.reason ?? new Error("import-aborted");
 
   const limits = { ...DEFAULT_LIMITS, ...limitOverrides };

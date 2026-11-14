@@ -10,8 +10,8 @@ import {
   validateEntryMetadata,
 } from "../src/import.mjs";
 
-const MEMBER_A = "1_5000_20261019.json";
-const MEMBER_B = "2_5000_20261019.json";
+const MEMBER_A = "fixture-01.json";
+const MEMBER_B = "fixture-02.json";
 const MEMBERS = [MEMBER_A, MEMBER_B];
 const feat = (att, val) => ({ att, val });
 
@@ -226,6 +226,18 @@ test("rejects duplicate JSON keys and parser depth/string limits", async () => {
       expectedMemberNames: [MEMBER_A],
       limits: { maxRecordBytes: 512, maxPackedLength: 1_000 },
     }), /record-size-limit/);
+
+    const numericDoc = document([wordEntry(4004)]).replace(
+      '"Sense":',
+      `"largeNumber":${"7".repeat(1_500)},"Sense":`,
+    );
+    const numericArchive = await makeArchive(parent, [[MEMBER_A, numericDoc]]);
+    await assert.rejects(importSyntheticArchive({
+      archivePath: numericArchive,
+      outputDir: join(parent, "long-number"),
+      expectedMemberNames: [MEMBER_A],
+      limits: { maxPackedLength: 1_000 },
+    }), /packed-value-size-limit|maxPackedLength|packed|length/i);
   } finally {
     await rm(parent, { recursive: true, force: true });
   }
