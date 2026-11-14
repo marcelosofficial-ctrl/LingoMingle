@@ -36,8 +36,10 @@ Every future adoption records exact version, SPDX licence, purpose, upstream URL
 - FusionIME: GPL-3.0. UX/integration reference only; do not copy/link into proprietary app.
 No keyboard engine, dictionary or dataset has been adopted or bundled. Native builds/device tests are NOT RUN; see T004 source/build spike for exact evidence and remaining gates.
 
-## NIKL build-tool candidates (evaluated, not adopted; 2026-11-14)
-- `@zip.js/zip.js` 2.25.0: npm latest at review time, BSD-3-Clause, zero runtime dependencies. Upstream 2.24.0 manifest declares Node >=18; re-verify exact 2.25.0 manifest before pinning. Preferred isolated importer prototype; enable CRC-32 check explicitly and enforce declared/actual expanded-size limits.
-- `stream-json` 3.9.0: BSD-3-Clause, ESM-only, actively maintained Node support; runtime `stream-chain` 4.4.2 is BSD-3-Clause. Candidate token parser for build-time importer.
-- Alternatives: `yauzl` 3.4.0 (MIT, Node >=12, `pend ~1.2.0` MIT) lacks built-in CRC-32 verification; `fflate` 0.8.3 (MIT, zero dependencies) has no CRC-32 read verification.
-- No importer dependency adopted or added to app runtime. See NIKL_STREAMING_PIPELINE_20261114.md. Store distribution remains HOLD; see NIKL_STORE_RIGHTS_REVIEW_20261114.md.
+## NIKL build-time prototype dependencies (tool-only, not app runtime; 2026-11-14)
+- `@zip.js/zip.js` 2.25.0: BSD-3-Clause; exact upstream tag manifest confirms Node >=18 and zero runtime dependencies. CRC-32 verification is opt-in and enabled in the prototype.
+- `stream-json` 3.9.0: BSD-3-Clause, ESM, no explicit engines field; its one runtime dependency is `stream-chain` 4.4.2.
+- `stream-chain` 4.4.2: BSD-3-Clause, zero runtime dependencies.
+- Exact pins are isolated in `tools/nikl-importer/package.json` and package-lock.json. CI #66 verified the synthetic-only package on Node 22.13.1. None is present in app package.json or the Expo runtime.
+- Security boundary: upstream stream-json says it is not designed for hostile JSON. The importer requires fixture-NN.json names and must not process the actual NIKL archive. See AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md.
+- Alternatives evaluated but not adopted: `yauzl` 3.4.0 (MIT; Node >=12; `pend` 1.2.0 MIT) and `fflate` 0.8.3 (MIT). Neither supplies the same explicit CRC-32 read verification path used by this prototype.
