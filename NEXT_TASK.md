@@ -1,17 +1,14 @@
 # NEXT_TASK
-ID: T010
-Goal: Build a dependency-free, record-level NIKL JSON normalizer against the inspected 2026-10-19 bulk schema, using synthetic fixtures only.
-Context: T009 is complete. Technical decision is GO for a word-only glossary with complete English sense coverage; production data import/distribution remains HOLD pending qualified CC BY-SA 2.0 KR/App Store/Play Store review. See AI_COLLAB/research/NIKL_SNAPSHOT_INSPECTION_20261114.md.
-Scope:
-- Add a pure function that accepts one parsed `LexicalEntry` record plus explicit source metadata and returns a typed GlossEntry or a structured skip/reject result.
-- Normalize actual source shape variations: entry `feat` object/array; `Lemma` object/array; `Sense` object/array; nested `Equivalent` list and `feat` arrays.
-- Include only `lexicalUnit=단어`. Require one non-empty `Lemma.writtenForm`, unique numeric-string entry ID, one or more senses, and exactly one English Equivalent per sense. Skip the entire entry if any sense lacks English, matching the 49,869-entry complete-coverage candidate.
-- Stable keys: `nikl-kbd:<LexicalEntry.val>`; sense key `nikl-kbd:<entry-id>:<Sense.val>`. Preserve `vocabularyLevel` as the raw learnerLevel value.
-- Map English Equivalent `lemma` to `GlossSense.englishEquivalent` and `definition` to `englishGloss`. Map POS only through `nikl-basic-pos-api-v1`; `품사 없음` and unknown labels remain unresolved.
-- Normalize recognized HTML named/numeric entities, trim outer whitespace, and NFC-normalize display strings. Do not alter internal punctuation/spacing. Reject or report malformed entities and invalid strings deterministically.
-- Ignore/drop examples, media, sound/audio, pronunciation, conjugation, variants, related forms and non-word lexical units before output. They must not leak into diagnostics.
-- Keep source provenance and data-pack manifest concerns separate from the GlossEntry payload.
-Tests (synthetic only): object/array singleton forms; multi-sense ordering; English equivalent vs definition; HTML entity and Unicode normalization; no/partial English exclusion; duplicate/missing IDs; unknown/no-POS behavior; non-word exclusion; ignored-field absence; deterministic output. No NIKL entry, translation, definition, example or media may be copied into fixtures.
-Do not add dependencies, stream/parse the 1 GB ZIP, create a production database, import the real dataset, or bundle/distribute NIKL data. A future streaming ZIP reader requires separate dependency/licence review.
-Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/research/**, src/features/glossary/**, tests/**, STATE.md.
-Line budget <=350 changed lines. Run CI and report exact output. After T010, next gate is legal review and a separately scoped streaming/import proof; no production import before that gate.
+ID: T011
+Goal: Evaluate a safe build-time streaming pipeline for the NIKL 2026-10-19 archive and resolve the remaining CC BY-SA 2.0 KR app-store distribution questions. Deliver a dependency/architecture recommendation and release go/no-go; do not import data.
+Context: T009 snapshot inspection and T010 synthetic record normalizer are complete. Technical candidate is 49,869 complete-translation word entries / 69,431 senses. Source archive is 84.5 MB compressed / 1.016 GB expanded. See AI_COLLAB/research/NIKL_SNAPSHOT_INSPECTION_20261114.md and NIKL_NORMALIZER_SPIKE_20261114.md.
+Acceptance:
+- Compare maintained ZIP readers and streaming JSON parsers suitable for a build-time Node 22/CI pipeline. Verify exact current version, SPDX licence, maintenance/release activity, Node compatibility, transitive licence risk and memory behavior from primary sources. Do not add a dependency.
+- Compare build-time import versus on-device import. Recommend bounded extraction, per-file streaming, record-level normalization, aggregate ID/coverage validation, deterministic output, temporary artifacts, atomic finalization and cleanup. Account for the 1.016 GB expanded source and 5.70 MiB selected-text lower bound without claiming a final DB size.
+- Assess whether GitHub Actions can safely process a user-supplied source archive without committing it, including artifact retention/size/access boundaries. Do not upload the user archive to GitHub or any external service.
+- Review official Apple App Store and Google Play terms plus CC BY-SA 2.0 KR legal code/deed for no-additional-restrictions, encryption/DRM, user access to the derived database and attribution/share-alike obligations. Separate verified platform wording from legal interpretation.
+- Produce a packaging options matrix and questions for qualified counsel. If compatibility remains uncertain, keep store distribution on HOLD; do not present this as legal advice.
+- Preserve NIKL attribution, source URL, archive SHA-256, snapshot date, importer version, transformation description, licence link, data counts and excluded-field list in the proposed manifest.
+- No real data import, production DB, app bundling, dependency adoption, external upload, account/API key, paid service or user spending.
+Files allowed: NEXT_TASK.md, AI_COLLAB/INDEX.md, AI_COLLAB/CHECKPOINT.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/research/**, STATE.md.
+Line budget <=350 changed lines. Use primary sources and several independent research angles. End with a clear technical architecture recommendation and legal/distribution go/no-go.
