@@ -115,6 +115,18 @@ test("fails closed on duplicate, unexpected, unsafe, encrypted, linked and unsup
   assert.throws(() => validateEntryMetadata([meta(MEMBER_A)], [MEMBER_A, MEMBER_B], { maxMembers: 1 }), /invalid-member-allowlist/);
 });
 
+test("refuses non-synthetic NIKL member names before opening any archive", async () => {
+  await assert.rejects(importSyntheticArchive({
+    archivePath: "not-opened.zip",
+    outputDir: "unused-output",
+    expectedMemberNames: ["1_5000_20261019.json"],
+  }), /synthetic-member-allowlist-required/);
+  await assert.rejects(importSyntheticArchive({
+    archivePath: "not-opened.zip",
+    outputDir: "unused-output",
+  }), /synthetic-member-allowlist-required/);
+});
+
 test("CRC mismatch aborts and removes the temporary output", async () => {
   const parent = await sandbox();
   try {
