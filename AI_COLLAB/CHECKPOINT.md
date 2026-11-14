@@ -1,13 +1,9 @@
 # CHECKPOINT
-
-Unit: T016 SDK 58 asset-adapter preflight COMPLETE. T016 implementation remains IN PROGRESS.
-
-Branch head before this docs unit: 1dee10ab0cd11b42c0bd24007d9b1dd6c2ea74ed. CI #82 SUCCESS on code commit 46d73869a3d84fe6ee7a3fbd31a8ea40a786e237: typecheck, lint, 47/47 app tests, 10/10 importer tests. Docs-only commits since then did not trigger CI.
-
-Verified: SDK 58 recommends expo-file-system ~58.0.13 and expo-asset ~58.0.21. Asset.fromModule + downloadAsync resolves a temporary cache file; Asset.hash is MD5, so SHA-256 must use File.digest("SHA-256"). Bundle the synthetic SQLite fixture as .db via expo-asset config plugin. Wrap Expo File instances to adapt File|Directory copy/move signatures to T015's narrower interface. Open in SQLite.defaultDatabaseDirectory, pass through T015 validation, then transfer to T014 repository.
-
-Blockers: root package-lock.json is absent (CI currently uses npm install); app has no assets directory, synthetic DB fixture, or glossary provider/lifecycle. Do not claim T016 integrated. No real NIKL content.
-
-Files: AI_COLLAB/research/T016_EXPO_ASSET_ADAPTER_PREFLIGHT_20261114.md, AI_COLLAB/INDEX.md, STATE.md, NEXT_TASK.md, AI_COLLAB/DECISIONS.md, AI_COLLAB/DEPENDENCIES.md, AI_COLLAB/CHECKPOINT.md.
-
-Next: settle root lockfile generation as a separate mechanical unit, add exact SDK 58 dependencies, build the tiny synthetic .db asset, implement/test Expo adapter and root lifecycle, then run CI. Native iOS/Android remains NOT RUN until device output exists. No user action.
+Unit: T015 synthetic-only SQLite pack provisioning coordinator COMPLETE.
+Implementation head: 46d73869a3d84fe6ee7a3fbd31a8ea40a786e237. CI #82 SUCCESS: typecheck, lint, 47/47 app tests, 10/10 isolated importer tests; Node 22.13.1.
+Files: src/features/glossary/provisioning.mjs, provisioning.d.mts, tests/glossary-provisioning.test.mjs, tests/glossary-sqlite-repository.test.mjs (Buffer lint fix), AI_COLLAB/research/NIKL_SQLITE_PROVISIONING_SPIKE_20261114.md.
+Contract: reserved immutable filename lingomingle-glossary-v1.sqlite and same-directory staging. Reuse only matching SHA-256 plus SQLite integrity/FK/application ID/schema/table/exact-column/count/query_only checks. Verify source hash before deleting an invalid reserved destination. Stage copy/hash/SQLite validation precedes move; final hash and SQLite validation precede returning connection. T014 repository handoff is covered by synthetic lookup.
+Concurrency: same-path/same-hash calls serialize and receive separate SQLite connections; differing hashes conflict. Interrupted copy/move partials and stale staging are cleaned. Android File.move tries atomic rename but may fall back to copy+delete; iOS uses FileManager.moveItem. No cross-platform atomicity/durability guarantee is claimed.
+SDK review: SQLiteProvider assetSource skips import if destination exists. File.digest requires "SHA-256". File.copy/move/delete are SDK 58 APIs. expo-file-system 58.0.13 MIT is evaluated but not yet a direct dependency.
+No Expo Go/iOS/Android validation; no real NIKL data, production DB, app bundle, external upload or paid service.
+Next: T016 integrate Expo FileSystem/SQLite adapter and native verification, synthetic pack only. User action: none.
