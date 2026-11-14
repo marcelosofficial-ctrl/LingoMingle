@@ -113,6 +113,16 @@ test("keeps snapshot no-POS entries surface-searchable but without a false canon
   assert.equal(Object.hasOwn(result.entry, "partOfSpeech"), false);
   assert.deepEqual(result.entry.surfaceForms, ["LM_TEST_표제어"]);
   assert.equal(result.entry.learnerLevel, "없음");
+
+  const unknown = normalizeNiklEntry(entry({
+    feat: [
+      feat("lexicalUnit", "단어"),
+      feat("partOfSpeech", "synthetic-unknown-pos"),
+      feat("vocabularyLevel", "없음"),
+    ],
+  }));
+  assert.equal(unknown.status, "accepted");
+  assert.equal(Object.hasOwn(unknown.entry, "partOfSpeech"), false);
 });
 
 test("rejects malformed IDs, duplicate sense order, duplicate English translations and unsafe entities", () => {
