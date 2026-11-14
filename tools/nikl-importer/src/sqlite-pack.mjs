@@ -17,7 +17,8 @@ CREATE TABLE glossary_source (
 ) STRICT;
 CREATE TABLE glossary_entry (
  id TEXT PRIMARY KEY, source_id TEXT NOT NULL REFERENCES glossary_source(id),
- language TEXT NOT NULL CHECK(language IN ('ja','ko')), lemma TEXT NOT NULL, reading TEXT,
+ language TEXT NOT NULL CHECK(language IN ('ja','ko')), lemma TEXT NOT NULL, normalized_lemma TEXT NOT NULL,
+ reading TEXT, normalized_reading TEXT,
  pos_scheme TEXT, pos_tag TEXT, source_pos_scheme TEXT, source_pos_tag TEXT,
  learner_level TEXT, frequency_rank REAL CHECK(frequency_rank IS NULL OR frequency_rank >= 0),
  priority REAL NOT NULL,
@@ -26,7 +27,7 @@ CREATE TABLE glossary_entry (
 ) STRICT;
 CREATE TABLE glossary_surface_form (
  entry_id TEXT NOT NULL REFERENCES glossary_entry(id) ON DELETE CASCADE,
- ordinal INTEGER NOT NULL CHECK(ordinal >= 0), surface_form TEXT NOT NULL,
+ ordinal INTEGER NOT NULL CHECK(ordinal >= 0), surface_form TEXT NOT NULL, normalized_form TEXT NOT NULL,
  PRIMARY KEY(entry_id, ordinal), UNIQUE(entry_id, surface_form)
 ) STRICT;
 CREATE TABLE glossary_sense (
@@ -46,6 +47,7 @@ CREATE TABLE glossary_domain_label (
 ) STRICT;`;
 
 function fail(code) { throw new Error(code); }
+function normalizeLookup(value) { return value.normalize("NFKC").trim().toLowerCase(); }
 function requireString(value, code) {
   if (typeof value !== "string" || !value.trim()) fail(code);
   return value;
@@ -69,7 +71,10 @@ function validateEntry(entry, sources) {
   if (!sources.has(entry.sourceId)) fail("unknown-source");
   if (!["ja","ko"].includes(entry.language)) fail("invalid-language");
   validateStrings(entry.surfaceForms, "invalid-surface-forms", false);
-  if (entry.reading !== undefined) requireString(entry.reading, "invalid-reading");
+  const normalizedForms = entry.surfaceForms.map(normalizeLookup);
+  if (normalizedForms.some((form) => !form) || new Set(normalizedForms).size !== normalizedForms.length) fail("duplicate-normalized-surface-form");
+  if (!normalizeLookup(entry.lemma)) fail("invalid-entry");
+  if (entry.reading !== undefined) { requireString(entry.reading, "invalid-reading"); if (!normalizeLookup(entry.reading)) fail("invalid-reading"); }
   if (entry.partOfSpeech !== undefined) {
     const pos = entry.partOfSpeech;
     if (!pos || typeof pos !== "object" || Array.isArray(pos)) fail("invalid-pos");
@@ -141,8 +146,8 @@ export async function buildSyntheticSqlitePack({
       sourceInsert.run(source.id,source.name,source.version,source.sourceUrl,source.licenseId,source.licenseUrl,
         source.attributionText,source.retrievedAt,source.shareAlikeRequired ? 1 : 0,source.modificationNotes);
     }
-    const entryInsert = db.prepare("INSERT INTO glossary_entry VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-    const surfaceInsert = db.prepare("INSERT INTO glossary_surface_form VALUES (?,?,?)");
+    const entryInsert = db.prepare("INSERT INTO glossary_entry VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    const surfaceInsert = db.prepare("INSERT INTO glossary_surface_form VALUES (?,?,?,?)");
     const senseInsert = db.prepare("INSERT INTO glossary_sense VALUES (?,?,?,?,?)");
     const senseLabelInsert = db.prepare("INSERT INTO glossary_sense_label VALUES (?,?,?)");
     const domainLabelInsert = db.prepare("INSERT INTO glossary_domain_label VALUES (?,?,?)");
@@ -158,10 +163,11 @@ export async function buildSyntheticSqlitePack({
       counts.entries += 1;
       if (counts.entries > limits.maxRecords) fail("record-count-limit");
       const pos = entry.partOfSpeech;
-      entryInsert.run(entry.id,entry.sourceId,entry.language,entry.lemma,entry.reading ?? null,
+      entryInsert.run(entry.id,entry.sourceId,entry.language,entry.lemma,normalizeLookup(entry.lemma),
+        entry.reading ?? null,entry.reading === undefined ? null : normalizeLookup(entry.reading),
         pos?.scheme ?? null,pos?.tag ?? null,pos?.source?.scheme ?? null,pos?.source?.tag ?? null,
         entry.learnerLevel ?? null,entry.frequencyRank ?? null,entry.priority);
-      entry.surfaceForms.forEach((form,ordinal) => { surfaceInsert.run(entry.id,ordinal,form); counts.surfaceForms += 1; });
+      entry.surfaceForms.forEach((form,ordinal) => { surfaceInsert.run(entry.id,ordinal,form,normalizeLookup(form)); counts.surfaceForms += 1; });
       entry.senses.forEach((sense,ordinal) => {
         senseInsert.run(sense.id,entry.id,ordinal,sense.englishEquivalent ?? null,sense.englishGloss);
         counts.senses += 1;
@@ -172,7 +178,7 @@ export async function buildSyntheticSqlitePack({
     }
     if (!counts.entries || counts.entries !== inputManifest.counts.accepted) fail("input-count-mismatch");
     if (signal?.aborted) throw signal.reason ?? new Error("pack-aborted");
-    db.exec("CREATE INDEX idx_surface_lookup ON glossary_surface_form(surface_form,entry_id); CREATE INDEX idx_lemma_pos_lookup ON glossary_entry(language,lemma,pos_scheme,pos_tag); CREATE INDEX idx_source_lookup ON glossary_entry(source_id,language);");
+    db.exec("CREATE INDEX idx_surface_lookup ON glossary_surface_form(normalized_form,entry_id); CREATE INDEX idx_lemma_pos_lookup ON glossary_entry(language,normalized_lemma,pos_scheme,pos_tag,priority,id); CREATE INDEX idx_reading_lookup ON glossary_entry(language,normalized_reading,priority,id); CREATE INDEX idx_source_lookup ON glossary_entry(source_id,language);");
     db.exec(`PRAGMA user_version=${SCHEMA_VERSION}; PRAGMA application_id=${APPLICATION_ID}; COMMIT;`);
     inTransaction = false;
     if (db.prepare("PRAGMA integrity_check").get()?.integrity_check !== "ok") fail("integrity-check-failed");
@@ -181,7 +187,7 @@ export async function buildSyntheticSqlitePack({
     if (db.prepare("PRAGMA user_version").get().user_version !== SCHEMA_VERSION) fail("schema-version-check-failed");
     const unique = db.prepare("SELECT COUNT(*) AS total,COUNT(DISTINCT id) AS distinct_count FROM glossary_entry").get();
     if (unique.total !== counts.entries || unique.distinct_count !== counts.entries) fail("entry-uniqueness-check-failed");
-    const lookup = db.prepare("SELECT e.id FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.surface_form=? ORDER BY e.priority,e.id LIMIT 1").get(firstEntry.surfaceForms[0]);
+    const lookup = db.prepare("SELECT e.id FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.normalized_form=? ORDER BY e.priority,e.id LIMIT 1").get(normalizeLookup(firstEntry.surfaceForms[0]));
     if (lookup?.id !== firstEntry.id) fail("representative-lookup-failed");
     db.close(); db = undefined;
     const dbInfo = await stat(dbPath);
