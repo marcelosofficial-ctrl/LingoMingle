@@ -128,6 +128,31 @@ function duplicateKeyGuard() {
   });
 }
 
+function packedValueGuard(maxLength) {
+  let active = null;
+  let packedLength = 0;
+  return new Transform({
+    writableObjectMode: true,
+    readableObjectMode: true,
+    transform(token, _encoding, callback) {
+      if (token.name === "startString" || token.name === "startKey") {
+        active = token.name;
+        packedLength = 0;
+      } else if (token.name === "stringChunk" && active) {
+        packedLength += token.value.length;
+        if (packedLength > maxLength) {
+          callback(new Error("packed-value-size-limit"));
+          return;
+        }
+      } else if (token.name === "endString" || token.name === "endKey") {
+        active = null;
+        packedLength = 0;
+      }
+      callback(null, token);
+    },
+  });
+}
+
 function createMemberPipeline(limits, totals, compressedSize) {
   let memberBytes = 0;
   const parserChunkBytes = Math.max(1, Math.min(16 * 1024, Math.floor(limits.maxPackedLength / 2)));
@@ -149,7 +174,8 @@ function createMemberPipeline(limits, totals, compressedSize) {
   });
   const stream = chain([
     byteLimit,
-    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength, packKeys: true }),
+    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength, packKeys: true, streamKeys: true, streamStrings: true }),
+    packedValueGuard(limits.maxPackedLength),
     duplicateKeyGuard(),
     pick({ filter: "LexicalResource.Lexicon.LexicalEntry" }),
     streamArray(),
