@@ -21,6 +21,7 @@
 | AI_COLLAB/research/KOREAN_POS_CROSSWALK_20261113.md | T008 versioned Kiwi/NIKL POS mapping, snapshot-observed labels and unresolved no-POS tag |
 | AI_COLLAB/research/NIKL_FULL_EXPORT_AND_RIGHTS_20261113.md | Official NIKL text licence, full/custom export paths and multimedia exclusions |
 | AI_COLLAB/research/NIKL_SNAPSHOT_INSPECTION_20261114.md | T009 actual 2026-10-19 ZIP/JSON schema, integrity, counts, translation coverage, IDs, POS, normalization and conditional go/no-go |
+| AI_COLLAB/research/NIKL_NORMALIZER_SPIKE_20261114.md | T010 dependency-free record-level normalizer, synthetic acceptance, normalization rules and explicit non-streaming limits |
 | AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | Superseded public-source preview; actual schema is in NIKL_SNAPSHOT_INSPECTION_20261114.md |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
