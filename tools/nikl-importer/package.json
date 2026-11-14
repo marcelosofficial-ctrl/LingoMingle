@@ -1,0 +1,17 @@
+{
+  "name": "lingomingle-nikl-importer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@zip.js/zip.js": "2.25.0",
+    "stream-chain": "4.4.2",
+    "stream-json": "3.9.0"
+  }
+}

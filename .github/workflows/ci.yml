@@ -12,6 +12,7 @@ on:
       - "app/**"
       - "src/**"
       - "tests/**"
+      - "tools/nikl-importer/**"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
@@ -24,6 +25,7 @@ on:
       - "app/**"
       - "src/**"
       - "tests/**"
+      - "tools/nikl-importer/**"
       - ".github/workflows/ci.yml"
 concurrency:
   group: ci-${{ github.ref }}
@@ -40,3 +42,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+      - run: npm ci --prefix tools/nikl-importer --no-audit --no-fund
+      - run: npm test --prefix tools/nikl-importer
