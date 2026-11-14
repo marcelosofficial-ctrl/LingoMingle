@@ -39,27 +39,27 @@ async function provision(options) {
   }
   if (typeof openDatabase !== "function") fail("open-database-required");
   if (stagingFile.exists) await stagingFile.delete();
-  if (destinationFile.exists && await destinationFile.digest("sha256") === expectedSha256) {
+  if (destinationFile.exists && await destinationFile.digest("SHA-256") === expectedSha256) {
     return {database:await openValidated(openDatabase,GLOSSARY_PACK_DATABASE_NAME),status:"reused"};
   }
   // Verify the bundled source before deleting an invalid app-owned destination.
-  if (await sourceFile.digest("sha256") !== expectedSha256) fail("glossary-asset-sha256-mismatch");
+  if (await sourceFile.digest("SHA-256") !== expectedSha256) fail("glossary-asset-sha256-mismatch");
   if (destinationFile.exists) await destinationFile.delete();
   try {
     await sourceFile.copy(stagingFile);
-    if (!stagingFile.exists || await stagingFile.digest("sha256") !== expectedSha256) fail("glossary-staging-sha256-mismatch");
+    if (!stagingFile.exists || await stagingFile.digest("SHA-256") !== expectedSha256) fail("glossary-staging-sha256-mismatch");
     const stagedDb=await openValidated(openDatabase,GLOSSARY_PACK_STAGING_NAME);
     await stagedDb.closeAsync();
     if (destinationFile.exists) fail("glossary-pack-destination-raced");
     await stagingFile.move(destinationFile);
-    if (!destinationFile.exists || await destinationFile.digest("sha256") !== expectedSha256) fail("glossary-published-sha256-mismatch");
+    if (!destinationFile.exists || await destinationFile.digest("SHA-256") !== expectedSha256) fail("glossary-published-sha256-mismatch");
     return {database:await openValidated(openDatabase,GLOSSARY_PACK_DATABASE_NAME),status:"installed"};
   } catch (error) {
     if (stagingFile.exists) { try { await stagingFile.delete(); } catch {} }
     // Only the reserved app-owned filename may be automatically removed.
     if (destinationFile.exists) {
       let digest;
-      try { digest=await destinationFile.digest("sha256"); } catch {}
+      try { digest=await destinationFile.digest("SHA-256"); } catch {}
       if (digest !== expectedSha256) { try { await destinationFile.delete(); } catch {} }
     }
     throw error;

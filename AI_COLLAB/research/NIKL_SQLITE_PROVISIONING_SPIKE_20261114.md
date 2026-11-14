@@ -5,7 +5,7 @@
 - Expo SQLite docs recommend ~58.0.17. SQLiteProvider.assetSource is supported on Android/iOS/macOS/tvOS/Web and imports a bundled DB into the SQLite directory.
 - SDK source shows SQLiteProvider resolves Asset.fromModule(...).downloadAsync(), then calls native importAssetDatabaseAsync. forceOverwrite defaults false; when destination exists, both Android and iOS return without checking its contents. It is not an integrity validator.
 - Native import uses Kotlin File.copyTo on Android and iOS FileManager.copyItem. No atomic-copy guarantee is documented. With forceOverwrite, iOS removes DB sidecars before copying. Do not use assetSource as a verified replacement mechanism.
-- Expo FileSystem SDK 58 recommends ~58.0.13. File.digest("sha256"), File.copy, File.move, File.exists and File.delete support Android/iOS/tvOS. Docs do not promise atomicity for move/copy.
+- Expo FileSystem SDK 58 recommends ~58.0.13. File.digest("SHA-256"), File.copy, File.move, File.exists and File.delete support Android/iOS/tvOS. Docs do not promise atomicity for move/copy.
 - Paths.cache can be evicted by the OS. The immutable pack belongs in SQLite's app-private defaultDatabaseDirectory, not cache or user Documents.
 - expo-file-system is not yet a direct app dependency. The coordinator uses an injected File-shaped interface, no new runtime dependency. T016 will integrate the native adapter.
 

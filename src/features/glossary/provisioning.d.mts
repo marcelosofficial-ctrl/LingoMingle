@@ -1,7 +1,7 @@
 export interface GlossaryPackFile {
   readonly name: string; readonly uri: string; readonly exists: boolean;
   readonly parentDirectory: { readonly uri: string };
-  digest(algorithm: "sha256"): Promise<string>;
+  digest(algorithm: "SHA-256"): Promise<string>;
   copy(destination: GlossaryPackFile): Promise<void>;
   move(destination: GlossaryPackFile): Promise<void>;
   delete(): void | Promise<void>;

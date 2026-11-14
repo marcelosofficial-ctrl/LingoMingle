@@ -21,7 +21,7 @@ const entries=[
 function localFile(path,overrides={}) {
   return {name:basename(path),uri:path,parentDirectory:{uri:dirname(path)},
     get exists(){return existsSync(path);},
-    async digest(algorithm){return createHash(algorithm).update(await readFile(path)).digest("hex");},
+    async digest(algorithm){return createHash(algorithm.toLowerCase().replace("-", "")).update(await readFile(path)).digest("hex");},
     async copy(destination){await copyFile(path,destination.uri);},
     async move(destination){await rename(path,destination.uri);},
     async delete(){await unlink(path);},...overrides};
