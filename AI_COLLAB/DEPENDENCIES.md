@@ -46,6 +46,6 @@ No keyboard engine, dictionary or dataset has been adopted or bundled. Native bu
 
 
 ## T013 SQLite pack engine (evaluated 2026-11-14)
-- Selected built-in Node node:sqlite / DatabaseSync on Node 22.13.1 for the isolated pack-builder. No npm dependency, native addon or WASM asset. Node unflagged the module in 22.13.0, but API remains experimental Stability 1.1 (Active development); private build-time only. CI #69/#70 verified the implementation; CI #72 covers final reader/count/order hardening.
+- Selected built-in Node node:sqlite / DatabaseSync on Node 22.13.1 for the isolated pack-builder. No npm dependency, native addon or WASM asset. Node unflagged the module in 22.13.0, but API remains experimental Stability 1.1 (Active development); private build-time only. CI #72 on 9041890 passed app typecheck/lint, 35/35 app tests and 10/10 importer tests, including reader/count/order hardening.
 - Evaluated, not adopted: better-sqlite3 13.1.1 MIT, Node >=22, native Node-API addon and node-addon-api dependency with platform prebuild/native-build fallback; sql.js 1.16.0 MIT, zero runtime npm dependencies, Emscripten/WASM and in-memory DB with full typed-array export. Neither is needed for the private Node builder.
 - No SQLite engine, pack builder or pack-generation dependency is added to Expo app runtime. See AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md.

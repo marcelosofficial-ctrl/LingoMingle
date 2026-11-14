@@ -28,11 +28,11 @@ Node 22.13.0 removed the --experimental-sqlite flag requirement, but the API rem
 
 - CI #69 on e481b5c: app typecheck/lint passed, app tests 35/35, importer tests 10/10.
 - CI #70 on d0d4537: app typecheck/lint passed, app tests 35/35, importer tests 10/10. It verified normalized lookup columns and indexes.
-- CI #71 on cc1e441: app quality checks and app tests passed; importer tests 9/10. The failure was a test SQL typo querying id from glossary_surface_form, whose key is entry_id. The production builder had created the synthetic DB and emitted metrics before this test assertion. Commit 9041890 corrects the assertion and adds bounded UTF-8 line reading, actual table row-count checks, cancellation-aware streaming and duplicate-surface priority ordering. CI #72 is pending and must be checked before declaring the unit verified.
+- CI #71 on cc1e441: app quality checks and app tests passed; importer tests 9/10. The failure was a test SQL typo querying id from glossary_surface_form, whose key is entry_id. The production builder had created the synthetic DB and emitted metrics before this test assertion. Commit 9041890 corrects the assertion and adds bounded UTF-8 line reading, actual table row-count checks, cancellation-aware streaming and duplicate-surface priority ordering. CI #72 on 9041890: app typecheck/lint passed, app tests 35/35, importer tests 10/10.
 
 The test suite covers deterministic repeated builds, normalized fields/indexes, SQLite integrity and foreign-key checks, schema/application IDs, row counts, lookup mapping/order, malformed/oversized JSONL, duplicate entry/sense IDs, SQL constraint rollback, cancellation, temporary cleanup and existing-output refusal.
 
-CI #71's two-entry fixture emitted an 86,016-byte SQLite file in 272.36 ms with 76,044 KiB process peak RSS. This is a diagnostic micro-fixture, not a scale benchmark or a projection of the full source pack.
+CI #72's two-entry fixture emitted an 86,016-byte SQLite file in 460.94 ms with 76,368 KiB process peak RSS. This is a diagnostic micro-fixture, not a scale benchmark or a projection of the full source pack.
 
 ## Limits and release gates
 
