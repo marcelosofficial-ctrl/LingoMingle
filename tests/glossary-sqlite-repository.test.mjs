@@ -106,6 +106,9 @@ test("stale analyzer tokens and Korean POS mismatches cannot create false matche
     const wrongPos=await repo.lookupGlosses({language:"ko",surfaceForm:"먹어요",
       analysis:{surfaceForm:"먹어요",lemma:"먹다",partOfSpeech:{scheme:"lingomingle-pos-v1",tag:"noun"}}});
     assert.deepEqual(wrongPos,[]);
+    const spaced=await repo.lookupGlosses({language:"ko",surfaceForm:"먹 어요",
+      analysis:{surfaceForm:"먹 어요",lemma:"먹다",partOfSpeech:{scheme:"lingomingle-pos-v1",tag:"verb"}}});
+    assert.deepEqual(spaced,[]);
     await repo.close();
   }finally{await rm(pack.dir,{recursive:true,force:true});}
 });
