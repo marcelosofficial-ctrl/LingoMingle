@@ -74,11 +74,9 @@ export function provisionGlossaryPack(options) {
   const key=options?.destinationFile?.uri;
   if (typeof key!=="string" || !key) return Promise.reject(new Error("invalid-glossary-pack-paths"));
   const pending=active.get(key);
-  if (pending) {
-    if (pending.sha256!==options.expectedSha256) return Promise.reject(new Error("glossary-pack-provision-conflict"));
-    return pending.promise;
-  }
-  const promise=provision(options);
+  if (pending && pending.sha256!==options.expectedSha256) return Promise.reject(new Error("glossary-pack-provision-conflict"));
+  const start=pending ? pending.promise.catch(()=>undefined) : Promise.resolve();
+  const promise=start.then(()=>provision(options));
   const tracked=promise.finally(()=>{if(active.get(key)?.promise===tracked)active.delete(key);});
   active.set(key,{sha256:options.expectedSha256,promise:tracked});
   return tracked;

@@ -1,4 +1,5 @@
 import test from "node:test";
+import { Buffer } from "node:buffer";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { copyFile, existsSync, mkdir, mkdtemp, readFile, rename, rm, unlink, writeFile } from "node:fs/promises";
@@ -40,7 +41,7 @@ async function fixture() {
   const sourcePath=join(root,"bundled.sqlite");await copyFile(join(packDir,"glossary.sqlite"),sourcePath);
   const sourceFile=localFile(sourcePath),destinationFile=localFile(join(dbDir,GLOSSARY_PACK_DATABASE_NAME));
   const stagingFile=localFile(join(dbDir,GLOSSARY_PACK_STAGING_NAME));
-  const expectedSha256=await sourceFile.digest("sha256");
+  const expectedSha256=await sourceFile.digest("SHA-256");
   const openDatabase=async(name)=>expoAdapter(new DatabaseSync(join(dbDir,name),{readOnly:true}));
   return {root,sourceFile,destinationFile,stagingFile,expectedSha256,openDatabase};
 }
@@ -82,7 +83,7 @@ test("rejects wrong-schema asset and cleans staging",async()=>{
   try{
     const bad=join(f.root,"wrong-schema.sqlite"),db=new DatabaseSync(bad);
     db.exec("CREATE TABLE not_a_glossary(id INTEGER);");db.close();await copyFile(bad,f.sourceFile.uri);
-    const expectedSha256=await f.sourceFile.digest("sha256");
+    const expectedSha256=await f.sourceFile.digest("SHA-256");
     await assert.rejects(provisionGlossaryPack({...f,expectedSha256}),/unsupported-glossary-schema/);
     assert.equal(f.stagingFile.exists,false);assert.equal(f.destinationFile.exists,false);
   }finally{await rm(f.root,{recursive:true,force:true});}
@@ -104,7 +105,35 @@ test("cleans stale staging and rebuilds a mismatched reserved destination",async
   try{
     await writeFile(f.stagingFile.uri,"stale-stage");await writeFile(f.destinationFile.uri,"partial-destination");
     const result=await provisionGlossaryPack(f);assert.equal(result.status,"installed");
-    assert.equal(f.stagingFile.exists,false);assert.equal(await f.destinationFile.digest("sha256"),f.expectedSha256);
+    assert.equal(f.stagingFile.exists,false);assert.equal(await f.destinationFile.digest("SHA-256"),f.expectedSha256);
     await result.database.closeAsync();
+  }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
+test("serializes concurrent provisioning without sharing a SQLite connection",async()=>{
+  const f=await fixture();
+  try{
+    let copies=0;
+    const sourceFile=localFile(f.sourceFile.uri,{async copy(destination){
+      copies++;await new Promise((resolve)=>setTimeout(resolve,10));await copyFile(f.sourceFile.uri,destination.uri);
+    }});
+    const [first,second]=await Promise.all([
+      provisionGlossaryPack({...f,sourceFile}),provisionGlossaryPack({...f,sourceFile}),
+    ]);
+    assert.equal(copies,1);assert.notEqual(first.database,second.database);
+    assert.deepEqual([first.status,second.status],["installed","reused"]);
+    await first.database.closeAsync();await second.database.closeAsync();
+  }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
+test("rejects a pack with foreign-key violations before publication",async()=>{
+  const f=await fixture();
+  try{
+    const broken=join(f.root,"foreign-key-invalid.sqlite");await copyFile(f.sourceFile.uri,broken);
+    const db=new DatabaseSync(broken);db.exec("PRAGMA foreign_keys=OFF; DELETE FROM glossary_source;");db.close();
+    await copyFile(broken,f.sourceFile.uri);
+    const expectedSha256=await f.sourceFile.digest("SHA-256");
+    await assert.rejects(provisionGlossaryPack({...f,expectedSha256}),/foreign-key-check-failed/);
+    assert.equal(f.stagingFile.exists,false);assert.equal(f.destinationFile.exists,false);
   }finally{await rm(f.root,{recursive:true,force:true});}
 });

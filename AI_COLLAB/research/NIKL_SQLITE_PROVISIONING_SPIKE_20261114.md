@@ -30,6 +30,6 @@ New src/features/glossary/provisioning.mjs is a platform-neutral coordinator. Th
 
 ## Synthetic tests and limits
 
-Tests use T013's real SQLite builder, invented Japanese/Korean entries, Node's read-only SQLite handle and a filesystem adapter. Cases: first install/repository lookup, valid-existing reuse without reading/copying source, asset hash rejection before destination deletion, wrong schema, interrupted copy, interrupted move, stale-stage cleanup, corrupt reserved destination recovery and repeated provisioning.
+Tests use T013's real SQLite builder, invented Japanese/Korean entries, Node's read-only SQLite handle and a filesystem adapter. Cases: first install/repository lookup, valid-existing reuse without reading/copying source, asset hash rejection before destination deletion, wrong schema, interrupted copy, interrupted move, stale-stage cleanup, corrupt reserved destination recovery and repeated provisioning, concurrent calls use separate connections, and foreign-key violations.
 
 No Expo Go, iOS or Android runtime was run. No actual bundled asset, real NIKL text, production pack, app bundle or store distribution was created. Native move/copy crash behavior remains a device validation gate.
