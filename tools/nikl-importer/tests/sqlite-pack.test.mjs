@@ -30,9 +30,9 @@ async function sandbox(){return mkdtemp(join(tmpdir(),"lingomingle-sqlite-pack-"
 async function makeInput(parent, ids=[1001,1002]) {
   const writer=new ZipWriter(new BlobWriter());
   await writer.add("fixture-01.json",new TextReader(JSON.stringify({LexicalResource:{Lexicon:{LexicalEntry:ids.map(wordEntry)}}})),{compressionMethod:0});
-  const blob=await writer.close(), archive=join(parent,"fixture.zip");
+  const blob=await writer.close(), archive=join(parent,`fixture-${ids[0]}.zip`);
   await writeFile(archive,Buffer.from(await blob.arrayBuffer()));
-  const output=join(parent,"jsonl");
+  const output=join(parent,`jsonl-${ids[0]}`);
   await importSyntheticArchive({archivePath:archive,outputDir:output,expectedMemberNames:["fixture-01.json"]});
   return {jsonlPath:join(output,"entries.jsonl"),inputManifestPath:join(output,"manifest.json")};
 }
@@ -52,6 +52,10 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
   const parent=await sandbox();
   try{
     const bundle=await makeInput(parent);
+    const rows=await records(bundle);
+    rows[0].priority=0.25;
+    rows[0].frequencyRank=3.5;
+    await rewriteInput(bundle,rows.map(JSON.stringify));
     const a=await build(bundle,join(parent,"pack-a"));
     const b=await build(bundle,join(parent,"pack-b"));
     assert.deepEqual(a.manifest.counts,{sources:1,entries:2,surfaceForms:2,senses:2,senseLabels:0,domainLabels:0});
@@ -65,7 +69,10 @@ test("builds a normalized, indexed, verified and deterministic SQLite pack",asyn
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_source").get().n,1);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM glossary_sense").get().n,2);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='index' AND name='idx_surface_lookup'").get().n,1);
-    assert.equal(db.prepare("SELECT e.lemma FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.surface_form=?").get("LM_SYNTHETIC_1001").lemma,"LM_SYNTHETIC_1001");
+    const sample=db.prepare("SELECT e.lemma,e.priority,e.frequency_rank FROM glossary_entry e JOIN glossary_surface_form s ON s.entry_id=e.id WHERE s.surface_form=?").get("LM_SYNTHETIC_1001");
+    assert.equal(sample.lemma,"LM_SYNTHETIC_1001");
+    assert.equal(sample.priority,0.25);
+    assert.equal(sample.frequency_rank,3.5);
     db.close();
   }finally{await rm(parent,{recursive:true,force:true});}
 });

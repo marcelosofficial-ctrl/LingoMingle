@@ -19,8 +19,8 @@ CREATE TABLE glossary_entry (
  id TEXT PRIMARY KEY, source_id TEXT NOT NULL REFERENCES glossary_source(id),
  language TEXT NOT NULL CHECK(language IN ('ja','ko')), lemma TEXT NOT NULL, reading TEXT,
  pos_scheme TEXT, pos_tag TEXT, source_pos_scheme TEXT, source_pos_tag TEXT,
- learner_level TEXT, frequency_rank INTEGER CHECK(frequency_rank IS NULL OR frequency_rank >= 0),
- priority INTEGER NOT NULL,
+ learner_level TEXT, frequency_rank REAL CHECK(frequency_rank IS NULL OR frequency_rank >= 0),
+ priority REAL NOT NULL,
  CHECK((pos_scheme IS NULL) = (pos_tag IS NULL)),
  CHECK((source_pos_scheme IS NULL) = (source_pos_tag IS NULL))
 ) STRICT;
@@ -85,8 +85,8 @@ function validateEntry(entry, sources) {
     if (sense.labels !== undefined) validateStrings(sense.labels, "invalid-sense-labels");
   }
   if (entry.learnerLevel !== undefined) requireString(entry.learnerLevel, "invalid-learner-level");
-  if (entry.frequencyRank !== undefined && (!Number.isSafeInteger(entry.frequencyRank) || entry.frequencyRank < 0)) fail("invalid-frequency-rank");
-  if (!Number.isSafeInteger(entry.priority)) fail("invalid-priority");
+  if (entry.frequencyRank !== undefined && (typeof entry.frequencyRank !== "number" || !Number.isFinite(entry.frequencyRank) || entry.frequencyRank < 0)) fail("invalid-frequency-rank");
+  if (typeof entry.priority !== "number" || !Number.isFinite(entry.priority)) fail("invalid-priority");
   if (entry.domainLabels !== undefined) validateStrings(entry.domainLabels, "invalid-domain-labels");
 }
 async function sha256File(path) {
@@ -113,12 +113,13 @@ export async function buildSyntheticSqlitePack({
   try { inputManifest = JSON.parse(manifestText); } catch { fail("invalid-input-manifest"); }
   if (inputManifest?.format !== "lingomingle-nikl-jsonl-v1" || inputManifest.sourceKind !== "synthetic-only"
     || !Array.isArray(inputManifest.memberNames) || inputManifest.memberNames.length === 0
+    || inputManifest.memberNames.length > 11 || new Set(inputManifest.memberNames).size !== inputManifest.memberNames.length
     || inputManifest.memberNames.some((name) => !/^fixture-[0-9]{2}[.]json$/u.test(name))
     || inputManifest.output?.file !== "entries.jsonl") fail("synthetic-input-manifest-required");
   if (inputManifest.output.bytes !== jsonlInfo.size || inputManifest.output.sha256 !== await sha256File(inputPath)) fail("input-jsonl-hash-mismatch");
   if (!Number.isSafeInteger(inputManifest.counts?.accepted)) fail("invalid-input-counts");
   if (!Array.isArray(sources) || sources.length === 0) fail("sources-required");
-  const sourceList = sources.map(validateSource).sort((a,b) => a.id.localeCompare(b.id));
+  const sourceList = sources.map(validateSource).sort((a,b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const sourceIds = new Set(sourceList.map((source) => source.id));
   if (sourceIds.size !== sourceList.length) fail("duplicate-source-id");
   await mkdir(dirname(finalPath), { recursive: true });
