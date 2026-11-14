@@ -29,3 +29,5 @@ Apple: educational purpose alone does not waive Apple's fee for an individual. W
 G1 no online copyrighted lyric display in v1 without explicit approval after rights review. Default BYO/original/PD/cleared content.
 G2 no paid Apple/Google developer enrollment without approval.
 G3 no paid hosting, API, AI inference or recurring service without approval.
+
+D022 The glossary pack builder is a private build-time-only tool using Node 22.13.1 node:sqlite DatabaseSync. It is synthetic-fixture-only, schema v1, and maps the current GlossSource/GlossEntry/GlossSense contract with normalized lookup indexes. Node's SQLite API remains experimental (Stability 1.1), so it must not enter Expo runtime or public API surfaces. No actual NIKL import or store distribution is authorized.
