@@ -28,6 +28,7 @@
 | AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md | T012 synthetic-only ZIP/JSON streaming prototype, bounds, CI, benchmark and hard stops |
 | AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md | T013 synthetic SQLite schema, engine comparison, deterministic build and verification gates |
 | AI_COLLAB/research/NIKL_SQLITE_REPOSITORY_SPIKE_20261114.md | T014 read-only Expo SQLite repository, SDK 58 compatibility and synthetic validation |
+| AI_COLLAB/research/NIKL_SQLITE_PROVISIONING_SPIKE_20261114.md | T015 Expo asset/filesystem comparison, hash-gated staging and synthetic-only validation |
 | AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | Superseded public-source preview; actual schema is in NIKL_SNAPSHOT_INSPECTION_20261114.md |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
