@@ -17,10 +17,11 @@
 | AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md | T004 Mozc/libhangul source, build targets, dictionary/licence scope, LGPL and build matrix |
 | AI_COLLAB/research/KEYBOARD_GLOSS_DATA_RESEARCH_20261113.md | T005 Japanese/Korean English gloss sources, licences, tokenizer/data caveats and offline recommendation |
 | AI_COLLAB/research/KEYBOARD_GLOSS_RESEARCH_RECHECK_20261113.md | Red-team corrections, NIKL full-download confirmation, Kiwi v0.24.1 native/WASM evidence, Sudachi file-level licence and platform constraints |
-| AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md | T007 Kiwi Android/iOS/WASM source, upstream CI, model footprint, Expo/Hermes integration and proof matrix |
-| AI_COLLAB/research/KOREAN_POS_CROSSWALK_20261113.md | T008 versioned Kiwi/NIKL POS mapping, explicit ambiguous tags and synthetic acceptance cases |
-| AI_COLLAB/research/NIKL_FULL_EXPORT_AND_RIGHTS_20261113.md | Official NIKL text licence, full/custom export paths, fields, multimedia exclusions and import gates |
-| AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | T009 provisional field mapping, import pipeline, synthetic gates, attribution and unresolved export blockers |
+| AI_COLLAB/research/KEYBOARD_KIWI_FEASIBILITY_SPIKE_20261113.md | T007 Kiwi v0.24.1 source/build, upstream CI, model footprint and Expo/Hermes integration |
+| AI_COLLAB/research/KOREAN_POS_CROSSWALK_20261113.md | T008 versioned Kiwi/NIKL POS mapping, snapshot-observed labels and unresolved no-POS tag |
+| AI_COLLAB/research/NIKL_FULL_EXPORT_AND_RIGHTS_20261113.md | Official NIKL text licence, full/custom export paths and multimedia exclusions |
+| AI_COLLAB/research/NIKL_SNAPSHOT_INSPECTION_20261114.md | T009 actual 2026-10-19 ZIP/JSON schema, integrity, counts, translation coverage, IDs, POS, normalization and conditional go/no-go |
+| AI_COLLAB/research/NIKL_IMPORT_SPEC_PREVIEW_20261113.md | Superseded public-source preview; actual schema is in NIKL_SNAPSHOT_INSPECTION_20261114.md |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C00_C01_binding_rules.md | Condensed Claude workflow summary; not a verbatim source extract |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C02_product_economics.md | Product and distribution costs |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C03_platform_workflow.md | Expo and phone workflow |
@@ -32,14 +33,14 @@
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C09_architecture_roadmap.md | Architecture and task queue |
 ## Binding rules
 1. Separate repo. Never touch RevDev or PocketCode here.
-2. Continuation read order: BOOT, STATE, NEXT_TASK, INBOX. Find other files through this index.
+2. Continuation read order: BOOT, STATE, NEXT_TASK, INBOX. Find all other material through this index.
 3. Never open a file over 1,500 words whole; shard source research into <=1,300-word files.
-4. Commit before summary; ~350 lines per work unit; overwrite CHECKPOINT after each unit.
+4. Commit before summary; ~350 changed lines per work unit; overwrite CHECKPOINT after each unit.
 5. Final <=15 lines: done(paths, commit), latest CI, next, user actions <=3. Tag VERIFIED/INFERRED/UNKNOWN. Never claim tests passed without output.
 6. Phone-first user actions under 3 minutes, no terminal or secrets in chat.
 7. Adopt before writing. Review exact licence and log name/version/SPDX/purpose/link/attribution before import.
 8. No scraping or copyrighted lyric/subtitle fixtures. G1 blocks online lyric lookup.
-9. No paid account/subscription/recurring service/store fee without explicit approval.
+9. No paid account/subscription/recurring service/store fee without explicit user approval.
 10. Pin Expo SDK and read current docs before Router/native-tabs/glass APIs.
 11. STATE <=400 words; BOOT <=250; every file <=1,500 words; NEXT_TASK one task.
 12. Secrets only in GitHub/EAS secrets.
