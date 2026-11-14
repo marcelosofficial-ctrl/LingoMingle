@@ -53,10 +53,11 @@ test("normalizes an object-shaped word entry and preserves English equivalent se
 
 test("normalizes array-shaped singleton fields and multiple ordered senses", () => {
   const result = normalizeNiklEntry(entry({
-    feat: {
-      att: "lexicalUnit",
-      val: "단어",
-    },
+    feat: [
+      feat("lexicalUnit", "단어"),
+      feat("partOfSpeech", "명사"),
+      feat("vocabularyLevel", "중급"),
+    ],
     Lemma: [
       { feat: feat("writtenForm", "LM_ARRAY_표제어") },
       { feat: feat("variant", "must-not-be-surface") },
@@ -89,7 +90,7 @@ test("normalizes tabs, outer whitespace, numeric entities and NFC without collap
 
 test("skips non-word lexical units and entries with any untranslated sense", () => {
   const nonWord = normalizeNiklEntry(entry({
-    feat: [feat("lexicalUnit", "관용구"), feat("partOfSpeech", "품사 없음"), feat("vocabularyLevel", "없음")],
+    feat: feat("lexicalUnit", "관용구"),
   }));
   const untranslated = normalizeNiklEntry(entry({
     Sense: [sense(1), sense(2, [equivalent("일본어", "ignored", "ignored")])],
