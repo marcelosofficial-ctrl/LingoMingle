@@ -304,7 +304,7 @@ export async function importSyntheticArchive({
 }) {
   if (!archivePath || !outputDir) fail("archive-and-output-required");
   if (!Array.isArray(expectedMemberNames) || expectedMemberNames.length === 0
-    || expectedMemberNames.some((name) => !/^fixture-\\d{2}\\.json$/u.test(name))) {
+    || expectedMemberNames.some((name) => !/^fixture-[0-9]{2}[.]json$/u.test(name))) {
     fail("synthetic-member-allowlist-required");
   }
   if (signal?.aborted) throw signal.reason ?? new Error("import-aborted");
