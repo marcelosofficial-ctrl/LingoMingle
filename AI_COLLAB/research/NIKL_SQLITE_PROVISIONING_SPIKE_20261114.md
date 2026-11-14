@@ -37,3 +37,13 @@ New src/features/glossary/provisioning.mjs is a platform-neutral coordinator. Th
 Tests use T013's real SQLite builder, invented Japanese/Korean entries, Node's read-only SQLite handle and a filesystem adapter. Cases: first install/repository lookup, valid-existing reuse without reading/copying source, asset hash rejection before destination deletion, wrong schema/column layout, interrupted copy, interrupted move, stale-stage cleanup, corrupt reserved destination recovery and repeated provisioning, concurrent calls use separate connections, and foreign-key violations.
 
 No Expo Go, iOS or Android runtime was run. No actual bundled asset, real NIKL text, production pack, app bundle or store distribution was created. Native move/copy crash behavior remains a device validation gate.
+
+## CI evidence
+
+CI #82 on implementation commit 46d73869a3d84fe6ee7a3fbd31a8ea40a786e237 completed SUCCESS on Node 22.13.1:
+- Root TypeScript typecheck: passed.
+- ESLint: passed.
+- App tests: 47 passed, 0 failed.
+- Isolated Node importer tests: 10 passed, 0 failed.
+- The provisioning suite includes first install and repository handoff, valid existing reuse, source hash rejection before deletion, wrong schema, wrong column layout, interrupted copy/move recovery, stale staging, concurrent calls with separate connections, and foreign-key violation rejection.
+The earlier T015 run #80 failed because the new test imported existsSync from node:fs/promises. The import was corrected to node:fs; run #82 verifies the fix.
