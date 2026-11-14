@@ -47,6 +47,7 @@ function safeFlatName(name) {
 export function validateEntryMetadata(entries, expectedMemberNames, overrides = {}) {
   const limits = { ...DEFAULT_LIMITS, ...overrides };
   if (!Array.isArray(expectedMemberNames) || expectedMemberNames.length === 0
+    || expectedMemberNames.length > limits.maxMembers
     || new Set(expectedMemberNames).size !== expectedMemberNames.length) {
     fail("invalid-member-allowlist");
   }
@@ -80,6 +81,15 @@ export function validateEntryMetadata(entries, expectedMemberNames, overrides = 
   return expectedMemberNames.map((name) => byName.get(name));
 }
 
+export function validateActualExpansion(memberBytes, compressedSize, totalBytes, overrides = {}) {
+  const limits = { ...DEFAULT_LIMITS, ...overrides };
+  if (memberBytes > limits.maxMemberBytes || totalBytes > limits.maxTotalExpandedBytes) {
+    fail("actual-expanded-size-limit");
+  }
+  const ratio = compressedSize === 0 ? (memberBytes === 0 ? 1 : Infinity) : memberBytes / compressedSize;
+  if (ratio > limits.maxCompressionRatio) fail("actual-compression-ratio-limit");
+}
+
 async function sha256File(path) {
   const hash = createHash("sha256");
   for await (const chunk of createReadStream(path)) hash.update(chunk);
@@ -92,22 +102,49 @@ async function writeLine(output, line) {
   });
 }
 
-function createMemberPipeline(limits, totals) {
+function duplicateKeyGuard() {
+  const objectKeys = [];
+  return new Transform({
+    writableObjectMode: true,
+    readableObjectMode: true,
+    transform(token, _encoding, callback) {
+      if (token.name === "startObject") objectKeys.push(new Set());
+      else if (token.name === "endObject") objectKeys.pop();
+      else if (token.name === "keyValue") {
+        const keys = objectKeys[objectKeys.length - 1];
+        if (!keys) {
+          callback(new Error("invalid-json-key-context"));
+          return;
+        }
+        if (keys.has(token.value)) {
+          callback(new Error("duplicate-json-key"));
+          return;
+        }
+        keys.add(token.value);
+      }
+      callback(null, token);
+    },
+  });
+}
+
+function createMemberPipeline(limits, totals, compressedSize) {
   let memberBytes = 0;
   const byteLimit = new Transform({
     transform(chunk, _encoding, callback) {
       memberBytes += chunk.length;
       totals.actualExpandedBytes += chunk.length;
-      if (memberBytes > limits.maxMemberBytes || totals.actualExpandedBytes > limits.maxTotalExpandedBytes) {
-        callback(new Error("actual-expanded-size-limit"));
-        return;
+      try {
+        validateActualExpansion(memberBytes, compressedSize, totals.actualExpandedBytes, limits);
+        callback(null, chunk);
+      } catch (error) {
+        callback(error);
       }
-      callback(null, chunk);
     },
   });
   const stream = chain([
     byteLimit,
-    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength }),
+    parser({ maxDepth: limits.maxDepth, maxPackedLength: limits.maxPackedLength, packKeys: true }),
+    duplicateKeyGuard(),
     pick({ filter: "LexicalResource.Lexicon.LexicalEntry" }),
     streamArray(),
   ]);
@@ -115,11 +152,12 @@ function createMemberPipeline(limits, totals) {
 }
 
 async function processMember(entry, output, normalizer, totals, limits, signal, onProgress) {
-  const bounded = createMemberPipeline(limits, totals);
+  const bounded = createMemberPipeline(limits, totals, entry.compressedSize);
   const controller = new AbortController();
   const combinedSignal = signal
     ? AbortSignal.any([signal, controller.signal])
     : controller.signal;
+  const webWritable = Writable.toWeb(bounded.stream);
 
   const consume = (async () => {
     for await (const item of bounded.stream) {
@@ -146,12 +184,12 @@ async function processMember(entry, output, normalizer, totals, limits, signal, 
     }
   })();
 
-  const read = entry.getData(Writable.toWeb(bounded.stream), {
+  const read = Promise.resolve().then(() => entry.getData(webWritable, {
     checkCrc32: true,
     checkOverlappingEntry: true,
     strictness: "strict",
     signal: combinedSignal,
-  });
+  }));
 
   try {
     await Promise.all([read, consume]);

@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { BlobWriter, TextReader, ZipWriter } from "@zip.js/zip.js";
 import {
   importSyntheticArchive,
+  validateActualExpansion,
   validateEntryMetadata,
 } from "../src/import.mjs";
 
@@ -110,6 +111,8 @@ test("fails closed on duplicate, unexpected, unsafe, encrypted, linked and unsup
   assert.throws(() => validateEntryMetadata([meta(MEMBER_A, { compressionMethod: 99 })], [MEMBER_A]), /unsupported-compression/);
   assert.throws(() => validateEntryMetadata([meta(MEMBER_A, { uncompressedSize: 101 })], [MEMBER_A], { maxMemberBytes: 100 }), /member-size-limit/);
   assert.throws(() => validateEntryMetadata([meta(MEMBER_A, { uncompressedSize: 5_000 })], [MEMBER_A], { maxCompressionRatio: 10 }), /compression-ratio-limit/);
+  assert.throws(() => validateActualExpansion(101, 100, 101, { maxCompressionRatio: 1 }), /actual-compression-ratio-limit/);
+  assert.throws(() => validateEntryMetadata([meta(MEMBER_A)], [MEMBER_A, MEMBER_B], { maxMembers: 1 }), /invalid-member-allowlist/);
 });
 
 test("CRC mismatch aborts and removes the temporary output", async () => {
@@ -174,6 +177,45 @@ test("malformed JSON, duplicate source IDs, size caps and cancellation all abort
 
     const names = (await readdir(parent)).sort();
     assert.deepEqual(names, ["fixture.zip"]);
+  } finally {
+    await rm(parent, { recursive: true, force: true });
+  }
+});
+
+test("rejects duplicate JSON keys and parser depth/string limits", async () => {
+  const parent = await sandbox();
+  try {
+    const duplicateKeys = '{"LexicalResource":{"Lexicon":{"LexicalEntry":[],"LexicalEntry":[]}}}';
+    const archivePath = await makeArchive(parent, [[MEMBER_A, duplicateKeys]]);
+    await assert.rejects(importSyntheticArchive({
+      archivePath,
+      outputDir: join(parent, "duplicate-json-key"),
+      expectedMemberNames: [MEMBER_A],
+    }), /duplicate-json-key/);
+
+    const deep = wordEntry(4001);
+    let cursor = deep;
+    for (let index = 0; index < 40; index += 1) {
+      cursor.nested = {};
+      cursor = cursor.nested;
+    }
+    const deepArchive = await makeArchive(parent, [[MEMBER_A, document([deep])]]);
+    await assert.rejects(importSyntheticArchive({
+      archivePath: deepArchive,
+      outputDir: join(parent, "deep-json"),
+      expectedMemberNames: [MEMBER_A],
+      limits: { maxDepth: 16 },
+    }), /maxDepth|nesting depth/i);
+
+    const long = wordEntry(4002);
+    long.extra = "x".repeat(1_500);
+    const longArchive = await makeArchive(parent, [[MEMBER_A, document([long])]]);
+    await assert.rejects(importSyntheticArchive({
+      archivePath: longArchive,
+      outputDir: join(parent, "long-string"),
+      expectedMemberNames: [MEMBER_A],
+      limits: { maxPackedLength: 1_000 },
+    }), /maxPackedLength|packed|length/i);
   } finally {
     await rm(parent, { recursive: true, force: true });
   }
