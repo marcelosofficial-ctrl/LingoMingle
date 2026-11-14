@@ -3,7 +3,6 @@ import { createReadStream, createWriteStream, openAsBlob } from "node:fs";
 import { mkdtemp, mkdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { performance } from "node:perf_hooks";
-import { tmpdir } from "node:os";
 import { finished } from "node:stream/promises";
 import { Transform, Writable } from "node:stream";
 import { BlobReader, ZipReader } from "@zip.js/zip.js";

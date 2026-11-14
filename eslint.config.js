@@ -10,5 +10,5 @@ export default [
       react: { version: "19.3" }
     }
   },
-  { ignores: ["dist/*", "node_modules/*", ".expo/*"] }
+  { ignores: ["dist/*", "node_modules/*", ".expo/*", "tools/nikl-importer/**"] }
 ];
