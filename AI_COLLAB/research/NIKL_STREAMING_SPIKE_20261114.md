@@ -21,13 +21,13 @@ The entry point requires explicit `fixture-NN.json` names and refuses the actual
 
 ## Verification
 
-CI run #66, SHA `92364908` (Node v22.13.1):
+CI run #67, SHA `5a2291dd` (Node v22.13.1):
 - Root install, typecheck and lint: PASS.
 - App tests: 35 passed, 0 failed, 0 skipped.
-- Isolated importer tests: 6 passed, 0 failed.
-- Tests cover deterministic multi-member output, incomplete-English skip, metadata/path/encryption/symlink/compression rejection, CRC corruption and cleanup, malformed JSON, duplicate source IDs, size limits, cancellation, duplicate JSON keys, parser depth, packed string/number bounds and record token-size rejection.
+- Isolated importer tests: 7 passed, 0 failed.
+- Tests cover deterministic multi-member output, incomplete-English skip, metadata/path/encryption/symlink/compression rejection, explicit refusal of NIKL member names before file access, CRC corruption and cleanup, malformed JSON, duplicate source IDs, size limits, cancellation, duplicate JSON keys, parser depth, packed string/number bounds and record token-size rejection.
 
-Synthetic benchmark: 1,500 entries; 643,500-byte JSONL; 1,100.27 ms; process peak RSS 133,936 KiB. RSS is the entire Node test-process peak, including fixture generation and preceding tests, not importer-only memory. This small fixture is not a projection of real archive performance or device memory.
+Synthetic benchmark: 1,500 entries; 643,500-byte JSONL; 857.48 ms; process peak RSS 134,548 KiB. RSS is the entire Node test-process peak, including fixture generation and preceding tests, not importer-only memory. This small fixture is not a projection of real archive performance or device memory.
 
 ## Hard stop and limitations
 
