@@ -5,7 +5,7 @@ import { colors } from "../../src/theme/tokens";
 
 export default function AlphabetsScreen() {
   const [selectedId, setSelectedId] = useState("hiragana-a");
-  const selected = HIRAGANA.find((character) => character.id === selectedId) ?? HIRAGANA[0];
+  const selected = HIRAGANA.find((character) => character.id === selectedId) ?? HIRAGANA[0]!;
 
   return (
     <ScrollView
