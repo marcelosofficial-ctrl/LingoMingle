@@ -76,7 +76,18 @@ try {
   await copyFile(join(built.outputDir, "glossary.sqlite"), databasePath);
   await writeFile(manifestPath, `${JSON.stringify(built.manifest, null, 2)}\n`, { flag: "w" });
 
-  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const builderManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const manifest = {
+    format: builderManifest.format,
+    sourceKind: builderManifest.sourceKind,
+    schemaVersion: builderManifest.schemaVersion,
+    applicationId: builderManifest.applicationId,
+    sqliteVersion: builderManifest.sqliteVersion,
+    input: { jsonlSha256: builderManifest.input.jsonlSha256 },
+    counts: builderManifest.counts,
+    database: builderManifest.database,
+  };
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, { flag: "w" });
   console.log("SYNTHETIC_APP_PACK", JSON.stringify({
     databasePath,
     bytes: manifest.database.bytes,
