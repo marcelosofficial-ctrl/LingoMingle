@@ -1,0 +1,24 @@
+{
+  "format": "lingomingle-glossary-sqlite-v1",
+  "sourceKind": "synthetic-only",
+  "schemaVersion": 1,
+  "applicationId": 1280132940,
+  "sqliteVersion": "3.47.2",
+  "input": {
+    "jsonlSha256": "cfe6d0a67a9736db6a9521e11eaa80938aa17371c7672c8fc5ebd27ce056dafa",
+    "manifestSha256": "ca0209abd814bf17d9bb7c17342424d927850e73fcbe01b797301b682278e5c8"
+  },
+  "counts": {
+    "sources": 1,
+    "entries": 1,
+    "surfaceForms": 1,
+    "senses": 1,
+    "senseLabels": 0,
+    "domainLabels": 0
+  },
+  "database": {
+    "file": "glossary.sqlite",
+    "bytes": 86016,
+    "sha256": "a7730a6bad8a1d3942f50b539931dbb9f4f01fc069721df39f661e2ccbd0affe"
+  }
+}
