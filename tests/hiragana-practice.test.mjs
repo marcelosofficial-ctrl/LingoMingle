@@ -1,10 +1,26 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  buildHiraganaQuestion,
-  getNextHiraganaQuestionIndex,
-  isCorrectHiraganaAnswer
-} from "../src/features/kana/hiraganaPractice.ts";
+import { readFile } from "node:fs/promises";
+import ts from "typescript";
+
+async function loadTypeScriptModule(path, replacements = []) {
+  let source = await readFile(new URL(path, import.meta.url), "utf8");
+  for (const [from, to] of replacements) source = source.replace(from, to);
+  const output = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }
+  }).outputText;
+  return import(`data:text/javascript;base64,${Buffer.from(output).toString("base64")}`);
+}
+
+const datasetSource = await readFile(new URL("../src/features/kana/hiragana.ts", import.meta.url), "utf8");
+const datasetOutput = ts.transpileModule(datasetSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }
+}).outputText;
+const datasetUrl = `data:text/javascript;base64,${Buffer.from(datasetOutput).toString("base64")}`;
+const practice = await loadTypeScriptModule("../src/features/kana/hiraganaPractice.ts", [
+  ['from "./hiragana"', `from "${datasetUrl}"`]
+]);
+const { buildHiraganaQuestion, getNextHiraganaQuestionIndex, isCorrectHiraganaAnswer } = practice;
 
 test("questions are deterministic and contain one correct answer", () => {
   const first = buildHiraganaQuestion("k", 0);
