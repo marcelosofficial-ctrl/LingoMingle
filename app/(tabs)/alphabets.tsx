@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { HIRAGANA, HIRAGANA_ROWS, type HiraganaRowId } from "../../src/features/kana/hiragana";
+import { HIRAGANA, HIRAGANA_ROWS, type HiraganaCharacter, type HiraganaRowId } from "../../src/features/kana/hiragana";
 import {
+  buildHiraganaPracticeResult,
   buildHiraganaQuestion,
+  getHiraganaRetryCharacters,
   getNextHiraganaQuestionIndex,
-  isCorrectHiraganaAnswer
+  isCorrectHiraganaAnswer,
+  type HiraganaPracticeAttempt
 } from "../../src/features/kana/hiraganaPractice";
 import { colors } from "../../src/theme/tokens";
 
@@ -15,15 +18,21 @@ export default function AlphabetsScreen() {
   const [practiceComplete, setPracticeComplete] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState<HiraganaPracticeAttempt[]>([]);
+  const [roundCharacters, setRoundCharacters] = useState<readonly HiraganaCharacter[] | null>(null);
   const selected = HIRAGANA.find((character) => character.id === selectedId) ?? HIRAGANA[0]!;
   const question = practiceStarted && !practiceComplete
-    ? buildHiraganaQuestion(practiceRow, questionIndex)
+    ? buildHiraganaQuestion(practiceRow, questionIndex, HIRAGANA, roundCharacters ?? undefined)
     : null;
   const practiceRows = HIRAGANA_ROWS.filter((row) => HIRAGANA.filter((character) => character.row === row.id).length >= 3);
+  const result = buildHiraganaPracticeResult(attempts);
+  const freshRowCharacters = HIRAGANA.filter((character) => character.row === practiceRow);
 
-  function startPractice() {
+  function startPractice(characters?: readonly HiraganaCharacter[]) {
     setQuestionIndex(0);
     setAnswer(null);
+    setAttempts([]);
+    setRoundCharacters(characters ?? null);
     setPracticeComplete(false);
     setPracticeStarted(true);
   }
@@ -141,6 +150,8 @@ export default function AlphabetsScreen() {
                   setPracticeComplete(false);
                   setQuestionIndex(0);
                   setAnswer(null);
+                  setAttempts([]);
+                  setRoundCharacters(null);
                 }}
                 style={{
                   backgroundColor: active ? colors.accent : colors.surface,
@@ -162,17 +173,39 @@ export default function AlphabetsScreen() {
         {!practiceStarted || practiceComplete ? (
           <View style={{ marginTop: 16 }}>
             {practiceComplete ? (
-              <Text accessibilityLiveRegion="polite" style={{ color: colors.accent, fontSize: 16, fontWeight: "700", marginBottom: 12 }}>
-                Round complete — nice work!
-              </Text>
+              <View accessibilityLiveRegion="polite" style={{ marginBottom: 14 }}>
+                <Text style={{ color: colors.accent, fontSize: 19, fontWeight: "700" }}>
+                  {result.correct} / {result.total} correct
+                </Text>
+                {result.missedCharacters.length > 0 ? (
+                  <>
+                    <Text style={{ color: colors.muted, fontSize: 13, marginTop: 8 }}>
+                      Review these characters:
+                    </Text>
+                    <Text style={{ color: colors.ink, fontSize: 16, lineHeight: 25, marginTop: 4 }}>
+                      {result.missedCharacters.map((character) => `${character.kana} (${character.romaji})`).join(" · ")}
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={{ color: colors.muted, fontSize: 13, marginTop: 8 }}>
+                    Perfect round. Try a fresh round to keep practising.
+                  </Text>
+                )}
+              </View>
             ) : null}
             <Pressable
               accessibilityRole="button"
-              onPress={startPractice}
+              onPress={() => startPractice(
+                practiceComplete
+                  ? getHiraganaRetryCharacters(result.missedCharacters, freshRowCharacters)
+                  : undefined
+              )}
               style={{ alignItems: "center", backgroundColor: colors.accent, borderRadius: 14, padding: 15 }}
             >
               <Text style={{ color: colors.surface, fontSize: 15, fontWeight: "700" }}>
-                {practiceComplete ? "Practice again" : "Start practice"}
+                {practiceComplete
+                  ? result.missedCharacters.length > 0 ? `Retry missed (${result.missedCharacters.length})` : "Start fresh round"
+                  : "Start practice"}
               </Text>
             </Pressable>
           </View>
@@ -196,7 +229,11 @@ export default function AlphabetsScreen() {
                     accessibilityLabel={choice.romaji}
                     accessibilityState={{ selected: chosen, disabled: answer !== null }}
                     disabled={answer !== null}
-                    onPress={() => setAnswer(choice.romaji)}
+                    onPress={() => {
+                      const isCorrect = isCorrectHiraganaAnswer(question, choice.romaji);
+                      setAnswer(choice.romaji);
+                      setAttempts((current) => [...current, { character: question.prompt, correct: isCorrect }]);
+                    }}
                     style={{
                       alignItems: "center",
                       backgroundColor: answer !== null && correct ? colors.accent : colors.surface,

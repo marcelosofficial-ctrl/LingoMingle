@@ -21,7 +21,13 @@ const datasetUrl = `data:text/javascript;base64,${Buffer.from(datasetOutput).toS
 const practice = await loadTypeScriptModule("../src/features/kana/hiraganaPractice.ts", [
   ['from "./hiragana"', `from "${datasetUrl}"`]
 ]);
-const { buildHiraganaQuestion, getNextHiraganaQuestionIndex, isCorrectHiraganaAnswer } = practice;
+const {
+  buildHiraganaPracticeResult,
+  buildHiraganaQuestion,
+  getHiraganaRetryCharacters,
+  getNextHiraganaQuestionIndex,
+  isCorrectHiraganaAnswer
+} = practice;
 
 test("questions are deterministic and contain one correct answer", () => {
   const first = buildHiraganaQuestion("k", 0);
@@ -58,8 +64,41 @@ test("round progression ends exactly at the selected row size", () => {
   assert.equal(getNextHiraganaQuestionIndex(2, 3), null);
 });
 
-test("invalid rows and question indices fail closed", () => {
+test("invalid rows, indices and retry subsets fail closed", () => {
   assert.throws(() => buildHiraganaQuestion("nasal", 0), /at least two/);
   assert.throws(() => buildHiraganaQuestion("k", -1), /non-negative/);
   assert.throws(() => getNextHiraganaQuestionIndex(-1, 5), /valid/);
+  assert.throws(() => buildHiraganaQuestion("k", 0, undefined, []), /unique members/);
+});
+
+test("round result counts correct answers and keeps missed characters in attempt order", () => {
+  const questionA = buildHiraganaQuestion("k", 0);
+  const questionI = buildHiraganaQuestion("k", 1);
+  const questionU = buildHiraganaQuestion("k", 2);
+  const result = buildHiraganaPracticeResult([
+    { character: questionA.prompt, correct: true },
+    { character: questionI.prompt, correct: false },
+    { character: questionU.prompt, correct: false },
+    { character: questionI.prompt, correct: false }
+  ]);
+  assert.equal(result.correct, 1);
+  assert.equal(result.total, 4);
+  assert.deepEqual(result.missedCharacters.map((character) => character.kana), ["き", "く"]);
+});
+
+test("retry uses only unique missed characters and keeps a single-character retry valid", () => {
+  const row = ["か", "き", "く", "け", "こ"].map((kana, index) => buildHiraganaQuestion("k", index).prompt);
+  const retry = getHiraganaRetryCharacters([row[1], row[1], row[3]], row);
+  assert.deepEqual(retry.map((character) => character.kana), ["き", "け"]);
+  const question = buildHiraganaQuestion("k", 0, undefined, retry);
+  assert.equal(question.roundLength, 2);
+  assert.equal(question.prompt.kana, "き");
+  assert.equal(question.choices.filter((choice) => choice.romaji === question.correctRomaji).length, 1);
+});
+
+test("perfect round offers a fresh full row instead of an empty retry", () => {
+  const row = ["か", "き", "く", "け", "こ"].map((kana, index) => buildHiraganaQuestion("k", index).prompt);
+  const fresh = getHiraganaRetryCharacters([], row);
+  assert.deepEqual(fresh, row);
+  assert.equal(buildHiraganaQuestion("k", 0, undefined, fresh).roundLength, row.length);
 });
