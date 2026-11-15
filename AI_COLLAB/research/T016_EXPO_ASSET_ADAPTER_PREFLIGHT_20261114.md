@@ -49,3 +49,8 @@ Decision: use Expo Asset to resolve only the static require() module id; FileSys
 - SQLite PRAGMA integrity_check / foreign_key_check: https://www.sqlite.org/pragma.html
 
 All source findings are limited to documented API and package metadata; iOS/Android execution is UNKNOWN/NOT RUN.
+
+
+## CI-driven correction (2026-11-15)
+
+VERIFIED: CI run #86 on commit 7e7a608 failed at TypeScript typecheck because `expo-asset` and `expo-file-system` could not be resolved from the root dependency graph. The package-level observation that an Expo SDK package is part of the SDK family did not establish that npm installed it as an application dependency. Therefore T016 now pins both exact SDK-compatible versions directly: expo-asset 58.0.21 and expo-file-system 58.0.13. The provisioning declaration now aliases its database contract to Expo's actual SQLiteDatabase type so the provider can transfer the validated connection to createGlossaryRepository without an unsafe adapter/cast. Commit 34ab4b5 contains this correction. Run #86 is still in progress at the time of this note; result pending.
