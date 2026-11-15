@@ -101,10 +101,33 @@ test("cleans interrupted copy and move, then recovers",async()=>{
     const recovered=await provisionGlossaryPack(f);assert.equal(recovered.status,"installed");await recovered.database.closeAsync();
   }finally{await rm(f.root,{recursive:true,force:true});}
 });
-test("cleans stale staging and rebuilds a mismatched reserved destination",async()=>{
+test("preserves a different valid v1 pack instead of replacing it",async()=>{
   const f=await fixture();
   try{
-    await writeFile(f.stagingFile.uri,"stale-stage");await writeFile(f.destinationFile.uri,"partial-destination");
+    await copyFile(f.sourceFile.uri,f.destinationFile.uri);
+    const previous=new DatabaseSync(f.destinationFile.uri);
+    previous.exec("UPDATE glossary_entry SET priority=priority+10;");
+    previous.close();
+    const previousSha256=await f.destinationFile.digest("SHA-256");
+    await assert.rejects(provisionGlossaryPack(f),/destination-valid-content-conflict/);
+    assert.equal(await f.destinationFile.digest("SHA-256"),previousSha256);
+    assert.equal(f.stagingFile.exists,false);
+    const stillValid=await f.openDatabase(GLOSSARY_PACK_DATABASE_NAME);
+    assert.equal((await stillValid.getFirstAsync("PRAGMA integrity_check")).integrity_check,"ok");
+    await stillValid.closeAsync();
+  }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
+test("cleans stale staging and rebuilds a partial reserved SQLite destination",async()=>{
+  const f=await fixture();
+  try{
+    await writeFile(f.stagingFile.uri,"stale-stage");
+    const partialPath=join(f.root,"partial.sqlite");
+    const partial=new DatabaseSync(partialPath);
+    partial.exec(`PRAGMA application_id=1278023500; PRAGMA user_version=1;
+      CREATE TABLE glossary_source(id TEXT); CREATE TABLE glossary_entry(id TEXT);`);
+    partial.close();
+    await copyFile(partialPath,f.destinationFile.uri);
     const result=await provisionGlossaryPack(f);assert.equal(result.status,"installed");
     assert.equal(f.stagingFile.exists,false);assert.equal(await f.destinationFile.digest("SHA-256"),f.expectedSha256);
     await result.database.closeAsync();
