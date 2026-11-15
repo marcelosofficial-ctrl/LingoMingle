@@ -10,6 +10,11 @@ T016 DONE (code + CI; native runtime NOT RUN):
 - Synthetic-only app pack generator at tools/nikl-importer/scripts/build-synthetic-app-pack.mjs; committed DB + stable manifest at assets/glossary-synthetic-v1.db and assets/glossary-synthetic-v1.manifest.json (asset commit bc620031).
 - DB 86,016 bytes; SQLite 3.47.2; schema v1; app ID 1280132940; counts 1 source / 1 entry / 1 surface / 1 sense; SHA-256 a7730a6bad8a1d3942f50b539931dbb9f4f01fc069721df39f661e2ccbd0affe. Independent SQLite verification: integrity_check ok; FK check empty; version and row counts match.
 - metro.config.js registers .db; GlossaryProvider pins measured digest; app/_layout.tsx mounts provider.
-- CI #98 (43686868728) SUCCESS: root npm ci, typecheck, lint, app tests, iOS and Android Metro exports, importer npm ci/tests, synthetic pack generation, and byte-for-byte repeat-build check of DB + manifest. #95's earlier failure was only the irrelevant web target; #96 verified mobile exports; #98 verifies reproducibility.
+- CI #99 (43686868728) SUCCESS: root npm ci, typecheck, lint, app tests, iOS and Android Metro exports, importer npm ci/tests, synthetic pack generation, and byte-for-byte repeat-build check of DB + manifest.
+T017 DONE:
+- Dependency-free typed 46-character basic hiragana dataset in src/features/kana/hiragana.ts, conventional gojūon order, stable IDs, Hepburn readings, row/column metadata; documents を=wo and ん=n.
+- Alphabets tab now has accessible responsive selectable character grid and live detail panel, initially あ; uses existing theme tokens.
+- tests/hiragana.test.mjs covers count, uniqueness, row order/sizes/metadata, key spellings and initial selection.
+- CI #103 (43699655234) SUCCESS: root npm ci, typecheck, lint, tests, iOS/Android Metro exports, importer tests, synthetic pack generation and repeat-build reproducibility.
 Native iOS/Android builds and Expo Go/device runtime validation NOT RUN. No real NIKL data, production pack, external upload, paid service, or store distribution. Legal/platform distribution remains HOLD.
-Next: T017 — implement the 46-character basic hiragana learning grid and selection detail, with a tested canonical kana/romaji dataset; exclude dakuten, small kana, katakana and audio for this first slice.
+Next: T018 — build a small local-only hiragana recognition practice loop using the tested dataset, with immediate feedback and no SRS/persisted mastery in the first iteration.
