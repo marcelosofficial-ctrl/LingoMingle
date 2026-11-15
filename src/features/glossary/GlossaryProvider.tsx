@@ -11,7 +11,7 @@ import {
 } from "./provisioning.mjs";
 import { createGlossaryRepository, type GlossaryRepository } from "./sqlite-repository.mjs";
 
-const EXPECTED_SYNTHETIC_PACK_SHA256 = "29e3d4fb5db7ba262328cab6350d25f82510ff8bd29dc9f0ca70efad8aa4e404";
+const EXPECTED_SYNTHETIC_PACK_SHA256 = "a7730a6bad8a1d3942f50b539931dbb9f4f01fc069721df39f661e2ccbd0affe";
 const SYNTHETIC_PACK_MODULE_ID = require("../../../assets/glossary-synthetic-v1.db");
 const ALLOWED_DATABASE_NAMES = new Set<string>([
   GLOSSARY_PACK_DATABASE_NAME,
