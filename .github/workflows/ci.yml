@@ -50,6 +50,14 @@ jobs:
       - name: Commit CI-generated root lockfile
         if: github.event_name == 'push' && github.ref == 'refs/heads/lingomingle-foundation-2026-11-10'
         run: |
+          cp package-lock.json "$RUNNER_TEMP/package-lock.generated.json"
+          git fetch origin "$GITHUB_REF_NAME"
+          if ! git diff --quiet HEAD "origin/$GITHUB_REF_NAME" -- package.json; then
+            echo "package.json changed during this run; refusing to publish a stale lockfile."
+            exit 1
+          fi
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          cp "$RUNNER_TEMP/package-lock.generated.json" package-lock.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
