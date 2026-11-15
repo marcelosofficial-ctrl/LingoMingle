@@ -81,6 +81,13 @@ jobs:
       - run: npm test --prefix tools/nikl-importer
       - name: Build synthetic application SQLite pack
         run: node tools/nikl-importer/scripts/build-synthetic-app-pack.mjs
+      - name: Verify synthetic app pack rebuild is byte-for-byte reproducible
+        run: |
+          cp assets/glossary-synthetic-v1.db "$RUNNER_TEMP/glossary-first.db"
+          cp assets/glossary-synthetic-v1.manifest.json "$RUNNER_TEMP/glossary-first.manifest.json"
+          node tools/nikl-importer/scripts/build-synthetic-app-pack.mjs
+          cmp "$RUNNER_TEMP/glossary-first.db" assets/glossary-synthetic-v1.db
+          cmp "$RUNNER_TEMP/glossary-first.manifest.json" assets/glossary-synthetic-v1.manifest.json
       - uses: actions/upload-artifact@v4
         with:
           name: synthetic-glossary-app-pack-${{ github.sha }}
