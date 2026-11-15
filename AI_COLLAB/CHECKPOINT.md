@@ -1,7 +1,20 @@
 # CHECKPOINT
 
-Unit: T016 lockfile artifact verification and Expo asset integration — IN PROGRESS.
+Unit: T016 root lockfile generation + CI publication path — DONE. T016 overall remains IN PROGRESS.
 
-Starting baseline (2026-11-15): branch head 584129cddfd90f88b9955f708f206a20126b468d. CI #86 succeeded on 34ab4b5. CI #87 for lockfile artifact upload was still running at last checkpoint. Root lockfile absent; no synthetic .db asset is committed; provider hash remains unverified. No native iOS/Android evidence.
+VERIFIED:
+- CI #87 (43684425346) SUCCESS: npm install on Node 22.13.1 / npm 10.9.2, root typecheck, lint, app tests, importer npm ci/tests, artifact upload.
+- Downloaded artifact 14149339600. It contains package-lock.json (429,564 bytes; lockfileVersion 3). Inspected root pins and resolved package entries: Expo 58.0.24, expo-asset 58.0.21, expo-file-system 58.0.13, expo-sqlite 58.0.16; all match package.json. No manual lockfile edits.
+- Commit 65de49f introduced the lockfile commit + root npm ci path.
+- CI #88 (43684904514) generated/uploaded the lock, then its push failed non-fast-forward because commits landed after checkout. Logs confirmed exact cause; no npm ci or tests ran in #88.
+- Commit 54c92a6 hardened the action: preserve generated lock in RUNNER_TEMP, fetch branch head, refuse if package.json changed, reset checkout to current remote head, restore generated lock, then commit/push. This avoids overwriting intervening docs commits.
+- 5895d54 updates STATE with exact status and failure/recovery.
+- CI #89 (43684992129) IN PROGRESS at checkpoint time. It is testing the hardened procedure. Do not claim lockfile committed or root npm ci passed until run output confirms.
 
-This pass will: verify CI #87 and retrieve its generated lockfile artifact if available; review the exact generated lock before committing; inspect provider/Metro/root route wiring and continue the T016 integration in bounded units. Never fabricate lockfile bytes or database hash. Keep changes within NEXT_TASK allowlist and <=350 changed lines per unit.
+Current blockers / UNKNOWN:
+- package-lock.json is not yet confirmed in the branch; #89 may commit it.
+- assets/glossary-synthetic-v1.db absent; provider SHA 29e3...e404 remains unverified placeholder.
+- Metro .db assetExts and app-root GlossaryProvider wiring remain outstanding.
+- Native iOS/Android NOT RUN; no real NIKL data, production pack, external upload, paid service, or store distribution.
+
+Next: verify #89 lock commit and root npm ci; then build a deterministic synthetic-only SQLite asset through committed T013 builder, validate exact schema/row counts/integrity/FKs, use measured SHA, add Metro .db config and provider root wiring, and rerun CI.
