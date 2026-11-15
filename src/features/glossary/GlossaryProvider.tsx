@@ -13,7 +13,7 @@ import { createGlossaryRepository, type GlossaryRepository } from "./sqlite-repo
 
 const EXPECTED_SYNTHETIC_PACK_SHA256 = "29e3d4fb5db7ba262328cab6350d25f82510ff8bd29dc9f0ca70efad8aa4e404";
 const SYNTHETIC_PACK_MODULE_ID = require("../../../assets/glossary-synthetic-v1.db");
-const ALLOWED_DATABASE_NAMES = new Set([
+const ALLOWED_DATABASE_NAMES = new Set<string>([
   GLOSSARY_PACK_DATABASE_NAME,
   GLOSSARY_PACK_STAGING_NAME,
 ]);

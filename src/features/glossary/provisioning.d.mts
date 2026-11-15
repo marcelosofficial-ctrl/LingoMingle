@@ -1,3 +1,5 @@
+import type { SQLiteDatabase } from "expo-sqlite";
+
 export interface GlossaryPackFile {
   readonly name: string; readonly uri: string; readonly exists: boolean;
   readonly parentDirectory: { readonly uri: string };
@@ -6,11 +8,7 @@ export interface GlossaryPackFile {
   move(destination: GlossaryPackFile): Promise<void>;
   delete(): void | Promise<void>;
 }
-export interface GlossaryPackDatabase {
-  getFirstAsync<T = Record<string, unknown>>(sql: string, ...params: unknown[]): Promise<T | null>;
-  getAllAsync<T = Record<string, unknown>>(sql: string, ...params: unknown[]): Promise<T[]>;
-  execAsync(sql: string): Promise<void>; closeAsync(): Promise<void>;
-}
+export type GlossaryPackDatabase = SQLiteDatabase;
 export declare const GLOSSARY_PACK_DATABASE_NAME: "lingomingle-glossary-v1.sqlite";
 export declare const GLOSSARY_PACK_STAGING_NAME: ".lingomingle-glossary-v1.sqlite.staging";
 export declare function validateGlossaryPackDatabase(db: GlossaryPackDatabase): Promise<void>;

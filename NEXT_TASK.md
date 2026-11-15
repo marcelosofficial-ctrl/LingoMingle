@@ -2,7 +2,7 @@
 ID: T016
 Goal: Integrate T015's hash-gated pack provisioning coordinator with exact SDK 58 Expo FileSystem and Expo SQLite APIs, using synthetic pack assets only.
 Acceptance:
-- Pin only compatible expo-file-system 58.0.13 directly. Expo 58.0.24 already depends on expo-asset 58.0.21 (MIT); use its Asset.fromModule(require(...)) resolver without introducing another package version or broad SDK upgrades.
+- Pin compatible expo-file-system 58.0.13 and expo-asset 58.0.21 directly. Although expo-asset is part of the SDK 58 package family, CI proved it is not installed by the root npm dependency graph merely because expo is installed. Both exact versions are direct dependencies; no broad SDK upgrades.
 - Bundle a synthetic .db fixture and configure Metro's resolver.assetExts for .db. Resolve the Metro module id with Asset.fromModule(...).downloadAsync(); use localUri only as a temporary source because it lives in an OS-evictable cache. Hash with File.digest("SHA-256"), then copy to staging in SQLite.defaultDatabaseDirectory. Never open the cache URI as the application DB.
 - Open staging only after the copy hash passes. Run T015 schema, integrity, FK, exact-column and count checks. Move to final only after staging passes, then hash and validate final before handing it to createGlossaryRepository. Never use SQLiteProvider assetSource as an integrity/replacement mechanism.
 - Protect a different valid schema-v1 pack at the reserved filename: return a clear conflict and preserve its bytes. The v1 filename is immutable; a future content revision requires a new versioned filename/schema migration. Recover only corrupt/partial files that T015 can positively identify as invalid; fail closed on an unclassifiable I/O error.
