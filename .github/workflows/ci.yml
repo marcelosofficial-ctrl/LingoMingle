@@ -6,6 +6,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - "app.json"
+      - "metro.config.js"
       - "tsconfig.json"
       - "eslint.config.js"
       - "expo-env.d.ts"
@@ -72,6 +73,8 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+      - name: Verify Expo Metro bundles iOS and Android with SQLite assets
+        run: npx expo export --platform all --output-dir "$RUNNER_TEMP/expo-export"
       - run: npm ci --prefix tools/nikl-importer --no-audit --no-fund
       - run: npm test --prefix tools/nikl-importer
       - name: Build synthetic application SQLite pack
