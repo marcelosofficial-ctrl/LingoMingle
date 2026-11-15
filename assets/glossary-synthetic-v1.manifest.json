@@ -6,7 +6,7 @@
   "sqliteVersion": "3.47.2",
   "input": {
     "jsonlSha256": "cfe6d0a67a9736db6a9521e11eaa80938aa17371c7672c8fc5ebd27ce056dafa",
-    "manifestSha256": "ca0209abd814bf17d9bb7c17342424d927850e73fcbe01b797301b682278e5c8"
+    "manifestSha256": "7fc693c549271999f6d6b319edadf2b7397be2231c17bd71b14c98094ef96861"
   },
   "counts": {
     "sources": 1,
