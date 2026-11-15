@@ -13,8 +13,13 @@ T016 DONE (code + CI; native runtime NOT RUN):
 - CI #99 (43686868728) SUCCESS: root npm ci, typecheck, lint, app tests, iOS and Android Metro exports, importer npm ci/tests, synthetic pack generation, and byte-for-byte repeat-build check of DB + manifest.
 T017 DONE:
 - Dependency-free typed 46-character basic hiragana dataset in src/features/kana/hiragana.ts, conventional gojūon order, stable IDs, Hepburn readings, row/column metadata; documents を=wo and ん=n.
-- Alphabets tab now has accessible responsive selectable character grid and live detail panel, initially あ; uses existing theme tokens.
+- Alphabets tab has accessible responsive selectable character grid and live detail panel, initially あ; uses existing theme tokens.
 - tests/hiragana.test.mjs covers count, uniqueness, row order/sizes/metadata, key spellings and initial selection.
 - CI #103 (43699655234) SUCCESS: root npm ci, typecheck, lint, tests, iOS/Android Metro exports, importer tests, synthetic pack generation and repeat-build reproducibility.
+T018 DONE:
+- src/features/kana/hiraganaPractice.ts adds deterministic row-scoped question generation, one correct answer, unique same-row distractors, answer checking, and round progression.
+- Alphabets tab adds local in-memory practice: choose a row with at least three characters, kana prompt, romaji choices, immediate feedback, next-question/round-complete flow. No W (2) or nasal (1) short rows in the picker.
+- tests/hiragana-practice.test.mjs executes the real TypeScript module via the installed TypeScript transpiler; covers deterministic prompts, correct-answer uniqueness, distractors, Y-row behavior, answer checking, progression and invalid inputs.
+- CI #109 (43701231807) SUCCESS: root npm install/ci, typecheck, lint, 58 root tests passed/0 failed, iOS and Android Metro exports, importer install/tests (10 passed/0 failed), synthetic app pack generation and byte-for-byte rebuild verification.
 Native iOS/Android builds and Expo Go/device runtime validation NOT RUN. No real NIKL data, production pack, external upload, paid service, or store distribution. Legal/platform distribution remains HOLD.
-Next: T018 — build a small local-only hiragana recognition practice loop using the tested dataset, with immediate feedback and no SRS/persisted mastery in the first iteration.
+Next: T019 — add a local in-memory practice result summary with correct-answer count and a missed-character retry round; no persisted mastery, SRS, DB writes, or network.
