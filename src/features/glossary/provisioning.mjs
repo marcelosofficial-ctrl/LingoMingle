@@ -40,8 +40,19 @@ async function openValidated(openDatabase, name) {
   try { await validateGlossaryPackDatabase(db); return db; }
   catch (error) { try { await db.closeAsync(); } catch {} throw error; }
 }
+const INVALID_EXISTING_PACK_CODES = new Set([
+  "unsupported-glossary-schema",
+  "glossary-integrity-check-failed",
+  "glossary-foreign-key-check-failed",
+  "incomplete-glossary-schema",
+  "glossary-table-shape-mismatch",
+  "empty-glossary-pack",
+  "glossary-readonly-mode-unavailable",
+]);
+
 async function provision(options) {
   const { sourceFile, destinationFile, stagingFile, expectedSha256, openDatabase } = options;
+  let publishingAttempt = false;
   if (!/^[a-f0-9]{64}$/u.test(expectedSha256 ?? "")) fail("invalid-expected-sha256");
   if (destinationFile?.name !== GLOSSARY_PACK_DATABASE_NAME || stagingFile?.name !== GLOSSARY_PACK_STAGING_NAME
     || destinationFile.parentDirectory?.uri !== stagingFile.parentDirectory?.uri) fail("invalid-glossary-pack-paths");
@@ -54,22 +65,42 @@ async function provision(options) {
   if (destinationFile.exists && await destinationFile.digest("SHA-256") === expectedSha256) {
     return {database:await openValidated(openDatabase,GLOSSARY_PACK_DATABASE_NAME),status:"reused"};
   }
-  // Verify the bundled source before deleting an invalid app-owned destination.
+  // Verify the bundled source before touching any existing destination.
   if (await sourceFile.digest("SHA-256") !== expectedSha256) fail("glossary-asset-sha256-mismatch");
-  if (destinationFile.exists) await destinationFile.delete();
   try {
     await sourceFile.copy(stagingFile);
     if (!stagingFile.exists || await stagingFile.digest("SHA-256") !== expectedSha256) fail("glossary-staging-sha256-mismatch");
     const stagedDb=await openValidated(openDatabase,GLOSSARY_PACK_STAGING_NAME);
     await stagedDb.closeAsync();
+
+    // A v1 filename is immutable. Never replace a different but valid v1 pack:
+    // a future pack revision must receive a new filename/schema migration.
+    if (destinationFile.exists) {
+      let existingDb;
+      let validationError;
+      try {
+        existingDb=await openDatabase(GLOSSARY_PACK_DATABASE_NAME);
+        await validateGlossaryPackDatabase(existingDb);
+      } catch (error) {
+        validationError=error;
+      } finally {
+        if (existingDb) { try { await existingDb.closeAsync(); } catch {} }
+      }
+      if (!validationError) fail("glossary-pack-destination-valid-content-conflict");
+      if (!INVALID_EXISTING_PACK_CODES.has(validationError.message)) {
+        fail("glossary-pack-destination-unverifiable");
+      }
+      await destinationFile.delete();
+    }
     if (destinationFile.exists) fail("glossary-pack-destination-raced");
+    // From this point any mismatched final file was created by this attempt.
+    publishingAttempt=true;
     await stagingFile.move(destinationFile);
     if (!destinationFile.exists || await destinationFile.digest("SHA-256") !== expectedSha256) fail("glossary-published-sha256-mismatch");
     return {database:await openValidated(openDatabase,GLOSSARY_PACK_DATABASE_NAME),status:"installed"};
   } catch (error) {
     if (stagingFile.exists) { try { await stagingFile.delete(); } catch {} }
-    // Only the reserved app-owned filename may be automatically removed.
-    if (destinationFile.exists) {
+    if (publishingAttempt && destinationFile.exists) {
       let digest;
       try { digest=await destinationFile.digest("SHA-256"); } catch {}
       if (digest !== expectedSha256) { try { await destinationFile.delete(); } catch {} }
