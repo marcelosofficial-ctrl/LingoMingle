@@ -10,6 +10,7 @@ on:
       - "eslint.config.js"
       - "expo-env.d.ts"
       - "app/**"
+      - "assets/**"
       - "src/**"
       - "tests/**"
       - "tools/nikl-importer/**"
@@ -73,3 +74,13 @@ jobs:
       - run: npm test
       - run: npm ci --prefix tools/nikl-importer --no-audit --no-fund
       - run: npm test --prefix tools/nikl-importer
+      - name: Build synthetic application SQLite pack
+        run: node tools/nikl-importer/scripts/build-synthetic-app-pack.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-glossary-app-pack-${{ github.sha }}
+          path: |
+            assets/glossary-synthetic-v1.db
+            assets/glossary-synthetic-v1.manifest.json
+          if-no-files-found: error
+          retention-days: 1
