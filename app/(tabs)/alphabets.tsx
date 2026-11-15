@@ -19,7 +19,7 @@ export default function AlphabetsScreen() {
   const question = practiceStarted && !practiceComplete
     ? buildHiraganaQuestion(practiceRow, questionIndex)
     : null;
-  const practiceRows = HIRAGANA_ROWS.filter((row) => row.id !== "nasal");
+  const practiceRows = HIRAGANA_ROWS.filter((row) => HIRAGANA.filter((character) => character.row === row.id).length >= 3);
 
   function startPractice() {
     setQuestionIndex(0);
