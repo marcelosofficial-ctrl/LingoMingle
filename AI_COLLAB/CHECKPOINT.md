@@ -1,5 +1,5 @@
 # CHECKPOINT
-Status: DONE — T020 accepted; documentation reconciled
+Status: IN PROGRESS — new full-work pass; recovery check underway
 Branch: lingomingle-foundation-2026-11-10
 Implementation: fb07fc800ebaed2e2b245f98155a7df3b65bdd8c adds 46 basic Katakana records, parity/exclusion tests, and accessible script switch preserving selected row/column. Hiragana practice remains intact and is not exposed for Katakana.
 Verification: CI #114 (43841900879) SUCCESS on the implementation commit. Typecheck, lint, root tests, iOS/Android Metro exports, importer tests, and synthetic-pack reproducibility all completed successfully.
