@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { HIRAGANA, HIRAGANA_ROWS, type HiraganaCharacter, type HiraganaRowId } from "../../src/features/kana/hiragana";
+import { KATAKANA, KATAKANA_ROWS } from "../../src/features/kana/katakana";
 import {
   buildHiraganaPracticeResult,
   buildHiraganaQuestion,
@@ -11,8 +12,11 @@ import {
 } from "../../src/features/kana/hiraganaPractice";
 import { colors } from "../../src/theme/tokens";
 
+type KanaScript = "hiragana" | "katakana";
+
 export default function AlphabetsScreen() {
   const [selectedId, setSelectedId] = useState("hiragana-a");
+  const [script, setScript] = useState<KanaScript>("hiragana");
   const [practiceRow, setPracticeRow] = useState<HiraganaRowId>("vowels");
   const [practiceStarted, setPracticeStarted] = useState(false);
   const [practiceComplete, setPracticeComplete] = useState(false);
@@ -20,13 +24,25 @@ export default function AlphabetsScreen() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [attempts, setAttempts] = useState<HiraganaPracticeAttempt[]>([]);
   const [roundCharacters, setRoundCharacters] = useState<readonly HiraganaCharacter[] | null>(null);
-  const selected = HIRAGANA.find((character) => character.id === selectedId) ?? HIRAGANA[0]!;
+  const activeCharacters = script === "hiragana" ? HIRAGANA : KATAKANA;
+  const activeRows = script === "hiragana" ? HIRAGANA_ROWS : KATAKANA_ROWS;
+  const selected = activeCharacters.find((character) => character.id === selectedId) ?? activeCharacters[0]!;
   const question = practiceStarted && !practiceComplete
     ? buildHiraganaQuestion(practiceRow, questionIndex, HIRAGANA, roundCharacters ?? undefined)
     : null;
   const practiceRows = HIRAGANA_ROWS.filter((row) => HIRAGANA.filter((character) => character.row === row.id).length >= 3);
   const result = buildHiraganaPracticeResult(attempts);
   const freshRowCharacters = HIRAGANA.filter((character) => character.row === practiceRow);
+
+  function switchScript(nextScript: KanaScript) {
+    if (nextScript === script) return;
+    const nextCharacters = nextScript === "hiragana" ? HIRAGANA : KATAKANA;
+    const nextSelected = nextCharacters.find((character) =>
+      character.rowIndex === selected.rowIndex && character.columnIndex === selected.columnIndex
+    ) ?? nextCharacters[0]!;
+    setSelectedId(nextSelected.id);
+    setScript(nextScript);
+  }
 
   function startPractice(characters?: readonly HiraganaCharacter[]) {
     setQuestionIndex(0);
@@ -53,10 +69,29 @@ export default function AlphabetsScreen() {
       contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 28, paddingBottom: 40 }}
       accessibilityLabel="Hiragana character lessons"
     >
-      <Text style={{ color: colors.ink, fontSize: 30, fontWeight: "700" }}>Hiragana</Text>
+      <Text style={{ color: colors.ink, fontSize: 30, fontWeight: "700" }}>{script === "hiragana" ? "Hiragana" : "Katakana"}</Text>
       <Text style={{ color: colors.muted, fontSize: 15, lineHeight: 22, marginTop: 8 }}>
         Explore the 46 basic characters. Select one to see its sound.
       </Text>
+      <View accessibilityLabel="Choose writing system" style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+        {(["hiragana", "katakana"] as const).map((option) => {
+          const active = script === option;
+          return (
+            <Pressable
+              key={option}
+              accessibilityRole="button"
+              accessibilityLabel={option === "hiragana" ? "Hiragana chart" : "Katakana chart"}
+              accessibilityState={{ selected: active }}
+              onPress={() => switchScript(option)}
+              style={{ backgroundColor: active ? colors.accent : colors.surface, borderColor: active ? colors.accent : colors.line, borderRadius: 12, borderWidth: 1, paddingHorizontal: 16, paddingVertical: 10 }}
+            >
+              <Text style={{ color: active ? colors.surface : colors.ink, fontSize: 14, fontWeight: "700" }}>
+                {option === "hiragana" ? "Hiragana" : "Katakana"}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
 
       <View
         accessibilityLabel={`Selected character ${selected.kana}, ${selected.romaji}`}
@@ -82,8 +117,8 @@ export default function AlphabetsScreen() {
         </Text>
       </View>
 
-      {HIRAGANA_ROWS.map((row) => {
-        const characters = HIRAGANA.filter((character) => character.row === row.id);
+      {activeRows.map((row) => {
+        const characters = activeCharacters.filter((character) => character.row === row.id);
         return (
           <View key={row.id} style={{ marginBottom: 18 }}>
             <Text style={{ color: colors.muted, fontSize: 12, fontWeight: "700", letterSpacing: 1, marginBottom: 9 }}>
@@ -128,9 +163,10 @@ export default function AlphabetsScreen() {
       })}
 
       <Text style={{ color: colors.muted, fontSize: 12, lineHeight: 18, marginTop: 2 }}>
-        Reading note: を is shown as “wo” and ん as “n” in this learning chart.
+        Reading note: {script === "hiragana" ? "を is shown as “wo” and ん as “n”." : "ヲ is shown as “wo” and ン as “n”."}
       </Text>
 
+      {script === "hiragana" ? (
       <View style={{ borderTopColor: colors.line, borderTopWidth: 1, marginTop: 28, paddingTop: 24 }}>
         <Text style={{ color: colors.ink, fontSize: 23, fontWeight: "700" }}>Quick practice</Text>
         <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 21, marginTop: 6 }}>
@@ -271,6 +307,7 @@ export default function AlphabetsScreen() {
           </View>
         ) : null}
       </View>
+      ) : null}
     </ScrollView>
   );
 }
