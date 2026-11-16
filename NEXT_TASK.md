@@ -2,26 +2,6 @@
 ID: T021
 Goal: Add Katakana recognition practice using the tested Hiragana practice interaction, while keeping script-specific content and state isolated.
 
-Acceptance:
-- Provide a Katakana recognition mode using only the 46 basic Katakana records.
-- Reuse the established Hiragana quiz interaction and validation approach where practical; do not regress or silently alter Hiragana practice.
-- Use canonical Katakana readings and row-scoped distractors; never trust answer text or row/position metadata supplied by UI state.
-- Keep progress in memory only; no review-history persistence, SRS, database writes, network calls or new dependencies.
-- Include deterministic Node tests for prompt pool, distractors, correct/wrong answers, invalid/forged inputs, progression and round completion.
-- Expose practice only when Katakana is selected; switching scripts must not leak or corrupt the other script's practice state.
-- Preserve accessibility labels, theme tokens and responsive behavior.
-Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kana/**, app/(tabs)/alphabets.tsx, tests/**. Keep each unit near 350 changed lines; commit each coherent unit and update CHECKPOINT.
-
-Acceptance:
-- Add 46 unique basic Katakana records, one-to-one with HIRAGANA by row, rowIndex, columnIndex and canonical romaji.
-- Stable IDs prefixed katakana-; same typed field shape and order as Hiragana.
-- Preserve project convention ヲ=wo and ン=n, even where external charts use another romanization.
-- Exclude voiced/semi-voiced add-ons, small kana, yōon/foreign-sound combinations, ッ and ー; handle these in later tasks.
-- Add an accessible Hiragana/Katakana switch to app/(tabs)/alphabets.tsx. Preserve the corresponding selected grid position across script changes. Keep Hiragana Quick practice intact; don't expose it for Katakana until a separate task adds Katakana practice.
-- Node tests verify 46 count, uniqueness, row/position/romaji parity, canonical kana, and deliberate exclusion of extended symbols.
-- Existing theme tokens, responsive chart, accessibility labels; no new dependencies, copied artwork, DB writes, network, SRS or persistence.
-Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kana/**, app/(tabs)/alphabets.tsx, tests/**. Keep each unit near 350 changed lines; commit each coherent unit and update CHECKPOINT.
-
 ## Ranked gaps and verified research (checked 2026-11-16)
 1. **Corpus rights / redistribution — launch blocker. VERIFIED.** Official NIKL Modu Corpus FAQ: use is limited to the approved purpose and agreement period; requests require detailed purpose/project/agency/duration; downloads follow admin approval and an individual corpus-use agreement; public disclosure of results needs prior NIKL approval and must not include the corpus or its language material. CC BY-SA metadata alone does not prove the supplied corpus can be bundled or redistributed. Keep real-data app pack and release HOLD; request corpus-specific permission and publication guidance before use beyond approved scope. Source: https://kli.korean.go.kr/boards/faqList.do?lang=en
 2. **Native device/runtime verification — release blocker. VERIFIED.** Expo SDK 58 released 2026-10-15 with RN 0.88. Expo Go page lists SDK 58 and iOS install; Apple's Spain App Store entry shows Expo Go 58.0.5 (2026-10-22) adds SDK 58. Expo Go is fixed prebuilt native app and cannot load arbitrary custom native code; Expo recommends development builds for production work. CI Metro exports verify JS bundling, not actual app launch, SQLite asset provisioning/repository, navigation, accessibility or upgrade behavior. Local iOS dev builds need Xcode; Android needs Android Studio/tooling. Sources: https://expo.dev/changelog/sdk-58 ; https://expo.dev/go ; https://apps.apple.com/es/app/expo-go/id982107779 ; https://docs.expo.dev/develop/development-builds/faq/ ; https://docs.expo.dev/develop/development-builds/introduction/
