@@ -1,6 +1,16 @@
 # NEXT_TASK
-ID: T020
-Goal: Add a complete basic Katakana chart beside Hiragana without unlicensed chart assets or expanded scope.
+ID: T021
+Goal: Add Katakana recognition practice using the tested Hiragana practice interaction, while keeping script-specific content and state isolated.
+
+Acceptance:
+- Provide a Katakana recognition mode using only the 46 basic Katakana records.
+- Reuse the established Hiragana quiz interaction and validation approach where practical; do not regress or silently alter Hiragana practice.
+- Use canonical Katakana readings and row-scoped distractors; never trust answer text or row/position metadata supplied by UI state.
+- Keep progress in memory only; no review-history persistence, SRS, database writes, network calls or new dependencies.
+- Include deterministic Node tests for prompt pool, distractors, correct/wrong answers, invalid/forged inputs, progression and round completion.
+- Expose practice only when Katakana is selected; switching scripts must not leak or corrupt the other script's practice state.
+- Preserve accessibility labels, theme tokens and responsive behavior.
+Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kana/**, app/(tabs)/alphabets.tsx, tests/**. Keep each unit near 350 changed lines; commit each coherent unit and update CHECKPOINT.
 
 Acceptance:
 - Add 46 unique basic Katakana records, one-to-one with HIRAGANA by row, rowIndex, columnIndex and canonical romaji.
@@ -20,9 +30,8 @@ Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kan
 5. **Store/test distribution readiness — later gate. VERIFIED + UNKNOWN.** Apple allows up to 100 internal and 10,000 external TestFlight testers. Google Play personal developer accounts created after 2023-11-13 need a closed test with 12 continuously opted-in testers for 14 days before production access. Whether the user's accounts fall under these conditions is UNKNOWN; no account or fee approved. Sources: https://developer.apple.com/help/app-store-connect/test-a-beta-version/add-internal-testers ; https://developer.apple.com/help/app-store-connect/test-a-beta-version/invite-external-testers/ ; https://support.google.com/googleplay/android-developer/answer/14151465?hl=en
 
 ## Ranked follow-on work
-1. T020 — basic Katakana data and chart switch.
-2. T021 — Katakana recognition practice using the tested Hiragana pattern.
-3. T022 — native device validation and SQLite/read-only-provider acceptance on iOS and Android.
-4. T023 — local review-event model and SRS compatibility spike; no scheduler adoption until Hermes/Node compatibility and event semantics are verified.
-5. T024 — resolve corpus-specific permission or select a separately licensed alternative for Korean lexical content; keep NIKL HOLD until authorization.
-6. T025 — store account, privacy, TestFlight and Google Play readiness, only after user approval for any fees.
+1. T021 — Katakana recognition practice using the tested Hiragana pattern.
+2. T022 — native device validation and SQLite/read-only-provider acceptance on iOS and Android.
+3. T023 — local review-event model and SRS compatibility spike; no scheduler adoption until Hermes/Node compatibility and event semantics are verified.
+4. T024 — resolve corpus-specific permission or select a separately licensed alternative for Korean lexical content; keep NIKL HOLD until authorization.
+5. T025 — store account, privacy, TestFlight and Google Play readiness, only after user approval for any fees.
