@@ -1,7 +1,7 @@
 # CHECKPOINT
-Status: IN PROGRESS — recovering T021 CI evidence and branch state
+Status: IN PROGRESS — T021 CI failure diagnosed; test harness fix committed, awaiting CI
 Branch: lingomingle-foundation-2026-11-10
 Unit 1: T021 Katakana recognition practice implementation is committed at 5b1263c2245d063bebb17fe3438e27e0a03bf16b. Practice engine, screen, tests and script integration are present.
-Verification: T021 CI result remains UNKNOWN. Earlier combined status was empty; the available commit-workflow wrapper only returns pull_request-triggered runs. Native iOS/Android device runtime remains NOT RUN. Do not claim test success without run output.
+Verification: CI #115 on T021 implementation commit 5b1263c failed at `npm test`. `npm run typecheck` and `npm run lint` passed. The failing Katakana test loader transpiled katakana.ts into a data: URL but left its relative `./hiragana` import unresolved; Node 22 reports ERR_UNSUPPORTED_RESOLVE_REQUEST. Later Metro/importer/pack jobs were skipped. A test-only harness fix now bundles the Hiragana dependency into its own data URL before importing Katakana. Native iOS/Android device runtime remains NOT RUN. Fix is not yet CI-verified.
 Recovery focus: inspect the actual branch head, latest commits, workflow runs/check-runs via the general GitHub fetch API, then reconcile CI evidence. No Gemini campaign is needed yet; intake any new Gemini handoff as project evidence when supplied.
-Next: If T021 CI is green, close T021 and proceed to T022 native-device validation. If CI cannot be established, document the precise blocker and safe user action. No merges, rebases, workflow-permission changes, or no-op source commits.
+Next: inspect CI for the test-harness fix commit. If npm test and all downstream CI jobs pass, reconcile STATE/NEXT_TASK and close T021; otherwise use the new failure output to fix the next concrete issue. Then proceed to T022 native-device validation. No merges, rebases, workflow-permission changes, or no-op source commits.
