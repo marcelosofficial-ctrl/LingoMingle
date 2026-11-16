@@ -96,9 +96,25 @@ test("retry uses only unique missed characters and keeps a single-character retr
   assert.equal(question.choices.filter((choice) => choice.romaji === question.correctRomaji).length, 1);
 });
 
-test("perfect round offers a fresh full row instead of an empty retry", () => {
+test("perfect round fresh selection uses normal full-row question choices", () => {
   const row = ["か", "き", "く", "け", "こ"].map((kana, index) => buildHiraganaQuestion("k", index).prompt);
   const fresh = getHiraganaRetryCharacters([], row);
+  const normalQuestion = buildHiraganaQuestion("k", 2);
+  const freshQuestion = buildHiraganaQuestion("k", 2, undefined, fresh);
   assert.deepEqual(fresh, row);
-  assert.equal(buildHiraganaQuestion("k", 0, undefined, fresh).roundLength, row.length);
+  assert.equal(freshQuestion.roundLength, row.length);
+  assert.deepEqual(freshQuestion.choices, normalQuestion.choices);
+});
+
+test("forged kana readings are rejected from retry and result inputs", () => {
+  const canonical = buildHiraganaQuestion("k", 0).prompt;
+  const forged = { ...canonical, romaji: "fake" };
+  assert.throws(() => buildHiraganaQuestion("k", 0, undefined, [forged]), /canonical/);
+  assert.throws(() => getHiraganaRetryCharacters([forged], []), /canonical/);
+  assert.throws(() => buildHiraganaPracticeResult([{ character: forged, correct: false }]), /canonical/);
+});
+
+test("practice result rejects non-boolean answer status", () => {
+  const character = buildHiraganaQuestion("k", 0).prompt;
+  assert.throws(() => buildHiraganaPracticeResult([{ character, correct: 1 }]), /boolean/);
 });
