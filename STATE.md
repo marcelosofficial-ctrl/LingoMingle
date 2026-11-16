@@ -1,25 +1,13 @@
 # STATE
-Updated: 2026-11-15
+Updated: 2026-11-16
 Repo: marcelosofficial-ctrl/LingoMingle; branch: lingomingle-foundation-2026-11-10; canonical repo (not LingoMingle-).
-Stack: Expo 58.0.24; Router 58.0.31; SQLite 58.0.16; React/React DOM 19.3.0; RN 0.88.1; TS 6.0.3.
-Product: Japanese hiragana MVP, katakana extension, Hangul starter, Song Study later. Local-first. G1 blocks online copyrighted lyric lookup. No paid services/store fees approved.
-T002-T008: SDK foundation, keyboard research, gloss/analyzer/POS contracts, Kiwi feasibility, Korean POS crosswalk. T009-T011: user-attached NIKL snapshot inspection, normalizer, parser/tool and CC BY-SA/platform rights review; production import/distribution HOLD.
-T012-T015 complete: synthetic-only ZIP/JSON importer; synthetic SQLite builder; read-only Expo repository; hash-gated staging/provisioning. T015 red-team fix preserves a different valid schema-v1 pack and fails closed on conflict (20c60ef, cbb1226).
-T016 DONE (code + CI; native runtime NOT RUN):
-- Direct Expo Asset 58.0.21, FileSystem 58.0.13 and React DOM 19.3.0 pins; root package-lock generated/committed by CI (7e70d57).
-- Synthetic-only app pack generator at tools/nikl-importer/scripts/build-synthetic-app-pack.mjs; committed DB + stable manifest at assets/glossary-synthetic-v1.db and assets/glossary-synthetic-v1.manifest.json (asset commit bc620031).
-- DB 86,016 bytes; SQLite 3.47.2; schema v1; app ID 1280132940; counts 1 source / 1 entry / 1 surface / 1 sense; SHA-256 a7730a6bad8a1d3942f50b539931dbb9f4f01fc069721df39f661e2ccbd0affe. Independent SQLite verification: integrity_check ok; FK check empty; version and row counts match.
-- metro.config.js registers .db; GlossaryProvider pins measured digest; app/_layout.tsx mounts provider.
-- CI #99 (43686868728) SUCCESS: root npm ci, typecheck, lint, app tests, iOS and Android Metro exports, importer npm ci/tests, synthetic pack generation, and byte-for-byte repeat-build check of DB + manifest.
-T017 DONE:
-- Dependency-free typed 46-character basic hiragana dataset in src/features/kana/hiragana.ts, conventional gojūon order, stable IDs, Hepburn readings, row/column metadata; documents を=wo and ん=n.
-- Alphabets tab has accessible responsive selectable character grid and live detail panel, initially あ; uses existing theme tokens.
-- tests/hiragana.test.mjs covers count, uniqueness, row order/sizes/metadata, key spellings and initial selection.
-- CI #103 (43699655234) SUCCESS: root npm ci, typecheck, lint, tests, iOS/Android Metro exports, importer tests, synthetic pack generation and repeat-build reproducibility.
-T018 DONE:
-- src/features/kana/hiraganaPractice.ts adds deterministic row-scoped question generation, one correct answer, unique same-row distractors, answer checking, and round progression.
-- Alphabets tab adds local in-memory practice: choose a row with at least three characters, kana prompt, romaji choices, immediate feedback, next-question/round-complete flow. No W (2) or nasal (1) short rows in the picker.
-- tests/hiragana-practice.test.mjs executes the real TypeScript module via the installed TypeScript transpiler; covers deterministic prompts, correct-answer uniqueness, distractors, Y-row behavior, answer checking, progression and invalid inputs.
-- CI #109 (43701231807) SUCCESS: root npm install/ci, typecheck, lint, 58 root tests passed/0 failed, iOS and Android Metro exports, importer install/tests (10 passed/0 failed), synthetic app pack generation and byte-for-byte rebuild verification.
-Native iOS/Android builds and Expo Go/device runtime validation NOT RUN. No real NIKL data, production pack, external upload, paid service, or store distribution. Legal/platform distribution remains HOLD.
-Next: T019 — add a local in-memory practice result summary with correct-answer count and a missed-character retry round; no persisted mastery, SRS, DB writes, or network.
+Stack: Expo 58.0.24; Router 58.0.31; SQLite 58.0.16; React/RN 19.3.0/0.88.1; TypeScript 6.0.3.
+Product: local-first. Japanese hiragana MVP, katakana extension, Hangul starter, Song Study later. G1 blocks online copyrighted lyric lookup. No paid services/store fees approved.
+T002–T011: SDK/keyboard/NLP research; NIKL snapshot, normalizer, streaming importer and rights review. Real-corpus production import/distribution HOLD pending corpus-specific authorization.
+T012–T015 DONE: synthetic-only importer/SQLite builder, read-only Expo repository, hash-gated staging/provisioning; T015 conflict fix fails closed and preserves other valid schema-v1 packs.
+T016 DONE: SDK 58 asset/filesystem pins, synthetic SQLite app pack and manifest, Metro DB registration and glossary provider. CI #99 SUCCESS; synthetic DB integrity/FK checks and repeat-build reproducibility verified.
+T017 DONE: typed 46-character Hiragana dataset and accessible chart/detail view. CI #103 SUCCESS.
+T018 DONE: deterministic row-scoped quiz with same-row distractors, feedback and in-memory progression. CI #109 SUCCESS (58 root tests; 10 importer tests; typecheck/lint/iOS+Android Metro exports/reproducibility).
+T019 DONE: in-memory score, missed-kana summary with canonical readings, retry-only prompt pool and fresh round on perfect result. Red-team fixes validate canonical glyph/readings/row/position and boolean results. CI #112 (43840445604) SUCCESS on cc8a04d: typecheck, lint, root tests, iOS/Android Metro exports, importer tests and synthetic pack reproducibility.
+Release gates: native iOS/Android builds and device runtime NOT RUN. NIKL real-data use/distribution HOLD. No store submission, accounts or paid build services approved.
+Next: T020 — add the 46 basic Katakana records and a switchable accessible script chart; preserve Hiragana practice.

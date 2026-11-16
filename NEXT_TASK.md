@@ -1,16 +1,28 @@
 # NEXT_TASK
-ID: T019
-Goal: Make the local hiragana practice loop more useful by showing a clear session result and allowing targeted retry of missed characters.
+ID: T020
+Goal: Add a complete basic Katakana chart beside Hiragana without unlicensed chart assets or expanded scope.
 
 Acceptance:
-- Track correct and incorrect answers only for the current in-memory round.
-- At round completion, show score (correct / total) and a concise list of missed kana with their canonical romaji.
-- Offer a retry round containing only missed characters; if none were missed, offer a fresh round instead.
-- Reuse canonical HIRAGANA records and the existing question/answer logic; do not duplicate kana records.
-- Keep result data in memory only. No account, network, database writes, SRS scheduling, persisted mastery, audio, handwriting, mnemonics, or paid service.
-- Deterministic helper functions and Node tests for score calculation, missed-character ordering/uniqueness, retry selection, and perfect-round behavior.
-- Accessible feedback and controls, existing theme tokens, responsive layout, no new runtime dependencies.
-- Run root typecheck, lint and tests in CI. Native iOS/Android runtime remains NOT RUN without device evidence.
+- Add 46 unique basic Katakana records, one-to-one with HIRAGANA by row, rowIndex, columnIndex and canonical romaji.
+- Stable IDs prefixed katakana-; same typed field shape and order as Hiragana.
+- Preserve project convention ヲ=wo and ン=n, even where external charts use another romanization.
+- Exclude voiced/semi-voiced add-ons, small kana, yōon/foreign-sound combinations, ッ and ー; handle these in later tasks.
+- Add an accessible Hiragana/Katakana switch to app/(tabs)/alphabets.tsx. Preserve the corresponding selected grid position across script changes. Keep Hiragana Quick practice intact; don't expose it for Katakana until a separate task adds Katakana practice.
+- Node tests verify 46 count, uniqueness, row/position/romaji parity, canonical kana, and deliberate exclusion of extended symbols.
+- Existing theme tokens, responsive chart, accessibility labels; no new dependencies, copied artwork, DB writes, network, SRS or persistence.
+Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kana/**, app/(tabs)/alphabets.tsx, tests/**. Keep each unit near 350 changed lines; commit each coherent unit and update CHECKPOINT.
 
-Files allowed: NEXT_TASK.md, STATE.md, AI_COLLAB/CHECKPOINT.md, src/features/kana/**, app/(tabs)/alphabets.tsx, tests/**.
-Line budget <=350 changed lines per unit. Commit implementation and overwrite CHECKPOINT.md.
+## Ranked gaps and verified research (checked 2026-11-16)
+1. **Corpus rights / redistribution — launch blocker. VERIFIED.** Official NIKL Modu Corpus FAQ: use is limited to the approved purpose and agreement period; requests require detailed purpose/project/agency/duration; downloads follow admin approval and an individual corpus-use agreement; public disclosure of results needs prior NIKL approval and must not include the corpus or its language material. CC BY-SA metadata alone does not prove the supplied corpus can be bundled or redistributed. Keep real-data app pack and release HOLD; request corpus-specific permission and publication guidance before use beyond approved scope. Source: https://kli.korean.go.kr/boards/faqList.do?lang=en
+2. **Native device/runtime verification — release blocker. VERIFIED.** Expo SDK 58 released 2026-10-15 with RN 0.88. Expo Go page lists SDK 58 and iOS install; Apple's Spain App Store entry shows Expo Go 58.0.5 (2026-10-22) adds SDK 58. Expo Go is fixed prebuilt native app and cannot load arbitrary custom native code; Expo recommends development builds for production work. CI Metro exports verify JS bundling, not actual app launch, SQLite asset provisioning/repository, navigation, accessibility or upgrade behavior. Local iOS dev builds need Xcode; Android needs Android Studio/tooling. Sources: https://expo.dev/changelog/sdk-58 ; https://expo.dev/go ; https://apps.apple.com/es/app/expo-go/id982107779 ; https://docs.expo.dev/develop/development-builds/faq/ ; https://docs.expo.dev/develop/development-builds/introduction/
+3. **Basic Katakana coverage — highest-value next feature. VERIFIED.** Japan Agency for Cultural Affairs handbook shows a Katakana chart and separately lists ン, ッ and ー; it also includes extended combinations. Japan Foundation chart page offers illustrated PDFs but states no reuse licence on the page, so do not copy artwork/PDF. Implement original 46-record basic set aligned to HIRAGANA row/position. The official handbook romanizes ヲ as “o”; preserve project convention “wo” for parity with を=wo. Sources: https://www.bunka.go.jp/seisaku/kokugo_nihongo/kyoiku/handbook/pdf/sp_04.pdf ; https://www.erin.jpf.go.jp/en/extra/syllabary/
+4. **Review history / SRS — architecture gap, not yet implementation-ready. VERIFIED + UNKNOWN.** Anki FSRS guidance describes 90% desired retention as its default balance and warns higher retention increases workload; optimization benefits from review history. ts-fsrs 6.0.0 (2026-10-28) is MIT-licensed and defaults to FSRS-7, but requires Node.js >=24; current CI uses Node 22.13.1, and React Native/Hermes compatibility is UNKNOWN. Do not add it yet. First define a local review-event model and run Node/Hermes compatibility spike. Sources: https://docs.ankiweb.net/deck-options.html ; https://open-spaced-repetition.github.io/ts-fsrs/updates/fsrs/6.0.0 ; https://github.com/open-spaced-repetition/ts-fsrs/blob/main/LICENSE ; https://github.com/open-spaced-repetition/ts-fsrs
+5. **Store/test distribution readiness — later gate. VERIFIED + UNKNOWN.** Apple allows up to 100 internal and 10,000 external TestFlight testers. Google Play personal developer accounts created after 2023-11-13 need a closed test with 12 continuously opted-in testers for 14 days before production access. Whether the user's accounts fall under these conditions is UNKNOWN; no account or fee approved. Sources: https://developer.apple.com/help/app-store-connect/test-a-beta-version/add-internal-testers ; https://developer.apple.com/help/app-store-connect/test-a-beta-version/invite-external-testers/ ; https://support.google.com/googleplay/android-developer/answer/14151465?hl=en
+
+## Ranked follow-on work
+1. T020 — basic Katakana data and chart switch.
+2. T021 — Katakana recognition practice using the tested Hiragana pattern.
+3. T022 — native device validation and SQLite/read-only-provider acceptance on iOS and Android.
+4. T023 — local review-event model and SRS compatibility spike; no scheduler adoption until Hermes/Node compatibility and event semantics are verified.
+5. T024 — resolve corpus-specific permission or select a separately licensed alternative for Korean lexical content; keep NIKL HOLD until authorization.
+6. T025 — store account, privacy, TestFlight and Google Play readiness, only after user approval for any fees.

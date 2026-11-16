@@ -114,6 +114,14 @@ test("forged kana readings are rejected from retry and result inputs", () => {
   assert.throws(() => buildHiraganaPracticeResult([{ character: forged, correct: false }]), /canonical/);
 });
 
+test("forged row and column metadata is rejected from retry and result inputs", () => {
+  const canonical = buildHiraganaQuestion("k", 0).prompt;
+  const forged = { ...canonical, rowIndex: canonical.rowIndex + 1, columnIndex: canonical.columnIndex + 1 };
+  assert.throws(() => buildHiraganaQuestion("k", 0, undefined, [forged]), /canonical/);
+  assert.throws(() => getHiraganaRetryCharacters([forged], []), /canonical/);
+  assert.throws(() => buildHiraganaPracticeResult([{ character: forged, correct: false }]), /canonical/);
+});
+
 test("practice result rejects non-boolean answer status", () => {
   const character = buildHiraganaQuestion("k", 0).prompt;
   assert.throws(() => buildHiraganaPracticeResult([{ character, correct: 1 }]), /boolean/);

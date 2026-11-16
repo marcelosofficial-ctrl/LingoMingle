@@ -23,7 +23,9 @@ function matchesCharacter(left: HiraganaCharacter, right: HiraganaCharacter): bo
   return left.id === right.id &&
     left.kana === right.kana &&
     left.romaji === right.romaji &&
-    left.row === right.row;
+    left.row === right.row &&
+    left.rowIndex === right.rowIndex &&
+    left.columnIndex === right.columnIndex;
 }
 
 export function buildHiraganaQuestion(
