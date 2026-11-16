@@ -1,7 +1,6 @@
 # CHECKPOINT
-Status: IN PROGRESS — recovering T021 CI and validating next gate
+Status: IN PROGRESS — T021 CI recovery and acceptance review
 Branch: lingomingle-foundation-2026-11-10
-Unit 1: Added isolated Katakana recognition-practice engine and screen with deterministic row-scoped prompts, canonical answer/input validation, score and missed-kana summary, missed-only retry, and fresh rounds. The screen remains mounted while hidden so Katakana practice state survives script switching. Fixed stale chart accessibility label so it follows the selected script.
-Tests: Added Node coverage for determinism, row-scoped distractors, short Y row, answer checking, progression, invalid inputs, missed-answer deduplication, retry, forged glyph/reading/row/position metadata and boolean flags. CI pending; no test pass claimed.
-Research: Official Anki guidance documents review-history-based FSRS optimization and retention/workload trade-offs; no persistence or scheduler added. Open-source kana projects show established separate-script quiz patterns; no code or assets copied.
-Next: Verify CI for the T021 implementation commit; fix failures; then close T021 and queue T022. Native device runtime remains NOT RUN.
+Unit 1: T021 Katakana recognition practice is committed at 5b1263c2245d063bebb17fe3438e27e0a03bf16b. Previous recovery note commit 929c407 also exists; verify branch head and history before further changes.
+Verification: CI status for T021 was unresolved in the prior pass. Do not claim tests passed without a run/check output. Native iOS/Android device runtime remains NOT RUN.
+Next: Re-read current state/task/inbox, inspect last five commits, establish the correct CI status, and resolve T021 acceptance before moving to T022.
