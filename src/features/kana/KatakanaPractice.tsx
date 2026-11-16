@@ -1,0 +1,22 @@
+import {useState} from "react";
+import {Pressable,Text,View} from "react-native";
+import {KATAKANA,KATAKANA_ROWS,type KatakanaCharacter} from "./katakana";
+import {buildKatakanaQuestion,buildKatakanaPracticeResult,getKatakanaRetryCharacters,getNextKatakanaQuestionIndex,isCorrectKatakanaAnswer,type KatakanaAttempt} from "./katakanaPractice";
+import {colors} from "../../theme/tokens";
+export default function KatakanaPractice(){
+ const rows=KATAKANA_ROWS.filter(r=>KATAKANA.filter(c=>c.row===r.id).length>=3);
+ const [row,setRow]=useState(rows[0]!.id),[started,setStarted]=useState(false),[done,setDone]=useState(false),[index,setIndex]=useState(0),[answer,setAnswer]=useState<string|null>(null),[attempts,setAttempts]=useState<KatakanaAttempt[]>([]),[retry,setRetry]=useState<readonly KatakanaCharacter[]|null>(null);
+ const q=started&&!done?buildKatakanaQuestion(row,index,KATAKANA,retry??undefined):null,r=buildKatakanaPracticeResult(attempts),fresh=KATAKANA.filter(c=>c.row===row);
+ const start=(items?:readonly KatakanaCharacter[])=>{setIndex(0);setAnswer(null);setAttempts([]);setRetry(items??null);setDone(false);setStarted(true);};
+ const advance=()=>{const n=getNextKatakanaQuestionIndex(index,q?.roundLength??0);setAnswer(null);if(n===null)setDone(true);else setIndex(n);};
+ return <View style={{borderTopColor:colors.line,borderTopWidth:1,marginTop:28,paddingTop:24}}>
+ <Text style={{color:colors.ink,fontSize:23,fontWeight:"700"}}>Katakana practice</Text>
+ <Text style={{color:colors.muted,fontSize:14,marginTop:6}}>Choose a row, then match each character to its romaji.</Text>
+ <View style={{flexDirection:"row",flexWrap:"wrap",gap:8,marginTop:14}}>{rows.map(x=><Pressable key={x.id} accessibilityRole="button" accessibilityLabel={x.label+" row"} accessibilityState={{selected:row===x.id}} onPress={()=>{setRow(x.id);setStarted(false);setDone(false);setIndex(0);setAnswer(null);setAttempts([]);setRetry(null);}} style={{backgroundColor:row===x.id?colors.accent:colors.surface,borderColor:colors.line,borderWidth:1,borderRadius:12,padding:10}}><Text style={{color:row===x.id?colors.surface:colors.ink}}>{x.label}</Text></Pressable>)}</View>
+ {!started||done?<View style={{marginTop:16}}>{done?<Text accessibilityLiveRegion="polite" style={{color:colors.accent,fontWeight:"700",marginBottom:12}}>{r.correct}/{r.total} correct · {r.missedCharacters.length? "Review: "+r.missedCharacters.map(c=>c.kana+" ("+c.romaji+")").join(" · "):"Perfect round!"}</Text>:null}
+ <Pressable accessibilityRole="button" onPress={()=>start(done?getKatakanaRetryCharacters(r.missedCharacters,fresh):undefined)} style={{backgroundColor:colors.accent,borderRadius:14,padding:15,alignItems:"center"}}><Text style={{color:colors.surface,fontWeight:"700"}}>{done?(r.missedCharacters.length?"Retry missed ("+r.missedCharacters.length+")":"Start fresh round"):"Start practice"}</Text></Pressable></View>:q?<View style={{marginTop:18}}>
+ <Text style={{color:colors.muted,fontSize:12}}>QUESTION {index+1} OF {q.roundLength}</Text><View style={{alignItems:"center",backgroundColor:colors.surface,borderRadius:18,marginTop:10,padding:18}}><Text style={{color:colors.ink,fontSize:56}}>{q.prompt.kana}</Text><Text style={{color:colors.muted}}>Which romaji matches?</Text></View>
+ <View style={{flexDirection:"row",flexWrap:"wrap",gap:9,marginTop:14}}>{q.choices.map(c=><Pressable key={c.id} accessibilityRole="button" accessibilityLabel={c.romaji} disabled={answer!==null} onPress={()=>{const ok=isCorrectKatakanaAnswer(q,c.romaji);setAnswer(c.romaji);setAttempts(a=>[...a,{character:q.prompt,correct:ok}]);}} style={{backgroundColor:answer!==null&&c.romaji===q.correctRomaji?colors.accent:colors.surface,borderColor:colors.line,borderWidth:1,borderRadius:12,padding:14,flexGrow:1,minWidth:"21%"}}><Text style={{color:answer!==null&&c.romaji===q.correctRomaji?colors.surface:colors.ink,textAlign:"center",fontWeight:"700"}}>{c.romaji}</Text></Pressable>)}</View>
+ {answer!==null?<View style={{marginTop:14}}><Text accessibilityLiveRegion="polite" style={{color:isCorrectKatakanaAnswer(q,answer)?colors.accent:colors.ink,fontWeight:"700"}}>{isCorrectKatakanaAnswer(q,answer)?"Correct!":"Not quite — "+q.prompt.kana+" is "+q.correctRomaji+"."}</Text><Pressable accessibilityRole="button" onPress={advance} style={{backgroundColor:colors.accent,borderRadius:14,padding:14,marginTop:12,alignItems:"center"}}><Text style={{color:colors.surface,fontWeight:"700"}}>{index+1===q.roundLength?"Finish round":"Next question"}</Text></Pressable></View>:null}
+ </View>:null}</View>;
+}

@@ -11,6 +11,7 @@ import {
   type HiraganaPracticeAttempt
 } from "../../src/features/kana/hiraganaPractice";
 import { colors } from "../../src/theme/tokens";
+import KatakanaPractice from "../../src/features/kana/KatakanaPractice";
 
 type KanaScript = "hiragana" | "katakana";
 
@@ -67,7 +68,7 @@ export default function AlphabetsScreen() {
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.canvas }}
       contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 28, paddingBottom: 40 }}
-      accessibilityLabel="Hiragana character lessons"
+      accessibilityLabel={script === "hiragana" ? "Hiragana character lessons" : "Katakana character lessons"}
     >
       <Text style={{ color: colors.ink, fontSize: 30, fontWeight: "700" }}>{script === "hiragana" ? "Hiragana" : "Katakana"}</Text>
       <Text style={{ color: colors.muted, fontSize: 15, lineHeight: 22, marginTop: 8 }}>
@@ -165,6 +166,8 @@ export default function AlphabetsScreen() {
       <Text style={{ color: colors.muted, fontSize: 12, lineHeight: 18, marginTop: 2 }}>
         Reading note: {script === "hiragana" ? "を is shown as “wo” and ん as “n”." : "ヲ is shown as “wo” and ン as “n”."}
       </Text>
+
+      <View style={{ display: script === "katakana" ? "flex" : "none" }}><KatakanaPractice /></View>
 
       {script === "hiragana" ? (
       <View style={{ borderTopColor: colors.line, borderTopWidth: 1, marginTop: 28, paddingTop: 24 }}>

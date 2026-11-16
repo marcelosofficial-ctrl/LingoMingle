@@ -1,8 +1,7 @@
 # CHECKPOINT
-Status: IN PROGRESS — new full-work pass; recovery check underway
+Status: IN PROGRESS — T021 implementation committed; CI pending
 Branch: lingomingle-foundation-2026-11-10
-Implementation: fb07fc800ebaed2e2b245f98155a7df3b65bdd8c adds 46 basic Katakana records, parity/exclusion tests, and accessible script switch preserving selected row/column. Hiragana practice remains intact and is not exposed for Katakana.
-Verification: CI #114 (43841900879) SUCCESS on the implementation commit. Typecheck, lint, root tests, iOS/Android Metro exports, importer tests, and synthetic-pack reproducibility all completed successfully.
-Research: Japan Agency for Cultural Affairs beginner guide lists basic Katakana and separately identifies voiced and combined forms. Source uses ヲ=o; project convention wo retained to match Hiragana を. No third-party artwork copied.
-Ledger: STATE.md records T020 DONE and CI #114. NEXT_TASK.md now queues T021 with acceptance criteria for isolated Katakana recognition practice.
-Next: T021 — Katakana recognition practice. Native iOS/Android device runtime remains NOT RUN.
+Unit 1: Added isolated Katakana recognition-practice engine and screen with deterministic row-scoped prompts, canonical answer/input validation, score and missed-kana summary, missed-only retry, and fresh rounds. The screen remains mounted while hidden so Katakana practice state survives script switching. Fixed stale chart accessibility label so it follows the selected script.
+Tests: Added Node coverage for determinism, row-scoped distractors, short Y row, answer checking, progression, invalid inputs, missed-answer deduplication, retry, forged glyph/reading/row/position metadata and boolean flags. CI pending; no test pass claimed.
+Research: Official Anki guidance documents review-history-based FSRS optimization and retention/workload trade-offs; no persistence or scheduler added. Open-source kana projects show established separate-script quiz patterns; no code or assets copied.
+Next: Verify CI; fix failures; then close T021 and queue T022. Native device runtime remains NOT RUN.
