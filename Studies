@@ -1,0 +1,247 @@
+LingoMingle Technical Architecture: Mnemonics, CJK Input, SLA Pedagogy, and Monetization Specification
+For LingoMingle (React Native + Expo New Architecture with native Swift/iOS modules), the recommended production architecture pairs license-isolated open-source lexical datasets with deterministic JavaScript script processors, a memory-partitioned Swift CJK conversion layer, an FSRS-scheduled Four Strands curriculum, and RevenueCat wrapping mandatory StoreKit 2. Specifically, the core stack combines Kanji alive (⁠CC BY 4.0⁠) and KanjiVG (⁠CC BY-SA 3.0⁠) for Japanese radical and stroke assets, ⁠WanaKana⁠ / ⁠WanaKanaSwift⁠ and ⁠toss/es-hangul⁠ (⁠MIT⁠) for deterministic script manipulation, Apple ⁠NaturalLanguage⁠ (⁠NLTagger⁠) for zero-footprint part-of-speech validation, a split Japanese conversion topology (non-Zenzai ⁠AzooKeyKanaKanjiConverter⁠ or ⁠mozc-for-ios⁠ inside any ⁠UIInputViewController⁠ keyboard extension beneath Jetsam limits, and ⁠AzooKey⁠ + ⁠zenz-v2.5⁠ GGUF in-app for contextual homophone disambiguation such as ⁠暑い⁠ vs. ⁠熱い⁠), ⁠ts-fsrs⁠ scheduling balanced across Paul Nation's Four Strands and the Involvement Load Hypothesis, and Day-0 RevenueCat paywall experimentation over StoreKit 2 and Play Billing. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19]
+Downstream development agents must plan around five explicit empirical and ecosystem gaps documented across the available technical and academic sources. First, no open-source JSON mnemonic repositories or APIs exist for Hiragana, Katakana, or Hangul Jamo, nor was an open-source Hangul stroke-order SVG corpus found. Second, available open-source Korean packages convert Hangul to Latin or compose/decompose Jamo syllables without providing reverse Latin-to-Hangul Jamo phonetic conversion, and no verified JavaScript bundle sizes or Hermes memory benchmarks were available for ⁠wanakana⁠, ⁠es-hangul⁠, or ⁠kuromoji-es⁠. Third, mobile latency (ms/token) and peak RAM measurements for ⁠mozc-for-ios⁠, non-Zenzai ⁠AzooKey⁠, and quantized ⁠zenz-v2.5⁠ GGUF inference on iOS or Android were not available in repository documentation. Fourth, Involvement Load Hypothesis experiments show mixed methodological depth, with a systematic review finding that zero reviewed studies assessed five or all six aspects of word knowledge. Fifth, while RevenueCat's 2025–2026 platform telemetry offers granular subscription benchmarks, zero empirical studies or conversion benchmarks were available for reverse paywalls or mascot-driven retention and conversion mechanics. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19]
+1. Mnemonic Systems, Lexical Datasets, and License Architecture
+LingoMingle's mnemonic system is anchored in Allan Paivio's Dual Coding Theory (1971, 1986, 2010), which models cognition across two linked representational channels: verbal units (⁠logogens⁠) and nonverbal imagery (⁠imagens⁠). Experimental reaction-time findings summarized in instructional design literature report slowest retrieval for word-word pairings, intermediate speeds for picture-word pairings, and fastest speeds for picture-picture pairings, while a four-month high school intervention integrating computer-assisted dual coding reported positive attitudes toward imagery and improved vocabulary learning. Commercial presentation guidance similarly advises making visuals pictorial, consistent, relevant rather than decorative, and non-redundant so imagery supplies an independent memory hook instead of duplicating text. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19]
+Competitor architectures illustrate major pedagogical and intellectual-property hazards for kanji and kana mnemonics. WaniKani (Tofugu's spaced-repetition kanji platform, offering levels 1–3 comprising 100+ kanji and 300+ vocabulary words free before charging ~$7–9/month) introduces renamed radical building blocks before kanji to bypass short-term memory's 6–8 item span. Examples include relabeling ⁠凵⁠ as "open box," ⁠广⁠ as "dotted cliff," ⁠爻⁠ as "double x," the road radical as "water slide" (later "scooter"), and ⁠扌⁠ as "nailbat" (later "fingers"). Community forum reports on WaniKani highlight two recurring design flaws: mnemonic radical interference, where invented labels obscure genuine semantic meanings and keisei (形声) phonetic-semantic clues—pushing learners to install third-party Keisei user scripts—and schema lock-in, which forced WaniKani to retain deprecated radical names on an answer allow-list and archive old stories on GitHub after its content overhaul. Elsewhere, Dr. Moku (a former flashcard mnemonic app for Hiragana, Katakana, and Kanji with a $2.99 image unlock) has been discontinued, Skritter focuses on stroke-order writing practice, and James Heisig's Remembering the Kanji (RTK) community shows ongoing copyright constraints: while ⁠cyphar/heisig-rtk-index⁠ publishes RTK 1 (6th edition) primitive artwork under CC0-1.0 (with repository files under GPL-3.0, leaving mnemonic fields blank for users to fill) and ⁠sdcr/heisig-kanjis⁠ distributes RTK 1 and 3 CSV tables (incomplete for RTK 3 components), ⁠bgior/rtk-finder⁠ explicitly removed RTK primitives to avoid copyright claims. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19]
+To ship cleanly on the iOS App Store and Google Play, LingoMingle must segregate open lexical and stroke assets by license compatibility. Crucially, ⁠kanjialive/kanji-data-media⁠ omits mnemonic hints and textbook lesson sequences from both GitHub and its RapidAPI endpoints due to copyright restrictions, and ⁠CHISE IDS⁠ carries a ⁠GPL-2.0-or-later⁠ copyleft license incompatible with proprietary app bundles if linked directly. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19]
+Repository / Dataset
+Language & Scope
+Core Assets & Schema
+License
+Commercial Integration Rule
+kanjialive/kanji-data-media
+Japanese (1,235 kanji, 214/321 radicals)
+CSV/XLSX (ka_data, japanese-radicals-ids), 10,187 native audio files (Opus/AAC/Ogg/MP3), 1,235 H.264/WebM stroke animations + timings, 11,929 stroke SVGs, 729 3-part radical derivation SVGs, 247 radical SVGs, 13 position SVGs (~302 MB archive)
+CC BY (CC BY 4.0); Apache 2.0 (JapaneseRadicals-Regular.otf, 54 KB, 322 glyphs); M+ FONTS (mplus-1m-light, 1,430 glyphs)
+Primary commercial-safe kanji & radical media base; excludes mnemonics and textbook chapters
+KanjiVG/kanjivg & Kan-G
+Japanese kanji stroke vectors
+XML/SVG paths with kvg:element, kvg:original, kvg:part, kvg:number, kvg:type, and StrokeNumbers; Kan-G removes kvg: attributes/variants and swaps #000000 to currentcolor
+CC BY-SA 3.0 (kanjivg-tools validator CC BY 4.0)
+ShareAlike governs modified stroke SVGs; preserve attribution and ShareAlike pack access
+JMdict / yomidevs/jmdict-yomitan & KANJIDIC2
+Japanese lexicon & kanji metadata
+JMdict (English ed. 3.6.2, Oct 2026), JMdict_english_with_examples (Tatoeba), JMdict_forms (conjugations); KANJIDIC2 (v2026-278, Oct 2026) grades/frequency/readings; jamdict Python compiler builds SQLite (JMDictSQLite, KanjiDic2SQLite)
+EDRDG License & CC BY-SA 4.0 (Yomitan converter code MIT; Tatoeba CC BY 2.0 FR; note repo recommends Jitendex)
+Derived SQLite dictionary tables require EDRDG / CC BY-SA 4.0 attribution and ShareAlike compliance
+bagustris/kanji-data (Kanjium ref)
+Japanese pitch accent
+compounds/accents_kanjium.txt word/reading to pitch mapping
+EDRDG / CC BY-SA 4.0-compatible repo credits
+Audit upstream Kanjium license file before bundling offline
+davidluzgouveia/kanji-data
+Japanese JLPT & WaniKani data
+kanji-wanikani.json mapping JLPT tiers and WaniKani fields
+Unverified in available docs
+Do not bundle WaniKani-derived fields commercially without permission
+cyphar/heisig-rtk-index & sdcr/heisig-kanjis
+Japanese RTK 1 & 3
+Edition frame IDs, keywords, readings, primitive PNGs, Anki Recognition/Production templates (klieret/rtk-lookup uses user-supplied kanji.koohii stories)
+CC0-1.0 (glyphs) / GPL-3.0 (code); references Heisig 1997–2007 copyright
+Avoid bundling commercially due to GPL code and RTK IP friction (bgior/rtk-finder stripped primitives)
+chise/ids (osfans/chise-ids)
+Han ideograph IDS trees
+Ideographic Description Sequence component decompositions
+GPL-2.0-or-later
+Strong copyleft; cannot be embedded directly inside a proprietary App Store binary
+KRDict (krdict.py / korean_dictionary) & NIKL 2003
+Korean learner lexicon
+한국어기초사전 API (free key at krdict.korean.go.kr) and 한국어 학습용 어휘 목록 (2003)
+KRDict: CC BY-SA 2.0 KR; NIKL 2003: KOGL Type 1
+Compliant for commercial lookup/extracts when attributing NIKL and respecting CC BY-SA 2.0 KR
+nk2028/sino-korean-readings
+Historical Sino-Korean Hanja
+15th–16th century Sino-Korean reading database
+Unspecified in available docs
+Optional only for historical Hanja modules, not beginner Hangul
+
+Because no open-source JSON mnemonic packages exist for Hiragana, Katakana, or Hangul Jamo—and no open-source Hangul stroke-order SVG corpus was found, mirroring open curriculum project LangBytes authoring Korean beginner content internally—LingoMingle should commission proprietary dual-coded SVGs and short stories for Kana and Jamo. To avoid WaniKani-style mnemonic interference in kanji, LingoMingle's SQLite schema should maintain three decoupled fields per character: ⁠official_radical_id⁠ (mapped directly to Kanji alive's 214-radical table), ⁠keisei_phonetic_series⁠ (separating semantic vs. phonetic cues), and ⁠mnemonic_story_anchor⁠ (editable by learners alongside versioned synonym allow-lists). [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16]
+2. Linguistic Transliteration and Phonetic Input Pipelines
+Deterministic script handling in React Native separates Japanese Romaji-Kana conversion, Japanese morphological reading extraction, and Korean Jamo manipulation. For Japanese input validation and live typing, ⁠wanikani/wanakana⁠ provides pure-JavaScript bidirectional conversion and script detection (⁠isJapanese⁠, ⁠isKana⁠, ⁠isHiragana⁠, ⁠isKatakana⁠, ⁠isKanji⁠, ⁠isRomaji⁠, ⁠toKana⁠, ⁠toHiragana⁠, ⁠toKatakana⁠, ⁠toRomaji⁠, ⁠stripOkurigana⁠, ⁠tokenize⁠), supporting ⁠IMEMode: true⁠, ⁠customKanaMapping⁠, ⁠passRomaji⁠, and ⁠useObsoleteKana⁠. When native Swift parity is required on iOS, ⁠WanaKana⁠ documents a community Swift port (⁠profburke/WanaKanaSwift⁠) alongside Rust (⁠PSeitz/wana_kana_rust⁠), Kotlin (⁠esnaultdev/wanakana-kt⁠), and Java ports. Because ⁠WanaKana⁠ cannot deduce context-dependent Kanji readings from sentences, furigana generation and reading extraction across mixed Kanji-Kana text require morphological segmentation via ⁠code4fukui/kuromoji-es⁠ (Apache 2.0 pure-JS ES module using gzipped MeCab-IPADIC dictionaries to emit ⁠surface_form⁠, ⁠pos⁠, ⁠conjugated_type⁠, ⁠basic_form⁠, ⁠reading⁠, and ⁠pronunciation⁠ in Katakana), ⁠kuroshiro⁠ (⁠@sglkc/kuroshiro⁠ + ⁠kuroshiro-analyzer-kuromoji⁠), or ⁠swkidd/react-native-japanese-text-analyzer⁠ (bridging Kuromoji on Android and native MeCab on iOS). Applying standard Kuromoji normalization patterns from Elasticsearch/OpenSearch—running an ⁠icu_normalizer⁠ step before tokenization to avoid full-width symbol failures and stripping trailing prolonged vowel marks (⁠ー⁠) on four-plus-character Katakana words (⁠コンピューター⁠ -> ⁠コンピュータ⁠)—prevents false negatives in learner input grading. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16]
+For Korean processing in TypeScript, ⁠toss/es-hangul⁠ (v2.4.0, MIT license, 98.4% TypeScript, tree-shakeable ESM) supersedes both the deprecated ⁠@toss/hangul⁠ package and ⁠hangul-js⁠ (last updated seven years prior). ⁠es-hangul⁠ directly supports learner-facing mechanics such as ⁠getChoseong⁠ for initial-consonant matching (⁠'라면'⁠ matching ⁠'ㄹㅁ'⁠) and ⁠josa⁠ for phonologically conditioned particle attachment (⁠'사과'⁠ + ⁠'을/를'⁠ -> ⁠'사과를'⁠, ⁠'바나나'⁠ + ⁠'이/가'⁠ -> ⁠'바나나가'⁠). Its API-compatible Java sibling (⁠Hyeonqz/es-hangul-java⁠) further illustrates the exact Jamo primitives LingoMingle's Korean drill engine requires: assembling partial Jamo sequences mid-sentence (⁠"아버지가 방ㅇㅔ 들어갑니다"⁠ -> ⁠"아버지가 방에 들어갑니다"⁠), decomposing compound final consonants into groups (⁠"값"⁠ -> ⁠[["ㄱ","ㅏ","ㅂ","ㅅ"]]⁠), differentiating single vs. double batchim, and validating Choseong/Jungseong/Jongseong legality. For Hangul-to-Latin learner hints, ⁠fujaru/aromanize-js⁠ offers both standard Revised Romanization and strict ⁠'rr-translit'⁠ (⁠'잘 먹었습니다.'⁠ -> ⁠'jal meog-eoss-seubnida'⁠), complemented by ⁠hangul-romanization⁠ (⁠'행복'⁠ -> ⁠'haengbok'⁠) and MIT-licensed ⁠hangul-romanize⁠. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16]
+Two structural gaps remain in open-source transliteration packages. First, no open-source JavaScript or Swift library in the reviewed ecosystem converts English or Latin phonetic input directly into Korean Hangul Jamo (⁠aromanize-js⁠, ⁠hangul-romanize⁠, ⁠hangul-romanization⁠, and ⁠kroman-js⁠ convert Hangul to Latin, while ⁠es-hangul⁠ and ⁠jonghwanhyeon/hangul-jamo⁠ compose/decompose Hangul Jamo and syllables); likewise, ⁠WanaKana⁠ maps strict Romaji phonotactics rather than converting arbitrary English spelling into Katakana Gairaigo. Second, no verified bundle size (KB) or Hermes cold-start memory benchmarks were available for ⁠wanakana⁠, ⁠es-hangul⁠, ⁠kuroshiro⁠, or ⁠k[span_161](start_span)[span_161](end_span)uromoji-es⁠ (beyond ⁠es-hangul⁠ using ESM and ⁠kuromoji-es⁠ compressing dictionaries with gzip). To support phonetic Latin-to-Hangul drills, LingoMingle should implement a custom deterministic longest-prefix Revised Romanization parser in TypeScript (matching multi-letter phonemes like ⁠eo⁠, ⁠eu⁠, ⁠ae⁠, ⁠oe⁠, ⁠ng⁠, ⁠ch⁠, ⁠kk⁠, ⁠tt⁠, ⁠pp⁠, ⁠ss⁠, ⁠jj⁠ ahead of singletons into Choseong/Jungseong/Jongseong tuples) and pass the resulting Jamo stream into ⁠es-hangul⁠ syllable assembly, surfacing ambiguous syllable boundaries (such as ⁠n-g⁠ vs. ⁠ng⁠) as selectable candidate chips. [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16]
+Package / Repository
+Language & Transformation
+Runtime / Platform
+Core Capabilities
+License
+Constraints & Missing Data
+wanikani/wanakana
+Japanese: Romaji <-> Hiragana / Katakana
+Pure JS (+ WanaKanaSwift, Rust, Kotlin, Java, Python, C#, Go)
+toKana, toHiragana, toKatakana, toRomaj[span_162](start_span)[span_162](end_span)i, IMEMode, stripOkurigana, tokenize
+Unspecified in available docs
+Expects Romaji phonotactics, not English spelling; KB size unreported
+code4fukui/kuromoji-es
+Japanese: Kanji/Kana -> POS + Katakana readings
+Pure JS ESM (gzipped IPADIC)
+createTokenizer(), tokenize() returning [span_166](start_span)[span_166](end_span)pos, basic_form, reading, pronunciation
+Apache 2.0
+Dictionary RAM/init cost unbenchmarked under React Native Hermes
+hexenq/kuroshiro (@sglkc/kuroshiro)
+Japanese: Kanji -> Kana / Romaji + furigana
+JS / TypeScript via kuroshiro-analyzer-kuromoji
+Furigana and reading conversion
+Unspecified in available docs
+Inherits Kuromoji dictionary weight on mobile
+swkidd/react[span_177](start_span)[span_177](end_span)[span_181](start_span)[span_181](end_span)-native-japanese-text-analyzer
+Japanese: Morphological segmentation
+React Native (Kuromoji Android / MeCab iOS)
+Native MeCab bridge on iOS to bypass JS dictionary overhead
+Unspecified in available docs
+New Architecture / Expo SDK 57+ plugin compatibility unverified
+toss/es-hangul
+Korean: Jamo <-> Hangul, josa, getChoseong
+Modern TypeScript ESM
+Initial consonant search and batchim-conditioned particle selection
+MIT
+No Latin-to-Jamo input; exact bundle KB unreported
+aromanize-js, hangul-romanize, hangul-romanization, kroman-js
+Korean: Hangul -> Latin (RR / Translit)
+JavaScript / Node
+Revised Romanization and character-level 'rr-translit'
+hangul-romanize[span_224](start_span)[span_224](end_span)[span_227](start_span)[span_227](end_span): MIT; others unspecified
+One-way Hangul -> Latin only; cannot synthesize Hangul
+jonghwanhyeon/hangul-jam[span_225](start_span)[span_225](end_span)[span_228](start_span)[span_228](end_span)o
+Korean: Jamo <-> Hangul syllables
+Language/runtime unspecified in docs
+Syllable composition and decomposition
+Unspecified in available docs
+No Latin phonetic conversion; runtime unspecified
+
+3. Contextual Sentence-Aware Input Interpretation and Homophone Disambiguation
+Resolving context-sensitive homophones (such as selecting ⁠暑い⁠ for ambient weather vs. ⁠熱い⁠ for hot objects when given ⁠あつい⁠) requires separating post-conversion linguistic tagging from neural or statistical sequence generation. Apple's native ⁠NaturalLanguage⁠ framework (⁠NLLanguageRecognizer⁠, ⁠NLTokenizer⁠, ⁠NLTagger⁠, ⁠NLEmbedding⁠) executes on-device across iOS 12+ with zero third-party binary footprint and supports ⁠.japanese⁠ and ⁠.korean⁠. Initializing ⁠NLTagger(tagSchemes: [.lexicalClass, .lemma, .nameType, .script])⁠ enables Swift native modules to extract stem lemmas and classify tokens as ⁠.noun⁠, ⁠.verb⁠, ⁠.adjective⁠, ⁠.particle⁠, ⁠.adverb⁠, or ⁠.classifier⁠. However, ⁠NaturalLanguage⁠ only analyzes already-orthographed text: it cannot generate Kanji candidates from Kana or output Japanese Katakana readings. Consequently, ⁠NLTagger⁠ should serve as LingoMingle's fast iOS answer validator—verifying particle choice, lemmatizing inflected learner responses before ⁠JMdict⁠/⁠KRDict⁠ lookup, and confirming expected parts of speech—rather than an input conversion engine. [1][2][3][4][5][6]
+Shipping a companion system-wide iOS custom keyboard (⁠UIInputViewController⁠) introduces severe OS constraints documented in iOS extension engineering guides. Apple enforces a strict per-process Jetsam memory limit where exceeding the ceiling causes silent termination—with no crash log, signal, or exception—abruptly reverting the user to the system keyboard. Historical developer reports placed extension limits at ~30–40 MB (iOS 8–13), while recent production debugging places the practical ceiling near ~60 MB of ⁠phys_footprint⁠ (an anecdotal Reddit developer comment claims Apple raised limits past 120 MB on iPhone 15 and newer hardware, though Apple's official documentation publishes no fixed MB guarantee). Furthermore, iOS allocates a new ⁠UIInputViewController⁠ per host app switch; retained view hierarchies or Swift closure cycles stack allocations across launches past 70 MB. Production mitigations require avoiding ⁠loadView⁠ overrides when embedding C++ IME cores, implementing ⁠didReceiveMemoryWarning()⁠, and tearing down views inside ⁠deinit⁠ deferred by one main-queue turn rather than inside ⁠viewWillDisappear⁠ (which forces costly rebuilds during temporary hides). Functionally, ⁠UIInputViewController⁠ extensions lack access to Apple's system autocorrect, predictive text, and host-app text selection (precluding inline highlight-and-convert behavior inside third-party apps), disable automatically inside ⁠secureTextEntry⁠ or phone-pad fields, and require ⁠RequestsOpenAccess = YES⁠ in ⁠Info.plist⁠ for key-click sound and read-only App Group access—plus explicit user "Allow Full Access" consent in Settings for network calls or App Group writes. Extensions must therefore inspect preceding text via ⁠textDocumentProxy.documentContextBeforeInput⁠, optionally load user shortcuts via ⁠UILexicon⁠ (⁠requestSupplementaryLexiconWithCompletion⁠), and render candidate strips internally. [1][2][3][4][5][6]
+These constraints mandate a two-tier hybrid conversion architecture in LingoMingle's Swift bridge. Inside any ⁠UIInputViewController⁠ keyboard extension, neural language models exceed safe memory budgets on baseline iOS devices; the extension must compile either ⁠kishikawakatsumi/mozc-for-ios⁠ (Apache 2.0 port of Mozc) or ⁠azooKey/AzooKeyKanaKanjiConverter⁠ in its non-Zenzai configuration without the GGML backend. (Note: while Mozc is widely known for statistical IME conversion, exact binary size, RAM usage, and internal LOUDS/Viterbi implementation benchmarks for ⁠mozc-for-ios⁠ were absent from available repository documentation.) Inside LingoMingle's main app process—free of keyboard-extension Jetsam caps—a Swift Expo Module can pair ⁠AzooKeyKanaKanjiConverter⁠ with the neural Zenzai backend (⁠zenz-v1⁠ or ⁠zenz-v2.5⁠) for sentence-aware Kana-Kanji and homophone disambiguation. Released in January 2025 and trained on the 129M-row ⁠Miwa-Keita/zenz-v2.5-dataset⁠, ⁠zenz-v2.5⁠ adapts Japanese GPT-2 models (⁠ku-nlp/gpt2-small-japanese-char⁠ / ⁠gpt2-medium-japanese-char⁠) with a character-level + byte-level BPE tokenizer and ⁠llama.cpp⁠ GGUF quantization (⁠Q8_0⁠) across three tiers: ⁠zenz-v2.5-xsmall⁠ (22.5M / 26M parameters), ⁠zenz-v2.5-small⁠ (90.5M / 91M parameters), and ⁠zenz-v2.5-medium⁠ (0.3B / 310M parameters), alongside alternative GGUF checkpoint ⁠togatogah/jinen-v1-small⁠. Downstream implementers must verify the Swift package license of ⁠AzooKeyKanaKanjiConverter⁠ directly in its repository (unspecified in retrieved index pages), distribute ⁠zenz-v2.5⁠ weights as attributable CC-BY-SA 4.0 downloadable packs rather than closed modified binaries, and profile quantized GGUF RAM and ms/token latency on target iOS and Android devices—since neither mobile inference benchmarks nor an Android ⁠AzooKey⁠ equivalent appeared in available sources (Android contextual conversion requires either a custom ⁠llama.cpp⁠ JNI wrapper running ⁠zenz-v2.5⁠ GGUF or a server endpoint). [1][2][3][4][5][6]
+Engine / API
+Target Process
+Architecture & Model Tier
+Capabilities & Disambiguation Scope
+License
+Constraints & Missing Benchmarks
+Apple NaturalLanguage (NLTagger)
+iOS main app & extension
+System on-device POS, lemma, NER (ja, ko)
+Zero app binary footprint; validates POS and dictionary stem forms of converted sentences
+Apple SDK
+Does not convert Kana -> Kanji or emit Japanese readings
+mozc-for-ios
+iOS extension or main app
+Google Mozc IME port
+Candidate generation within extension constraints
+Apache 2.0
+Exact iOS RAM, binary MB, and internal architecture specs absent in available docs
+AzooKeyKanaKanjiConv[span_270](start_span)[span_270](end_span)erter (non-Zenzai)
+iOS extension & main app (Swift)
+Swift converter compiled without GGML backend
+Native Swift SPM integration; suited to strict ~60 MB extension caps
+Verify in GitHub repo
+Lower long-context homophone accuracy without Zenzai; exact RAM MB unreported
+AzooKey + zenz-v2.5-xsmall / small / medium
+Main app only (iOS Swift / llama.cpp GGUF)
+Conditional GPT-2 (22.5–26M / 90.5–91M / 310M params), char+byte BPE
+Context-aware Kana-Kanji & homophone disambiguation (文脈を考慮)
+CC-BY-SA 4.0 (model weights)
+Unsafe inside ~60 MB extension Jetsam limit; mobile GGUF MB and ms/token unbenchmarked
+
+To execute sentence-aware input and homophone disambiguation reliably across React Native, Expo, and Swift, implement the following pipeline: [1][2][3][4][5][6][7][8][9][10][11][12][13]
+4. Second Language Acquisition Science and Interactive Exercise Specifications
+LingoMingle's curriculum engine is structured around Paul Nation's Four Strands framework (2007), which allocates study time roughly equally across four distinct learning conditions. Meaning-Focused Input (~25%) requires extensive reading and listening on familiar topics where 95–98% of running words are already known (Laufer 1992 places adequate comprehension around 95%; Schmitt 2011 places unassisted reading around 98%), aligning with Krashen's i + 1 principle so learners process meaning rather than constantly decoding. Meaning-Focused Output (~25%) operationalizes Swain's (1995) Output Hypothesis: speaking and writing on familiar topics forces learners to notice structural gaps, and research summaries cite production as more effective than passive comprehension for acquiring vocabulary and grammar. Language-Focused Learning (capped at ≤25%) covers deliberate "focus on formS" instruction on pronunciation, orthography, vocabulary, grammar, and dictation; Laufer (2006) observed superior Phase-1 vocabulary gains from focus-on-formS (though that advantage disappeared after Phase 2), and Nation cautions that exceeding 25% starves fluency and communicative use. Fluency Development (~25%) strictly bars unknown vocabulary or difficult grammar (requiring 100% known items) and applies speed pressure—exemplified by Nation's 4-3-2 speaking/retelling task (repeating the same talk across shrinking timers, e.g., 4, 3, and 2 minutes, or 3/2/1 minutes in classroom adaptations) and timed rereading—to automatize retrieval. [1][2][3]
+Task depth within each exercise is quantified via Laufer and Hulstijn's Involvement Load Hypothesis (ILH) (2001), built on Craik and Lockhart's (1972) Depth of Processing model. ILH scores every task across three factors—Need (motivational: 0 = none, 1 = externally assigned, 2 = learner-initiated), Search (cognitive: 0 = gloss supplied, 1 = learner looks up unknown meaning; some frameworks score form lookup at 2), and Evaluation (cognitive: 0 = isolated exposure, 1 = comparing candidate words in a provided context such as fill-in-the-blank, 2 = comparing and deploying words in a self-created original context)—generating 15 theoretical combinations. Empirical support includes Hulstijn and Laufer's (2001) multi-country university study (which partially supported ILH, though secondary literature notes methodological debates) and a primary-school study of 28 ten-year-old EFL learners across four conditions where higher involvement load (Need 1 + Search 1 + Evaluation 2 = 4) produced statistically significant gains on both receptive and productive tests (p = .000 < .05). Crucially, a systematic review (⁠PMC9598591⁠) found that 30.77% of ILH studies tested only one aspect of word knowledge, 33.33% tested two, 26.92% tested three, 6.41% tested four, and zero tested five or all six aspects—meaning LingoMingle must explicitly pair receptive recognition probes with productive recall and contextual composition. [1][2][3]
+For spaced-repetition scheduling inside Language-Focused Learning, LingoMingle can deploy the open-source TypeScript FSRS engine ⁠open-spaced-repetition/ts-fsrs⁠ (which tracks three numerical memory-state variables per flashcard, with ⁠femto-fsrs⁠ available as a minimal alternative; exact underlying equations and parameter names were not present in the retrieved package summaries). Combining Dual Coding, Nation's Four Strands, ILH, and ⁠ts-fsrs⁠ produces seven concrete mobile exercise formats: [1][2][3]
+Exercise / Test Format
+Nation Strand
+ILH Load (Need + Search + Eval)
+Target Aspect
+React Native / Expo / Swift Implementation
+Dual-Coded Radical Assembly & Guided Stroke Recall
+Language-Focused Learning (≤25%)
+1 + 0 + 1 = 2 (assigned task + comparing component options)
+Form + meaning link
+Render KanjiVG/Kan-G SVGs with Kanji alive stroke timings (CC BY 4.0) and a non-redundant visual cue; feed recall grades into ts-fsrs
+Homophone Context Cloze & Disambiguation
+Language-Focused Learning / Output bridge
+1 + 1 + 1 = 3 (optional gloss search + context selection)
+Orthography + contextual sense (暑い vs 熱い)
+Learner enters Kana via WanaKana; AzooKey + zenz-v2.5 ranks candidates while NLTagger validates POS against JMdict
+Hangul Jamo & Josa Morphophonemic Builder
+Language-Focused Learning + Output
+1 + 0 + 1 = 2 (evaluating batchim-conditioned particles)
+Form + morphosyntactic collocation
+Snap Choseong/Jungseong/Jongseong tiles or typed Romaja; es-hangul verifies syllable assembly and josa selection (을/를, 이/가)
+95–98% Synced Lyric Immersion (Tap-to-Lookup)
+Meaning-Focused Input (25%)
+2 + 1 + 0 = 3 (learner-selected lookup on ~2–5% unknown words)
+Receptive audio-lexical comprehension
+Fetch LRCLIB LRC / CC0 Lyricsfile 1.0 YAML (GET /api/get), animate ELRC word sync via reanimated + @shopify/react-native-skia (clrc), and play audio via MIT daily-react-native-player (Expo SDK 57+, RN 0.86+ New Architecture)
+Self-Created Context Sentence Challenge
+Meaning-Focused Output (25%)
+2 + 1 + 2 = 5 (self-selected target + lookup + original context)
+Productive grammar + semantic usage
+Learner writes original Japanese/Korean sentence; NLTagger checks lemma and POS presence, Az[span_385](start_span)[span_385](end_span)[span_388](start_span)[span_388](end_span)ooKey/es-hangul processes input, and JMdict/KRDict verifies gloss
+4-3-2 Shrinking-Timer Speed Retell / Speed Read
+Fluency Development (25%)
+1 + 0 + 0 = 1 (zero unknown items; speed automatization)
+Processing speed & automaticity
+Restrict deck strictly to 100% mastered FSRS cards; prompt spoken/typed summary across shrinking timers (4-3-2 or 3-2-1 minute intervals)
+Staggered Productive-then-Receptive Audit
+Cross-strand Assessment
+Evaluative (Evaluation 1–2)
+Multi-aspect mastery
+Run productive recall first, wait 15 minutes before administering receptive recognition—mirroring experimental isolation in primary-school ILH testing—to prevent test-order priming
+
+5. Monetization Psychology, Paywall Architecture, and Subscription Engineering
+Subscription benchmarks for 2026 show extreme winner-take-more concentration. According to RevenueCat's State of Subscription Apps 2025 and 2026 vendor telemetry (reflecting apps integrated with RevenueCat rather than an audited market-wide census), monthly new subscription app launches climbed roughly 7x from ~2,000/month in January 2022 to 14,700+/month in January 2026—with iOS representing ~77% of new launches vs. ~3,300/month on Android, largely propelled by AI-assisted tooling. Yet apps launched before 2020 still capture 69% of all subscription revenue, whereas 2025+ cohorts generate 3%. Median YoY MRR growth stands at 5.3%, while the top quartile grew 80%+, the top decile grew 306%+, and the bottom quartile shrank more than 33% (with the top 5% earning 400x the revenue of the bottom 25% in 2025, up from 200x in 2024). Notably, a RevenueCat report summary notes AI apps generate 41% more revenue per payer yet churn 30% faster, highlighting that AI novelty cannot compensate for weak habit retention. Geographically, Year-1 Realized LTV (Y1 RLTV) per payer averages $23 globally, ranging from $32 in North America and $25 in Western Europe to $14 in India/Southeast Asia (IN/SEA)—a 2.3x spread. Education apps skew heavily toward annual billing (59–66% across Education, Travel, and Shopping vs. 82% weekly in Gaming and 77% monthly in Productivity), while 63.5% of apps globally use subscriptions alone and 23.2% combine subscriptions with lifetime purchases (rising to 29.2% +lifetime in IN/SEA). [1][2][3][4][5]
+RevenueCat's platform telemetry surfaces four concrete behavioral dynamics governing paywall timing and trial design, though observational pricing patterns must not be confused with standalone causation: [1][2][3][4][5]
+A strict evidence audit must flag two explicit gaps: no empirical conversion benchmarks, retention curves, or behavioral psychology studies were found in the available sources for reverse paywalls or mascot-driven retention/conversion strategies (such as character emotional expressions, streak pressure, or variable rewards). LingoMingle should therefore avoid hard-coding speculative mascot lift assumptions or unverified reverse-trial rules. Instead, product teams should design Day-0 onboarding to complete one dual-coded Kanji or Hangul micro-lesson (establishing learner-owned Need before presenting an annual-anchored paywall), dispatch a Day-0 trial-qualifier analytics event, offer regional lifetime tiers for IN/SEA cohorts, and A/B test a 17+ day habit trial against a non-trial upfront offer rather than a 3-day trial vulnerable to 84% Day-0/1 cancellation. [1][2][3][4][5][6][7][8][9][10]
+On subscription engineering, Apple deprecated StoreKit 1 in April 2026, requiring StoreKit 2 for all new iOS releases. For LingoMingle's cross-platform React Native stack, wrapping StoreKit 2 and Google Play Billing with RevenueCat ($119/month + 1% of revenue above $2,500 MRR) minimizes launch risk despite its marginal revenue share: [1][2][3][4][5][6][7][8][9][10]
+Engineering Dimension
+StoreKit 2 + Native Play Billing
+RevenueCat (Wrapping StoreKit 2 & Play Billing)
+LingoMingle Engineering Decision
+SDK Fees & Scale Economics
+$0 SDK fee (store commissions remain 30% Yr1 / 15% Yr2+)
+$119/mo + 1% above $2,500 MRR (~$10,000/mo cited at 100K subs × $10 ARPU)
+Adopt RevenueCat at launch; revisit pure StoreKit 2 + Play Billing only at high scale (e.g., 100K+ subs)
+Implementation Cost & Speed
+Agency estimate adds +$20K–$40K and +2–4 weeks for cross-platform sync; ~120–150 lines SwiftUI alone
+~35–60 lines client integration; unified iOS/Android/web entitlements and webhooks
+Use RevenueCat React Native SDK to eliminate cross-platform receipt-state bugs
+Paywall Experimentation
+None built in (agency estimate +$15K–$30K / +2–3 weeks custom build)
+Remote Paywalls, Offerings, and live A/B testing built in
+Required to test Day-0 hard paywall vs. 17+ day trial vs. non-trial pricing
+Churn & Billing Recovery
+Requires manual App Store Server Library 2.0 + Play billing retry orchestration
+Automated cross-platform state tracking across grace periods and retries (10–30% recovery estimate)
+Essential on Android where billing failures cause 31% of cancellations
+
+Portability & Audit Scope
+Pure Apple on-device JWS verification; zero third-party SDK
+Executes StoreKit 2 natively underneath; Apple transactions remain portable
+
+Downstream engineering sprints should execute across four sequential milestones: [1][2][3][4][5][6][7][8][9]
+
+1. https://langbytes.com/sources (Data Sources - LangBytes)
+2. https://kanjivg.tagaini.net/ (The Kanji Vector Graphics (KanjiVG) project - KanjiVG)
+3. https://github.com/kanjialive/kanji-data-media (GitHub - kanjialive/kanji-data-media: Japanese language data on)
+4. https://github.com/wanikani/wanakana (GitHub - WaniKani/WanaKana: Javascript library for detecting and)
+5. https://github.com/toss/es-hangul/blob/main/README-en_us.md (es-hangul/README-en_us.md at main - GitHub)
+6. https://medium.com/@poojarapriyanka2305/core-classes-and-methods-of-apples-nlp-framework-9ea6b3e2b35c (Core classes and methods of Apple's NLP Framework - Medium)
+7. https://developer.apple.com/documentation/naturallanguage/nltagscheme (NLTagScheme | Apple Developer Documentation)
+8. https://github.com/azooKey/AzooKeyKanaKanjiConverter/issues (Issues · azooKey/AzooKeyKanaKanjiConverter - GitHub)
+9. https://github.com/kishikawakatsumi/mozc-for-ios (kishikawakatsumi/Mozc-for-iOS: Mozc - Japanese Input Method for)
+10. https://dev.to/tbds_2dadf2b626f315902eae/the-three-hard-constraints-of-an-ios-keyboard-extension-46af (The three hard constraints of an iOS keyboard extension)
+11. https://swiftpackageindex.com/azooKey/AzooKeyKanaKanjiConverter (AzooKeyKanaKanjiConverter - Swift Package Index)
+12. https://huggingface.co/Miwa-Keita/zenz-v1 (Miwa-Keita/zenz-v1 - Hugging Face)
+13. https://huggingface.co/Miwa-Keita/zenz-v2.5-medium (Miwa-Keita/zenz-v2.5-medium - Hugging Face)
+14. https://open-spaced-repetition.github.io/ts-fsrs/ (TS-FSRS - Open Spaced Repetition)
+15. https://scispace.com/pdf/the-involvement-load-hypothesis-an-inquiry-into-vocabulary-zpebcjscy8.pdf (The involvement load hypothesis: an inquiry into vocabulary learning)
+16. https://biblingo.com/the-four-strands-of-language-learning (The Four Strands of Language Learning - Biblingo)
+17. https://www.bolderapps.com/blog-posts/subscription-app-development-2026 (Subscription App Development in 2026: RevenueCat, StoreKit 2)
+18. https://theswiftk.it.com/blog/storekit-2-vs-revenuecat-ios-subscriptions (StoreKit 2 vs RevenueCat for iOS Subscriptions (2026) - The Swift Kit)
+19. https://www.youtube.com/watch?v=1toNkt5bTgg (Insights from RevenueCat's 2026 State of Subscription Apps Report)
+20. https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard (Configuring open access for a custom keyboard - Apple Developer)
+21. https://shyngys.com/ios-custom-keyboard-guide (iOS Custom Keyboard Guide - Shyngys Kassymov)
+22. https://medium.com/@inFullMobile/limitations-of-custom-ios-keyboards-3be88dfb694 (Limitations of custom iOS keyboards | by intent - Medium)
