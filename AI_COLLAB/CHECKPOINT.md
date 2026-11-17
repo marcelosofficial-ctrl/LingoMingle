@@ -3,7 +3,7 @@
 
 
 # CHECKPOINT
-Status: DONE — recovered the canonical branch, checked the native-build bootstrap prerequisites against official Expo/GitHub documentation, and recorded a corrected T022 path without making unapproved configuration changes.
+Status: IN PROGRESS — recovered the prior Android workflow pass; waiting for the first non-cancelled Gradle APK build to finish before recording outcome.
 Branch: lingomingle-foundation-2026-11-10
 Recovery: completed. Read root BOOT.md on main, AI_COLLAB/BOOT.md, STATE.md, NEXT_TASK.md, INBOX_chatgpt.md and the prior checkpoint. Last five working-branch commits (newest first): 0ed1950d1d9478e8c81b2b19c823512f79253bc1 (INBOX research); 3a57186cfd377c44561ade8d79df68d81edcc84e (NEXT_TASK research); ddaa88c208eb56e4f5cf873dc8aadaaddd3857c3 (pass start); aac42eb2dd779c7d5e338198c82bdea617db5240 (prior checkpoint close); dac83990d796cfc252df8f52ecc05172e09f4942 (prior INBOX update). No outside working-branch commits were found in the recovered history.
 VERIFIED: package.json pins Expo SDK 58.0.24 and includes typecheck/lint/test scripts. app.json has name/slug/plugins but no android.package or ios.bundleIdentifier; no eas.json exists. Existing .github/workflows/ci.yml runs JS/Metro exports and synthetic-pack checks, not a native Gradle/EAS build.
@@ -19,3 +19,13 @@ Docs updated: NEXT_TASK.md records the route, limits and acceptance boundaries; 
 Latest CI VERIFIED: #116 / run 43959854824 SUCCESS on 5c7e3157d4fd77025f45eb92f746d8a09cc995fe; #115 was failed and superseded. No newer CI run exists; documentation changes did not trigger CI.
 Commits this pass: 6212c247998f36a66419236e25cc68230d0417a4 (start IN PROGRESS); e68e3aabbb8e950e88132680aab5c5202e59c959 (T022 remote-build research); dac83990d796cfc252df8f52ecc05172e09f4942 (inbox evidence); final checkpoint close follows.
 Next: pursue Android internal APK through EAS Free only after owner confirms Expo account/token setup; iOS physical-device testing needs confirmed paid Apple Developer membership, or a Mac/Xcode simulator path. Do not exceed free quota or enable paid services without approval.
+
+
+## Recovery 2026-11-17 — Android workflow execution
+- **VERIFIED:** root BOOT.md on `main` points to `lingomingle-foundation-2026-11-10`; working-branch BOOT.md rules were read. The repo remains PUBLIC (live metadata); no visibility change made. Existing 24-hour reminder to restore PRIVATE remains scheduled (automation `6afc054725d8819194682af8103681fe`).
+- **VERIFIED:** prior checkpoint was left IN PROGRESS after the five-commit cap. Reopened it for this pass at `0c445bae320295c3fff9a29f45e7c77ddd941d89`. Recovered STATE/NEXT_TASK/INBOX and listed last five branch commits: `0c445bae320295c3fff9a29f45e7c77ddd941d89`, `5ecf44542350784521104aa29fef606c232ccf9b`, `29be322b94609c4bd1132227224be1af77e84e02`, `557b484dc711aa58841d168277fc18a1a8edb6a9`, `843bff568a15be156abc5c6594e480172ba6ca04`.
+- **VERIFIED:** reviewed `.github/workflows/android-apk.yml`, `app.json`, and `package.json`. Workflow's Node 22.13.1 matches prior project CI pin; Expo Prebuild, Gradle configuration injection and SDK install steps completed successfully in Actions. Android package ID is `com.marcelosofficial.lingomingle`.
+- **VERIFIED:** first Android workflow run `44144179666` (commit `557b484...`) was cancelled by concurrency when corrected workflow commit arrived. Second run `44144207732` (commit `29be322...`) is IN PROGRESS. Its job completed checkout, Node/Java setup, Android SDK installation, `npm ci`, Expo Prebuild and JS-bundle Gradle configuration. `:app:assembleDebug` is still running; signature/bundle/package checks and artifact upload are pending. No artifact is currently listed. Run: https://github.com/marcelosofficial-ctrl/LingoMingle/actions/runs/44144207732
+- **UNKNOWN:** final Gradle result, APK verification and artifact availability. Device install/runtime and T022 native acceptance remain NOT RUN. Do not infer success from completed setup steps.
+- **Next:** poll run `44144207732`; if successful, inspect verification steps and artifact, then arrange physical Android install and T022 matrix. If failed, inspect job logs and make the smallest targeted fix. Keep iOS device acceptance separate; no iOS build path or Apple Developer membership verified.
+- This pass made no app source/test changes and ran no local tests. Latest app-suite CI evidence remains #116 SUCCESS; Android APK workflow is a separate new build job.
