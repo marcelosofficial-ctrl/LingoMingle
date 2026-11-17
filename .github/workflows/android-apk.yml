@@ -1,0 +1,89 @@
+name: Android installable debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lingomingle-foundation-2026-11-10
+    paths:
+      - "app.json"
+      - "package.json"
+      - "package-lock.json"
+      - "app/**"
+      - "src/**"
+      - "assets/**"
+      - "metro.config.js"
+      - ".github/workflows/android-apk.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.1"
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Android SDK components
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install JavaScript dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate the Android native project
+        run: npx expo prebuild --platform android --clean --no-install --non-interactive
+
+      - name: Embed the JavaScript bundle in the installable debug APK
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("android/app/build.gradle")
+          source = path.read_text()
+          marker = "react {"
+          if source.count(marker) != 1:
+              raise SystemExit("Expected exactly one React Native Gradle react {} block")
+          source = source.replace(marker, marker + "\\n    // Bundle JS for standalone sideload testing; no Metro server required.\\n    debuggableVariants = []", 1)
+          path.write_text(source)
+          PY
+
+      - name: Build signed debug APK
+        working-directory: android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Verify APK signature and embedded JavaScript
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify "$APK"
+          unzip -l "$APK" | grep -E 'assets/index.android.bundle|assets/.*\.bundle'
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='com.marcelosofficial.lingomingle'"
+
+      - name: Upload installable test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lingomingle-android-debug-${{ github.sha }}
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
