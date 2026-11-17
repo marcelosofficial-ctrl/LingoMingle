@@ -4,12 +4,14 @@ Canonical repository: https://github.com/marcelosofficial-ctrl/LingoMingle
 Canonical branch: `lingomingle-foundation-2026-11-10`
 This brief is a research handoff, not authorization to change code, dependencies, licensing decisions or roadmap priorities.
 
+> **Access warning — important:** The canonical GitHub repository is PRIVATE. Every GitHub link in this brief requires an authenticated account that has repository access. An AI session that is not signed in cannot read these links and may receive a 404. If you cannot access the repository, do not infer file contents from link titles or proceed as though you read them. Ask the owner to paste this entire handoff and any specific supporting excerpts into the conversation. Do not ask for passwords, personal access tokens or account credentials. This handoff is designed to be self-contained enough to begin independent research without repository access; clearly label any project detail that you cannot independently inspect.
+
 ## 1. Product in one minute
 LingoMingle is a phone-first, local-first language-learning app built with Expo, React Native and TypeScript. It is intended to make useful language learning work offline and avoid requiring a PC or paid AI/API service for core learning. Current sequence: Japanese hiragana foundation, basic katakana extension, Korean Hangul starter, then a carefully scoped Song Study experience using only user-imported, original, public-domain or otherwise cleared text.
 
 The current app is a foundation, not a finished commercial product. It already has a synthetic-only content import/build pipeline, a read-only SQLite repository and Japanese kana chart/practice features. The next engineering task is real iOS/Android device validation—not another broad feature build.
 
-## 2. Start here — authoritative public project paths
+## 2. Start here — authoritative project paths (repository access required)
 Use these files from the canonical branch, not `main` unless the path explicitly says main:
 - Startup/working rules: [BOOT.md](https://github.com/marcelosofficial-ctrl/LingoMingle/blob/main/BOOT.md) and [AI_COLLAB/BOOT.md](https://github.com/marcelosofficial-ctrl/LingoMingle/blob/lingomingle-foundation-2026-11-10/AI_COLLAB/BOOT.md)
 - Current facts: [STATE.md](https://github.com/marcelosofficial-ctrl/LingoMingle/blob/lingomingle-foundation-2026-11-10/STATE.md)
