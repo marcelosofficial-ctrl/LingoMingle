@@ -1,3 +1,5 @@
+> **CHECKPOINT STATUS: IN PROGRESS** — continuation pass opened 2026-11-17.
+
 # CHECKPOINT
 Status: DONE — recovered canonical branch, confirmed latest CI, researched and documented an evidence-backed remote native-build path for T022, and preserved all release gates.
 Branch: lingomingle-foundation-2026-11-10
