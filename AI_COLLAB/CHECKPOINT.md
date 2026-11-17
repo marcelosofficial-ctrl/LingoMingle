@@ -1,9 +1,6 @@
 # CHECKPOINT
-Status: DONE — recovered canonical branch, verified owner-approved public research access, scheduled the 24-hour privacy reminder, recorded it, and confirmed the next technical gate remains T022.
+Status: IN PROGRESS — recover current project state and advance the highest-priority safe task without assuming native device access.
 Branch: lingomingle-foundation-2026-11-10
-Recovery: completed. Read root BOOT.md on main, AI_COLLAB/BOOT.md, STATE.md, NEXT_TASK.md, INBOX_chatgpt.md and prior checkpoint; listed the last 5 commits on the working branch. No independent project commits appeared ahead of the prior checkpoint; this pass's own commits are recorded below.
-VERIFIED: GitHub repo metadata reports visibility PUBLIC; owner explicitly authorized this temporary public window. ChatGPT did not change visibility. Do not change visibility; owner must restore PRIVATE. A one-time reminder was successfully created for 24 hours later (automation 6afc054725d8819194682af8103681fe). Reminder is not an automatic GitHub visibility change.
-T022: native iOS/Android device runtime and SQLite/read-only-provider acceptance remain NOT RUN. No local device/build toolchain evidence is available here. CI/Metro export does not substitute for native device evidence. This remains the next project task; do not mark it complete without per-platform observed results.
-Latest CI: #116 / run 43959854824 SUCCESS on 5c7e3157d4fd77025f45eb92f746d8a09cc995fe; reconfirmed earlier in prior pass, no new CI run triggered here. Documentation-only changes; tests NOT RUN this pass.
-Commits this pass: 57d1e6c33aad20030ca6e48accd0c08e207624bc (start IN PROGRESS); 9687399a819f9236cc22102ce248c7c8d50fe26c (record owner approval and reminder); final checkpoint close follows.
-Next: T022 native iOS and Android acceptance when development builds/devices are available. Then reconcile the external GPT research packet against the repo's evidence and decisions.
+Recovery: read current STATE.md, NEXT_TASK.md, INBOX_chatgpt.md and recent branch history. Preserve existing records. T022 device acceptance was previously NOT RUN.
+Scope: LingoMingle only. Do not change repository visibility; owner has a 24-hour reminder to restore PRIVATE. No main-branch work, merge/rebase/delete, paid services, unapproved dependencies/data/models/native modules, or lyric lookup.
+Evidence discipline: tag VERIFIED / INFERRED / UNKNOWN; never claim tests passed without output. No file over 1,500 words whole; max 3 files read whole this pass.
