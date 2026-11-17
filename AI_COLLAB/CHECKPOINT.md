@@ -1,4 +1,4 @@
-> **CHECKPOINT STATUS: IN PROGRESS** — recovery and Android APK workflow verification pass opened 2026-11-17.
+> **CHECKPOINT STATUS: IN PROGRESS** — new recovery pass opened 2026-11-17; reconcile newer branch history and Android build evidence.
 
 
 
