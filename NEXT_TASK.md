@@ -2,6 +2,9 @@
 ID: T022
 Goal: Complete device-level acceptance of the synthetic SQLite asset/provisioning and read-only repository on iOS and Android, distinguishing CI/Metro-export evidence from real device runtime.
 
+## T022 execution protocol
+Acceptance matrix: AI_COLLAB/T022_DEVICE_ACCEPTANCE_20261117.md. The matrix is prepared; actual iOS and Android native runtime checks remain NOT RUN. Use a development/preview build containing the packaged database asset; Metro exports or Expo Go alone do not close this task. Record per-platform evidence and do not mark a check PASS without observed output.
+
 ## T021 completion evidence
 T021 is implemented at 5b1263c2245d063bebb17fe3438e27e0a03bf16b; the Node test-harness fix is 5c7e3157d4fd77025f45eb92f746d8a09cc995fe. CI #116 (run 43959854824) completed SUCCESS with all quality, test, export, importer and reproducibility steps green. Native device behavior remains NOT RUN.
 
@@ -13,7 +16,7 @@ T021 is implemented at 5b1263c2245d063bebb17fe3438e27e0a03bf16b; the Node test-h
 5. **Store/test distribution readiness — later gate. VERIFIED + UNKNOWN.** Apple allows up to 100 internal and 10,000 external TestFlight testers. Google Play personal developer accounts created after 2023-11-13 need a closed test with 12 continuously opted-in testers for 14 days before production access. Whether the user's accounts fall under these conditions is UNKNOWN; no account or fee approved. Sources: https://developer.apple.com/help/app-store-connect/test-a-beta-version/add-internal-testers ; https://developer.apple.com/help/app-store-connect/test-a-beta-version/invite-external-testers/ ; https://support.google.com/googleplay/android-developer/answer/14151465?hl=en
 
 ## Ranked follow-on work
-1. T022 — native device validation and SQLite/read-only-provider acceptance on iOS and Android.
+1. T022 — execute the native device acceptance matrix on iOS and Android; resolve any asset/provisioning/provider failures with evidence.
 3. T023 — local review-event model and SRS compatibility spike; no scheduler adoption until Hermes/Node compatibility and event semantics are verified.
 4. T024 — resolve corpus-specific permission or select a separately licensed alternative for Korean lexical content; keep NIKL HOLD until authorization.
 5. T025 — store account, privacy, TestFlight and Google Play readiness, only after user approval for any fees.
