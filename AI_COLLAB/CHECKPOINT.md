@@ -39,3 +39,8 @@ Next: pursue Android internal APK through EAS Free only after owner confirms Exp
 - **VERIFIED:** Added owner expectation to INBOX: independent Grok and GPT app studies are pending, likely within ~24 hours or sooner. Neither was received. When they arrive, reconcile evidence and disagreements against current source/official sources; no automatic implementation approval.
 - **UNKNOWN:** final Android APK build, signature/bundle/package verification, artifact availability, and physical device install. No local tests were run. No source code or dependencies changed.
 - **Commits this pass:** `54af6f2677e219bb00d2f3c8b7e3c1e195d0d6ce` (start/recovery); `285debc41a3016b48dc06ae927ab086ab1e7b951` (pending research intake). Checkpoint remains **IN PROGRESS** because the Android build has not completed; next pass must recover and poll run `44144207732` before claiming completion.
+
+
+## Pass opened — 2026-11-18
+- **IN PROGRESS:** new continuation pass opened. Recover current branch history and verify the outstanding Android APK workflow before any further project changes.
+- Prior checkpoint's Android run reference: `44144207732`; final result and artifact remain UNKNOWN until live Actions evidence is retrieved.
