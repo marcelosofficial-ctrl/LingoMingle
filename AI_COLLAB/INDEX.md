@@ -7,13 +7,14 @@
 | INBOX_chatgpt.md | User/AI approvals and handoffs |
 | AI_COLLAB/CHECKPOINT.md | Last unit, commit, CI and next |
 | AI_COLLAB/DECISIONS.md | Decisions, conflicts and gates |
-| AI_COLLAB/DEPENDENCIES.md | Adopted code/data and licences |
+| AI_COLLAB/DEPENDENCIES.md | Adopted/evaluated dependencies and licences |
 | AI_COLLAB/RISKS.md | Risk register |
 | AI_COLLAB/VERIFY_BACKLOG.md | Unverified claims |
 | AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, package compatibility, SRS and reuse review |
 | AI_COLLAB/COMPETITOR_AND_LEARNING_REVIEW_20261111.md | Kana apps, licensing, Hangul letter origins, mnemonic and retrieval evidence |
 | AI_COLLAB/research/GEMINI_STUDIES_AUDIT_20261117.md | Audited Gemini Studies intake: learning science, licensing, CJK input, native keyboard/model feasibility, lyrics and monetization |
 | AI_COLLAB/EXTERNAL_AI_RESEARCH_HANDOFF_20261117.md | Concise app brief and bounded research assignment for an independent AI reviewer |
+| AI_COLLAB/T022_DEVICE_ACCEPTANCE_20261117.md | iOS/Android native install, SQLite asset/provisioning, read-only provider, accessibility and recovery acceptance matrix |
 | AI_COLLAB/research/KEYBOARD_TRANSLITERATION_FEASIBILITY_20261113.md | Keyboard product UX, platform constraints and competitor landscape |
 | AI_COLLAB/research/KEYBOARD_TRANSLITERATION_ENGINES_20261113.md | Mozc/libhangul/librime/Fcitx reuse, licences, architecture and corrected Romaja findings |
 | AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md | T004 Mozc/libhangul source, build targets, dictionary/licence scope, LGPL and build matrix |
@@ -28,7 +29,7 @@
 | AI_COLLAB/research/NIKL_STORE_RIGHTS_REVIEW_20261114.md | T011 CC BY-SA 2.0 KR, Apple FairPlay/EULA, Google Play DDA, packaging matrix and counsel questions |
 | AI_COLLAB/research/NIKL_T011_RECHECK_20261114.md | T011 exact package metadata, source resource envelope, parser trust warning and platform/licence recheck |
 | AI_COLLAB/research/NIKL_STREAMING_SPIKE_20261114.md | T012 synthetic-only ZIP/JSON streaming prototype, bounds, CI, benchmark and hard stops |
-| AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md | T013 synthetic SQLite schema, engine comparison, deterministic build and verification gates |
+| AI_COLLAB/research/NIKL_SQLITE_PACK_SPIKE_20261114.md | T013 synthetic SQLite schema, engine comparison, deterministic build and verification |
 | AI_COLLAB/research/NIKL_SQLITE_REPOSITORY_SPIKE_20261114.md | T014 read-only Expo SQLite repository, SDK 58 compatibility and synthetic validation |
 | AI_COLLAB/research/NIKL_SQLITE_PROVISIONING_SPIKE_20261114.md | T015 Expo asset/filesystem comparison, hash-gated staging and synthetic-only validation |
 | AI_COLLAB/research/T016_EXPO_ASSET_ADAPTER_PREFLIGHT_20261114.md | T016 SDK 58 package/API preflight, asset bundling design, root lockfile blocker and implementation sequence |
@@ -42,6 +43,7 @@
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C07_character_learning.md | Mnemonics and quizzes |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C08_data_business_design.md | Data, monetisation, design, reuse |
 | AI_COLLAB/research/00_MERGED_SHARDS/R-C09_architecture_roadmap.md | Architecture and task queue |
+
 ## Binding rules
 1. Separate repo. Never touch RevDev or PocketCode here.
 2. Continuation read order: BOOT, STATE, NEXT_TASK, INBOX. Find all other material through this index.
@@ -58,6 +60,7 @@
 13. Verify [INFERRED]/[UNKNOWN] claims when they block task.
 14. Linux CI: typecheck, lint, unit tests; report latest actual status.
 15. Claude C00/C01 workflow wins over conflicting research workflow.
+
 ## Source register
 Claude digest: 10,380 words, 69,414 bytes; SHA-256 5a6e297392fea6de49ba00e03b8d6b150cbfb28ff82fe21209bf6481f7487b53. Primary workflow/technical plan.
 Gemini Language.pdf: 637,913 bytes; SHA-256 c9bb7a2cd1cee16c9fedfe7c9bdfaef23787e392439f309e842890b9d891da74. API/media sync research.
