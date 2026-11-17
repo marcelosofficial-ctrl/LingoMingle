@@ -1,4 +1,4 @@
-> **CHECKPOINT STATUS: IN PROGRESS** — owner-authorized Android build workflow pass opened 2026-11-17.
+> **CHECKPOINT STATUS: IN PROGRESS** — recovery and Android APK workflow verification pass opened 2026-11-17.
 
 
 
