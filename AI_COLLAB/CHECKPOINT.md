@@ -1,5 +1,5 @@
 # CHECKPOINT
-Status: IN PROGRESS — T021 CI failure diagnosed; test harness fix committed, awaiting CI
+Status: IN PROGRESS — Gemini Studies intake and evidence audit
 Branch: lingomingle-foundation-2026-11-10
 Unit 1: T021 Katakana recognition practice implementation is committed at 5b1263c2245d063bebb17fe3438e27e0a03bf16b. Practice engine, screen, tests and script integration are present.
 Verification: CI #115 on T021 implementation commit 5b1263c failed at `npm test`. `npm run typecheck` and `npm run lint` passed. The failing Katakana test loader transpiled katakana.ts into a data: URL but left its relative `./hiragana` import unresolved; Node 22 reports ERR_UNSUPPORTED_RESOLVE_REQUEST. Later Metro/importer/pack jobs were skipped. A test-only harness fix now bundles the Hiragana dependency into its own data URL before importing Katakana. Native iOS/Android device runtime remains NOT RUN. Fix is not yet CI-verified.
