@@ -1,9 +1,9 @@
-> **CHECKPOINT STATUS: IN PROGRESS** — new recovery pass opened 2026-11-17; reconcile newer branch history and Android build evidence.
+> **CHECKPOINT STATUS: DONE** — 2026-11-18 recovery pass completed; Android APK build verified, physical-device acceptance remains open.
 
 
 
 # CHECKPOINT
-Status: IN PROGRESS — recovered the prior Android workflow pass; waiting for the first non-cancelled Gradle APK build to finish before recording outcome.
+Status: DONE — Android workflow run 44144207732 completed SUCCESS; artifact and verification evidence recorded in STATE.md and NEXT_TASK.md. T022 device acceptance remains open.
 Branch: lingomingle-foundation-2026-11-10
 Recovery: completed. Read root BOOT.md on main, AI_COLLAB/BOOT.md, STATE.md, NEXT_TASK.md, INBOX_chatgpt.md and the prior checkpoint. Last five working-branch commits (newest first): 0ed1950d1d9478e8c81b2b19c823512f79253bc1 (INBOX research); 3a57186cfd377c44561ade8d79df68d81edcc84e (NEXT_TASK research); ddaa88c208eb56e4f5cf873dc8aadaaddd3857c3 (pass start); aac42eb2dd779c7d5e338198c82bdea617db5240 (prior checkpoint close); dac83990d796cfc252df8f52ecc05172e09f4942 (prior INBOX update). No outside working-branch commits were found in the recovered history.
 VERIFIED: package.json pins Expo SDK 58.0.24 and includes typecheck/lint/test scripts. app.json has name/slug/plugins but no android.package or ios.bundleIdentifier; no eas.json exists. Existing .github/workflows/ci.yml runs JS/Metro exports and synthetic-pack checks, not a native Gradle/EAS build.
@@ -44,3 +44,22 @@ Next: pursue Android internal APK through EAS Free only after owner confirms Exp
 ## Pass opened — 2026-11-18
 - **IN PROGRESS:** new continuation pass opened. Recover current branch history and verify the outstanding Android APK workflow before any further project changes.
 - Prior checkpoint's Android run reference: `44144207732`; final result and artifact remain UNKNOWN until live Actions evidence is retrieved.
+
+
+## Completed recovery pass — 2026-11-18
+- **VERIFIED — startup/recovery:** read root `BOOT.md` on `main`, working-branch `AI_COLLAB/BOOT.md`, `STATE.md`, `NEXT_TASK.md`, `INBOX_chatgpt.md`, this checkpoint, and listed the last five commits. Canonical branch remains `lingomingle-foundation-2026-11-10`.
+- **VERIFIED — Android build:** workflow run [44144207732](https://github.com/marcelosofficial-ctrl/LingoMingle/actions/runs/44144207732), head `29be322b94609c4bd1132227224be1af77e84e02`, conclusion SUCCESS. Gradle `:app:assembleDebug` reported BUILD SUCCESSFUL; `apksigner verify` passed; APK contains `assets/index.android.bundle` (2,173,464 bytes); package `com.marcelosofficial.lingomingle`, version 0.1.0 verified.
+- **VERIFIED — artifact:** artifact `14355909071`, ZIP size 75,387,512 bytes, SHA-256 `8bdec7e2727088a9a072a886be11e3a3765f9882d322a61c75e7bf949521faa1`; expires 2026-11-24 18:21 UTC. Download: https://github.com/marcelosofficial-ctrl/LingoMingle/actions/runs/44144207732/artifacts/14355909071
+- **BOUNDARY:** debug-signed sideload artifact only; no release keystore/store publishing. Android physical-device install/runtime, SQLite provisioning, offline behavior, accessibility and recovery remain NOT RUN. iOS build/device acceptance remains NOT RUN. T022 is not complete.
+- **VERIFIED — warnings:** build emitted non-fatal Gradle deprecation warnings for Gradle 10 compatibility and GitHub Actions Node 20 deprecation warnings (runner forced Node 24); no build step failed.
+- **VERIFIED — repository/constraints:** repository metadata remains PUBLIC; no visibility changes. Existing reminder to restore PRIVATE remains scheduled (automation `6afc054725d8819194682af8103681fe`). No app code, dependencies, signing secrets, paid services, or release credentials changed. No tests were run in this pass; app-suite CI #116 / run 43959854824 remains the latest recorded full test-suite success.
+- **VERIFIED — documentation:** updated `STATE.md` and `NEXT_TASK.md` with the successful build evidence, artifact digest/expiry, and remaining device gates.
+- **UNKNOWN / PENDING:** physical Android device availability and results; iOS native build prerequisites; incoming independent Grok and GPT studies. Reconcile those studies separately when supplied; no implementation authorization is implied.
+- **Commits this pass:** `6bfb0c34348d288a41956c562e06bb1d8644a4e6` (open/recover); `2280e5857283014e7b69aa1c72b6c887d4e215cb` (STATE build evidence); `fa7f4fbca8d288b58ed824e0c8229ecb97b25f4d` (NEXT_TASK build evidence); final checkpoint close follows.
+- **Pre-close last five commits (newest first):**
+- fa7f4fbca8d288b58ed824e0c8229ecb97b25f4d — docs: record successful Android APK build and remaining device gates
+- 2280e5857283014e7b69aa1c72b6c887d4e215cb — docs: record verified Android APK build in project state
+- 6bfb0c34348d288a41956c562e06bb1d8644a4e6 — Open 2026-11-18 LingoMingle recovery pass
+- 1148f4ce1e1402ec8d3b27ddd66a20813d779231 — docs: checkpoint Android build wait and pending research intake
+- 285debc41a3016b48dc06ae927ab086ab1e7b951 — docs: record pending independent app research intake
+- **Next task:** install the APK on a physical Android device and complete T022 evidence rows; keep iOS acceptance separate. Do not mark device acceptance from CI build evidence.
