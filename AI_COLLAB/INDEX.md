@@ -11,7 +11,9 @@
 | AI_COLLAB/RISKS.md | Risk register |
 | AI_COLLAB/VERIFY_BACKLOG.md | Unverified claims |
 | AI_COLLAB/TECH_RESEARCH_20261111.md | Verified SDK 58 stack, package compatibility, SRS and reuse review |
-| AI_COLLAB/COMPETITOR_AND_LEARNING_REVIEW_20261111.md | Kana apps, licensing, Hangul letter origins, mnemonic and retrieval evidence |\n| AI_COLLAB/research/GEMINI_STUDIES_AUDIT_20261117.md | Audited Gemini Studies intake: learning science, licensing, CJK input, native keyboard/model feasibility, lyrics and monetization |
+| AI_COLLAB/COMPETITOR_AND_LEARNING_REVIEW_20261111.md | Kana apps, licensing, Hangul letter origins, mnemonic and retrieval evidence |
+| AI_COLLAB/research/GEMINI_STUDIES_AUDIT_20261117.md | Audited Gemini Studies intake: learning science, licensing, CJK input, native keyboard/model feasibility, lyrics and monetization |
+| AI_COLLAB/EXTERNAL_AI_RESEARCH_HANDOFF_20261117.md | Concise app brief and bounded research assignment for an independent AI reviewer |
 | AI_COLLAB/research/KEYBOARD_TRANSLITERATION_FEASIBILITY_20261113.md | Keyboard product UX, platform constraints and competitor landscape |
 | AI_COLLAB/research/KEYBOARD_TRANSLITERATION_ENGINES_20261113.md | Mozc/libhangul/librime/Fcitx reuse, licences, architecture and corrected Romaja findings |
 | AI_COLLAB/research/KEYBOARD_ENGINE_SOURCE_BUILD_SPIKE_20261113.md | T004 Mozc/libhangul source, build targets, dictionary/licence scope, LGPL and build matrix |
