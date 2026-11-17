@@ -1,5 +1,5 @@
 # STATE
-Updated: 2026-11-16
+Updated: 2026-11-17
 Repo: marcelosofficial-ctrl/LingoMingle; branch: lingomingle-foundation-2026-11-10; canonical repo (not LingoMingle-).
 Stack: Expo 58.0.24; Router 58.0.31; SQLite 58.0.16; React/RN 19.3.0/0.88.1; TypeScript 6.0.3.
 Product: local-first. Japanese hiragana MVP, katakana extension, Hangul starter, Song Study later. G1 blocks online copyrighted lyric lookup. No paid services/store fees approved.
@@ -11,4 +11,4 @@ T018 DONE: deterministic row-scoped quiz with same-row distractors, feedback and
 T019 DONE: in-memory score, missed-kana summary with canonical readings, retry-only prompt pool and fresh round on perfect result. Red-team fixes validate canonical glyph/readings/row/position and boolean results. CI #112 (43840445604) SUCCESS on cc8a04d: typecheck, lint, root tests, iOS/Android Metro exports, importer tests and synthetic pack reproducibility.
 Release gates: native iOS/Android builds and device runtime NOT RUN. NIKL real-data use/distribution HOLD. No store submission, accounts or paid build services approved.
 T020 DONE: added 46 basic Katakana records, accessible script switch preserving selected row/column, parity/exclusion tests. CI #114 (43841900879) SUCCESS on fb07fc8: typecheck, lint, root tests, iOS/Android Metro exports, importer tests and synthetic-pack reproducibility.
-Next: T021 — Katakana recognition practice, reusing the validated Hiragana practice pattern without changing Hiragana behavior.
+T021 DONE: isolated Katakana recognition practice reusing the validated Hiragana pattern. CI #116 (run 43959854824) SUCCESS on harness-fix commit 5c7e3157d4fd77025f45eb92f746d8a09cc995fe; typecheck, lint, root tests, iOS/Android Metro exports, importer tests and synthetic-pack reproducibility all passed. Native device runtime NOT RUN.\nNext: T022 — native device validation and SQLite/read-only-provider acceptance on iOS and Android.

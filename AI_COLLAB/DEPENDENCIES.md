@@ -19,6 +19,12 @@
 - Tatoeba licences vary per record; never assume one licence for all.
 - KanaDojo AGPL-3.0, Kanji Dojo GPL-3.0-or-later, Nihonoari GPL-3.0 and KanaSRS source-available: reference only; no code/assets adopted.
 Every future adoption records exact version, SPDX licence, purpose, upstream URL, attribution, modifications and review date before import.
+## Gemini Studies candidates (evaluated, not adopted; 2026-11-17)
+- es-hangul 2.4.0: MIT, ESM; upstream exposes Jamo extraction, josa helpers and QWERTY keyboard-layout conversion. QWERTY mapping is not Revised-Romanization parsing. Bundle size, Hermes runtime and app acceptance are unverified. Candidate only.
+- AzooKeyKanaKanjiConverter: upstream repository MIT; current README specifies iOS 16+ and Swift 6.1+. Zenzai is an optional Swift package trait; Zenz-v2.5 weights are CC BY-SA 4.0. Native integration, model packaging, device RAM/latency, extension limits and Android parity are unverified. Not adopted.
+- Apple NaturalLanguage provides native tokenization/tagging/lemma/lexical-class APIs, not kana-kanji generation. Native bridge integration is not adopted.
+- No lyric database/API, model weights, mnemonic corpus or subscription platform was adopted. See GEMINI_STUDIES_AUDIT_20261117.md.
+
 ## SDK 58 patch alignment (2026-11-12)
 - Updated `expo-router` to 58.0.31 and `expo-sqlite` to 58.0.16 after checking the SDK 58 versioned Expo docs. These are exact package pins, not ranges. The docs now recommend `~58.0.31` and `~58.0.16` respectively; the chosen exact pins resolve to those recommended patch releases.
 - Run #36 verified the updated Router/SQLite/Constants/Linking/Expo patch set; see the checkpoint for exact quality-step evidence.
