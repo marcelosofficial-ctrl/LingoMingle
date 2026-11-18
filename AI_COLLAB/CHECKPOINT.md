@@ -1,3 +1,9 @@
+**CHECKPOINT STATUS: IN PROGRESS** — 2026-11-18 continuation opened. Recovery required before further work.
+
+Previous pass close record retained below for recovery context.
+
+---
+
 > **CHECKPOINT STATUS: DONE** — 2026-11-18 pass closed. T022 remains open.
 
 ## Pass — 2026-11-18
