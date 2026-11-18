@@ -1,3 +1,5 @@
+> **CHECKPOINT STATUS: IN PROGRESS** — 2026-11-18 pass; check reminder, visibility and T022 blockers.
+
 > **CHECKPOINT STATUS: DONE** — 2026-11-18 continuation recovered and closed; no new external study received.
 
 # CHECKPOINT
