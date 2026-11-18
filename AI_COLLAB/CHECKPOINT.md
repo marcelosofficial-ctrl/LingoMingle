@@ -1,3 +1,7 @@
+> **CHECKPOINT STATUS: IN PROGRESS** — recovering prior continuation; verify incoming research, reminder state, and latest branch history before further work.
+
+> Prior completed pass remains preserved below. This line opens the current pass; do not treat earlier DONE status as closure of this continuation.
+
 > **CHECKPOINT STATUS: DONE** — 2026-11-18 recovery pass completed; Android APK build verified, physical-device acceptance remains open.
 
 
