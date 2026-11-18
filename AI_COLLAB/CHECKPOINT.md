@@ -63,3 +63,7 @@ Next: pursue Android internal APK through EAS Free only after owner confirms Exp
 - 1148f4ce1e1402ec8d3b27ddd66a20813d779231 — docs: checkpoint Android build wait and pending research intake
 - 285debc41a3016b48dc06ae927ab086ab1e7b951 — docs: record pending independent app research intake
 - **Next task:** install the APK on a physical Android device and complete T022 evidence rows; keep iOS acceptance separate. Do not mark device acceptance from CI build evidence.
+
+
+## Pass opened — 2026-11-18 (continuation)
+- **IN PROGRESS:** opened a new recovery pass. Verify the prior DONE checkpoint against current branch history and live Android artifact status; then select the next bounded T022 action without claiming device acceptance.
