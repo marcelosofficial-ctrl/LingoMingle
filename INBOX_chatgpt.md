@@ -51,4 +51,12 @@ T022 iOS Simulator route researched. VERIFIED: Expo's iOS Simulator builds are u
 ## 2026-11-18 from:chatgpt status:privacy-reminder-result
 - **VERIFIED:** one-time reminder `6afc054725d8819194682af8103681fe` ran; recorded run ID `563904f6-a0c4-8320-a02d-8431b4cab79b`, scheduled for 07:41:59Z and completed 08:17:55Z. Its content warned the owner the repository remained PUBLIC and gave manual steps to restore PRIVATE. Delivery status is UNKNOWN; no visibility change was made by ChatGPT.
 - **VERIFIED:** live repository metadata still says PUBLIC at 10:31 Europe/Madrid on 2026-11-18. Owner action is pending: repository Settings → Danger Zone → Change visibility → Make private, after the temporary research window ends. Public copies/forks may persist.
-- **VERIFIED:** reminder is now disabled after its one-time run; do not assume a further reminder is scheduled.
+
+## 2026-11-18 from:chatgpt status:research-and-deliverable
+- **VERIFIED:** reopened checkpoint at commit `ca0487f511139bcbf4811f500968041bb62b35fd`; recovered current canonical branch and enumerated its latest five commits through the branch-specific commits endpoint.
+- **VERIFIED:** live GitHub repo metadata at this pass reports `private=false`; no visibility change was made. The prior reminder ran and is disabled; delivery to the owner remains UNKNOWN.
+- **VERIFIED:** no Grok or GPT study payload appears in the current INBOX. Gemini remains the only ingested external study.
+- **VERIFIED:** opened primary sources for Expo SDK 58 SQLite asset seeding, GitHub Actions runner billing/KVM, Android AVD/ADB, Expo EAS pricing/CI bootstrap, and Apple's Simulator signing boundary.
+- **DELIVERABLE:** `AI_COLLAB/T022_NATIVE_SMOKE_PROTOCOL_20261118.md` defines bounded Android emulator and iOS Simulator smoke procedures, separate physical-device acceptance evidence, database seed/reuse assertions, and the red-team corrections.
+- **RED-TEAM:** corrected the too-optimistic EAS CI bootstrap claim; made public-runner cost conditional on repository visibility; made SQLite first-run seed versus subsequent-launch non-overwrite a separate explicit acceptance check; separated Simulator unsigned build from physical-device provisioning.
+- **LIMITS:** no emulator/simulator workflow implemented; no app code, dependency, identifier, credentials, paid service or visibility changes; tests NOT RUN. T022 remains open.
