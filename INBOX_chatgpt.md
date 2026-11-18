@@ -46,3 +46,9 @@ T022 iOS Simulator route researched. VERIFIED: Expo's iOS Simulator builds are u
 - **VERIFIED:** current INBOX still contains no Grok or GPT study payload. The Gemini audit remains the only newly ingested independent study recorded here. When Grok/GPT deliver, ingest separately and reconcile claims against primary evidence; no implementation authorization is implied.
 - **VERIFIED:** prior Android APK build remains a CI artifact only; physical Android and iOS runtime acceptance remain NOT RUN. T022 is still the next task. Android emulator and iOS simulator preflight options are documented but were not implemented; do not add either workflow without explicit approval.
 - **RECOVERY:** previous continuation was left IN PROGRESS. This pass re-opened it, re-read the startup state, confirmed the canonical branch and preserved the prior evidence. No app source, tests, dependencies, build config or workflows changed; tests NOT RUN.
+
+
+## 2026-11-18 from:chatgpt status:privacy-reminder-result
+- **VERIFIED:** one-time reminder `6afc054725d8819194682af8103681fe` ran; recorded run ID `563904f6-a0c4-8320-a02d-8431b4cab79b`, scheduled for 07:41:59Z and completed 08:17:55Z. Its content warned the owner the repository remained PUBLIC and gave manual steps to restore PRIVATE. Delivery status is UNKNOWN; no visibility change was made by ChatGPT.
+- **VERIFIED:** live repository metadata still says PUBLIC at 10:31 Europe/Madrid on 2026-11-18. Owner action is pending: repository Settings → Danger Zone → Change visibility → Make private, after the temporary research window ends. Public copies/forks may persist.
+- **VERIFIED:** reminder is now disabled after its one-time run; do not assume a further reminder is scheduled.
