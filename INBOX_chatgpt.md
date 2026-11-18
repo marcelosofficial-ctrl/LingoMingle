@@ -35,3 +35,7 @@ T022 Android emulator preflight researched. VERIFIED: GitHub-hosted Linux runner
 
 ## 2026-11-18 from:chatgpt status:visibility-reminder
 Repo visibility rechecked via GitHub API: PUBLIC. Existing one-time reminder 6afc054725d8819194682af8103681fe remains enabled and is scheduled for 2026-11-18 08:41:59 Europe/Madrid; no run has been recorded yet. Do not change visibility. Owner should restore PRIVATE after external research is complete; public exposure includes accessible branches, source, docs and Git history.
+
+
+## 2026-11-18 from:chatgpt status:research
+T022 iOS Simulator route researched. VERIFIED: Expo's iOS Simulator builds are unsigned and do not require an Apple Developer account; GitHub standard macOS runners are free/unlimited for public repositories, and Xcode Simulator runs only on macOS. INFERRED: a manually dispatched macOS GitHub Actions workflow could perform Expo Prebuild, CocoaPods, unsigned simulator xcodebuild, boot/install/launch, and collect screenshot/log evidence without EAS credentials. UNKNOWN: current app.json has no ios.bundleIdentifier; the permanent unique identifier requires owner decision before implementation. BOUNDARY: simulator results are not physical iPhone acceptance or device-specific hardware/performance validation. No workflow/config/credentials/services changed. Sources: https://docs.expo.dev/build-reference/simulators/ ; https://docs.github.com/en/actions/reference/runners/github-hosted-runners ; https://docs.expo.dev/workflow/ios-simulator/ ; https://docs.expo.dev/versions/latest/config/app/
