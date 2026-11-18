@@ -1,4 +1,10 @@
-**CHECKPOINT STATUS: DONE** — 2026-11-18 research and T022 acceptance-spec pass closed.
+**CHECKPOINT STATUS: IN PROGRESS** — 2026-11-18 continuation opened. Recover prior pass state before additional work.
+
+Previous completed pass record retained below.
+
+---
+
+> **CHECKPOINT STATUS: DONE** — 2026-11-18 research and T022 acceptance-spec pass closed.
 
 ## Pass result
 - **VERIFIED:** canonical branch `lingomingle-foundation-2026-11-10`; root BOOT pointer on main and branch AI_COLLAB/BOOT + STATE read. NEXT_TASK, INBOX and checkpoint recovery reviewed within the read budget.
@@ -16,4 +22,4 @@
 - `ca0487f511139bcbf4811f500968041bb62b35fd` — open/recover checkpoint
 - `560348656e086cf2d515b3ab33a3050183fb84ba` — add T022 native smoke protocol
 - `f44dc1bf4179ed38694e852fcd92be0e81230e9a` — record research and deliverable in INBOX
-- Closing commit follows.
+- `c7f11c03dd081539810994e42e04e16001a8e385` — close previous pass
