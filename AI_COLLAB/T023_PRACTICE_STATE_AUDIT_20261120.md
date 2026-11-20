@@ -35,4 +35,12 @@ Scope: Review-tab placeholder, kana quiz attempt lifecycle, persistence seam. No
 - No test/build/device output gathered in this audit.
 
 ## Suggested next unit
-If owner approves moving beyond T022 documentation-only constraint, implement T023-A only: inspect existing schema/migration and repository seam; add event table + pure event builder/validator + idempotent insert tests. Do not integrate UI or choose/adopt FSRS in same unit. Otherwise keep this proposal and continue T022 acceptance prep.
+If owner approves moving beyond T022 documentation-only constraint, implement T023-A only: inspect existing schema/migration and repository seam; add event table + pure event builder/validator + idempotent insert tests. Do not integrate UI or choose/adopt FSRS in same unit.
+
+## Direct SQLite provider/schema seam audit (2026-11-20)
+- **VERIFIED:** `GlossaryProvider` opens the bundled pack via `SQLite.openDatabaseAsync(name, { useNewConnection: true }, SQLite.defaultDatabaseDirectory)`, after allow-listing only the main pack and staging filename.
+- **VERIFIED:** `createGlossaryRepository` checks SQLite `application_id=0x4c4d474c`, `user_version=1`, and six required glossary tables, then sets and verifies `PRAGMA query_only=ON`. Its documented ownership is a dedicated connection; it never creates, migrates, copies, or writes the content database.
+- **VERIFIED:** The bundled glossary DB connection is intentionally read-only. Learner events must not be added to this pack, nor may `query_only` be weakened. The pack’s schema version is not an appropriate learner-history migration version.
+- **INFERRED:** T023-A requires a separate app-owned learner database and connection, with its own migration/version lifecycle. Keep content-pack provisioning and learner-history initialization separate so pack replacement cannot erase history.
+- **UNKNOWN:** exact Expo SDK 58 writable transaction API and the app’s test seam are still unverified. Directly inspect the installed SDK typings/docs and tests before writing DB code; current inspection was limited to the provider and repository read-only path.
+
