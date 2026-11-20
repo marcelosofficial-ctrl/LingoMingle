@@ -1,4 +1,7 @@
-**CHECKPOINT STATUS: DONE** — 2026-11-20 continuation pass closed.
+**CHECKPOINT STATUS: IN PROGRESS** — continuation pass.
+
+## Recovery
+- Prior pass closed cleanly. No known recovery blocker.
 
 ## Recovery / startup
 - Previous pass closed cleanly; no recovery issue found.
