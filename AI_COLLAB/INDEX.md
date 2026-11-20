@@ -66,3 +66,5 @@ Claude digest: 10,380 words, 69,414 bytes; SHA-256 5a6e297392fea6de49ba00e03b8d6
 Gemini Language.pdf: 637,913 bytes; SHA-256 c9bb7a2cd1cee16c9fedfe7c9bdfaef23787e392439f309e842890b9d891da74. API/media sync research.
 ChatGPT digest: 63,563 bytes; SHA-256 357801718d53a606e704483f3685b002b64353c651610b9ab57a50257fd7596d. Learning science, architecture, costs.
 Original sources remain in conversation attachments. This repo stores distilled synthesis. C00 and C01 verbatim extracts still need to be added as separate files; until then the original Claude attachment is authoritative.
+
+| AI_COLLAB/EXTERNAL_RESEARCH_INTAKE_PROTOCOL_20261120.md | Intake method for forthcoming large multi-pass external research (bounded reading, evidence labels, reconciliation, durable outputs) |
