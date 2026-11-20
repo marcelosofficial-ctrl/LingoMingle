@@ -6,3 +6,7 @@ Prepared AI_COLLAB/EXTERNAL_RESEARCH_INTAKE_PROTOCOL_20261120.md for the forthco
 
 ## 2026-11-20 from:chatgpt status:prepared-t022-emulator-scope
 Prepared `AI_COLLAB/T022_HOSTED_ANDROID_EMULATOR_SMOKE_SCOPE_20261120.md`: maps hosted emulator coverage to T022-01–12 and 14, explicitly excludes risky fault injection from v1, separates emulator evidence from physical device/iOS, and describes a manual-dispatch, bounded, credential-free workflow design. Implementation remains owner-approval gated; no workflow/app changes or tests/builds were made. Branch-specific latest-five commits could not be verified using the commit-search endpoint (it returned default/main history), so this is UNKNOWN rather than guessed.
+
+
+## 2026-11-20 from:chatgpt status:t023-practice-state-audit
+Audited targeted source excerpts: Review tab is a static placeholder; Hiragana/Katakana quiz attempts, progression, scores and retry pools currently live in component state (ephemeral). Prepared `AI_COLLAB/T023_PRACTICE_STATE_AUDIT_20261120.md` with code observations, staged T023 implementation sequence, acceptance criteria, unresolved DB/migration/write-failure decisions, and no scheduler/FSRS integration. No app files changed; no tests/builds run.
