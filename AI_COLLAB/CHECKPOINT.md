@@ -1,28 +1,22 @@
-**CHECKPOINT STATUS: IN PROGRESS** — continuation pass.
+**CHECKPOINT STATUS: DONE** — continuation pass closed (2026-11-20).
 
-## Recovery
-- Prior pass closed cleanly. No known recovery blocker.
+## Recovery and startup
+- Prior pass was DONE. Started this pass IN PROGRESS first.
+- Read branch AI_COLLAB/BOOT.md, NEXT_TASK.md, INBOX_chatgpt.md, STATE.md and checkpoint; startup boundaries reconfirmed.
+- Branch: `lingomingle-foundation-2026-11-10`.
+- **UNKNOWN:** exact latest-five branch commit listing remains unavailable via current GitHub search connector; its recent commit query returned default/main history. No guessed history.
 
-## Recovery / startup
-- Previous pass closed cleanly; no recovery issue found.
-- Read root BOOT.md (main), branch AI_COLLAB/BOOT.md, STATE.md, NEXT_TASK.md, INBOX_chatgpt.md, and CHECKPOINT.md. Root/branch startup rules reconfirmed.
-- Canonical branch exists: `lingomingle-foundation-2026-11-10`.
-- **UNKNOWN:** branch-specific last-five commit list could not be verified. The GitHub commit-search endpoint returned default/main history rather than scoped branch history. No fabricated branch commit list.
+## Work completed
+- **DONE:** Created `AI_COLLAB/T023_PRACTICE_STATE_AUDIT_20261120.md` from targeted current-code excerpts. Verified Review tab is placeholder and quiz attempts/progression/retry/score are component state; refined staged T023 sequence, acceptance and unresolved DB/error decisions.
+- **DONE:** Recorded T023 audit in `INBOX_chatgpt.md`.
+- **VERIFIED:** Existing T022 hosted-emulator smoke proposal remains approval-gated; no CI/workflow changes made.
+- **NOT RUN:** tests, builds, emulator, device validation.
 
-## Work
-- **DONE:** Prepared `AI_COLLAB/T022_HOSTED_ANDROID_EMULATOR_SMOKE_SCOPE_20261120.md`, mapping proposed hosted Android emulator evidence to T022 rows, workflow constraints, first-pass scope, and limitations.
-- **DONE:** Indexed the proposal in `AI_COLLAB/INDEX.md` and recorded it in `INBOX_chatgpt.md`.
-- **VERIFIED:** Existing Android APK build workflow and package ID inspected. It builds a standalone debug APK on ubuntu-24.04; this pass did not modify it.
-- **INFERRED:** Hosted emulator smoke can add install/launch and selected synthetic-pack checks while owner has no PC access.
-- **APPROVAL REQUIRED:** No new emulator workflow or CI changes made.
-- **NOT RUN:** Tests, builds, emulator, device checks.
+## Commit references this pass
+- 6117ad4449 — checkpoint start
+- cd7d178bc2 — T023 audit
+- 1406b43e09 — inbox
+- checkpoint close follows
 
-## Commits this pass
-- 42ea9d0f92 — start checkpoint
-- 52cb979789 — emulator smoke scope proposal
-- 045d600edb — index proposal
-- a9a680f888 — inbox record
-- checkpoint close commit follows.
-
-## Scope boundaries
-T022 remains OPEN. Android physical device, iOS native runtime, full accessibility, interrupted-provisioning recovery and platform parity are NOT RUN. No app code, dependencies, credentials, release signing, paid services, data sources, privacy/security boundary, or policies changed. Grok's upcoming study remains UNKNOWN/not received in this intake; use the prepared large-study intake protocol when paths/commit arrive.
+## Constraints
+T022 remains OPEN. Physical Android/iOS native runtime and full accessibility remain NOT RUN. No app code, dependency, workflow, service, paid account, data-source, security/privacy, corpus-rights or store-policy changes. Upcoming Grok study remains NOT RECEIVED; intake protocol remains ready.
