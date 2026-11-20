@@ -1,9 +1,11 @@
-**CHECKPOINT STATUS: DONE** — 2026-11-20 continuation pass closed.
+**CHECKPOINT STATUS: IN PROGRESS** — 2026-11-20 continuation pass.
 
 ## Recovery
-- Started IN PROGRESS at commit 50e9b527924cf05ed79c934b2be1b0044c8270eb.
-- Re-read root BOOT, branch BOOT, STATE (partial), NEXT_TASK and INBOX (partial); checkpoint recovery was applied.
-- Canonical branch confirmed present. The commit-search connector returned main's history and could not produce branch-scoped recent commits; latest-five list is **UNKNOWN/not verified this pass** (not fabricated).
+- Previous checkpoint closed cleanly; no recovery blocker reported.
+- Starting a new bounded continuation.
+
+## Recovery
+- Prior checkpoint closed cleanly; current pass starts without reported recovery issues.
 
 ## Work
 - **DONE:** Created AI_COLLAB/EXTERNAL_RESEARCH_INTAKE_PROTOCOL_20261120.md, establishing large Grok-study intake: path/commit pinning, inventory, bounded chunk reading, evidence labels, source verification, conflicts/reconciliation, ranking, and outputs.
